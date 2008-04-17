@@ -1,0 +1,18 @@
+# Name: Makefile.windows
+# Project: usbtool
+# Author: Christian Starkjohann
+# Creation Date: 2008-04-06
+# Tabsize: 4
+# Copyright: (c) 2008 by OBJECTIVE DEVELOPMENT Software GmbH
+# License: GNU GPL v2 (see License.txt) or proprietary (CommercialLicense.txt)
+# This Revision: $Id$
+
+# You may use this file with
+#   make -f Makefile.windows
+# on Windows with MinGW instead of editing the main Makefile.
+
+include Makefile
+
+USBFLAGS = -I/usr/local/mingw/include
+USBLIBS = -L/usr/local/mingw/lib -lusb
+EXE_SUFFIX = .exe
