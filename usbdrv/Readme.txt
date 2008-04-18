@@ -118,7 +118,8 @@ things IN ADDITION to the obligations from the GPL2:
 (1) Publish your entire project on a web site and drop us a note with the URL.
 Use the form at http://www.obdev.at/avrusb/feedback.html for your submission.
 If you don't have a web site, you can publish the project in obdev's
-documentation wiki.
+documentation wiki at
+http://www.obdev.at/goto.php?t=avrusb-wiki&p=hosted-projects.
 
 (2) Adhere to minimum publication standards. Please include AT LEAST:
     - a circuit diagram in PDF, PNG or GIF format

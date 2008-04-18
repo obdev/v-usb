@@ -51,9 +51,9 @@ respective directory.
 Hardware dependencies of AVR code has been kept at a minimum. All examples
 should work on any AVR chip which has enough resources to run the driver.
 Makefile and usbconfig.h have been configured for the metaboard hardware (see
-http://metalab.at/wiki/Metaboard for details). Edit the target device, fuse
-values, clock rate and programmer in Makefile and the I/O pins dedicated to
-USB in usbconfig.h.
+http://www.obdev.at/goto.php?t=metaboard for details). Edit the target
+device, fuse values, clock rate and programmer in Makefile and the I/O pins
+dedicated to USB in usbconfig.h.
 
 
 WHAT IS NOT DEMONSTRATED IN THESE EXAMPLES?
@@ -61,7 +61,8 @@ WHAT IS NOT DEMONSTRATED IN THESE EXAMPLES?
 These examples show only the most basic functionality. More elaborate
 examples and real world applications showing more features of the driver are
 available at http://www.obdev.at/avrusb/projects.html. Most of these
-features are described in the Documentation Wiki linked from this page.
+features are described in our documentation wiki at
+http://www.obdev.at/goto.php?t=avrusb-wiki.
 
 To mention just a few:
 

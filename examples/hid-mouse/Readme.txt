@@ -20,7 +20,7 @@ PREREQUISITES
 =============
 Target hardware: You need an AVR based circuit based on one of the examples
 (see the "circuits" directory at the top level of this package), e.g. the
-metaboard (http://metalab.at/wiki/Metaboard).
+metaboard (http://www.obdev.at/goto.php?t=metaboard).
 
 AVR development environment: You need the gcc tool chain for the AVR, see
 the Prerequisites section in the top level Readme file for how to obtain it.

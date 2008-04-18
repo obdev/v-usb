@@ -54,8 +54,8 @@ TECHNICAL DOCUMENTATION
 =======================
 The API reference of the driver firmware can be found in usbdrv/usbdrv.h.
 Documentation for host and device library files are in the respective header
-files. For more information, follow the "Documentation Wiki" link in the
-navigation box at http://www.obdev.at/avrusb/.
+files. For more information, see our documentation wiki at
+http://www.obdev.at/goto.php?t=avrusb-wiki.
 
 
 LICENSE
