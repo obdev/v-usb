@@ -9,13 +9,15 @@ This package consists of the device side USB driver firmware, library code
 for device and host and fully working examples for device and host:
 
   Readme.txt .............. The file you are currently reading.
-  License.txt ............. Free Open Source license for this package (GPL).
-  CommercialLicense.txt ... Alternative commercial license for this package.
   usbdrv .................. AVR-USB firmware, to be included in your project.
-  circuits ................ Example circuits using this driver.
+  examples ................ Example code for device and host side.
   libs-device ............. Useful code snippets for the device firmware.
   libs-host ............... Useful code snippets for device drivers.
-  examples ................ Example code for device and host side.
+  circuits ................ Example circuits using this driver.
+  Changelog.txt ........... Documentation of changes between versions.
+  License.txt ............. Free Open Source license for this package (GPL).
+  CommercialLicense.txt ... Alternative commercial license for this package.
+  USBID-License.txt ....... Terms and conditions for free USB VID/PID pairs.
 
 Each subdirectory contains a separate Readme file which explains its
 contents.
