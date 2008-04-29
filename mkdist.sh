@@ -47,19 +47,32 @@ fi
 #-------------------------------------------------------------------
 open -a X11	# we need X11 for EAGLE
 
+version=`grep USBDRV_VERSION usbdrv/usbdrv.h | awk '{print $NF}'`
+if [ "$isPublic" != yes ]; then
+	version="$version"-priv
+fi
+
+if [ "$isPublic" = yes ]; then
+(
+    cd tests
+    for i in 3 4; do
+        avr-gcc-select $i >/dev/null 2>&1
+        gccvers=`avr-gcc --version | awk '{print $NF; exit}'`
+        file=sizes-$version-gcc$gccvers.txt
+        make sizes
+        mv sizes.txt sizes-reference/$file
+        svn add sizes-reference/$file
+        svn commit -m "Added sizes file for this version" sizes-reference/$file
+    done
+)
+fi
+
 if svn commit; then
 	:
 else
 	echo "svn commit failed, aborting"
 	exit 1
 fi
-
-version=`grep USBDRV_VERSION usbdrv/usbdrv.h | awk '{print $NF}'`
-
-if [ "$isPublic" != yes ]; then
-	version="$version"-priv
-fi
-
 
 repository=`svn info | sed -n -e '/^URL:/ s|^URL: \(.*\)/trunk|\1| p'`
 if [ "$isPublic" = yes ]; then
