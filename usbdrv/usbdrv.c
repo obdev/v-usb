@@ -275,8 +275,12 @@ uchar       *p, i;
 static uchar usbRead(uchar *data, uchar len)
 {
 #if USB_CFG_IMPLEMENT_FN_READ
-    if(usbMsgFlags & USB_FLG_USE_DEFAULT_RW){
+    if(!(usbMsgFlags & USB_FLG_USE_DEFAULT_RW)){
+        if(len != 0)    /* don't bother app with 0 sized reads */
+            len = usbFunctionRead(data, len);
+    }else
 #endif
+    {
         uchar i = len, *r = usbMsgPtr;
         if(usbMsgFlags & USB_FLG_MSGPTR_IS_ROM){    /* ROM data */
             while(i--){
@@ -289,14 +293,8 @@ static uchar usbRead(uchar *data, uchar len)
                 *data++ = *r++;
         }
         usbMsgPtr = r;
-        return len;
-#if USB_CFG_IMPLEMENT_FN_READ
-    }else{
-        if(len != 0)    /* don't bother app with 0 sized reads */
-            return usbFunctionRead(data, len);
-        return 0;
     }
-#endif
+    return len;
 }
 
 
@@ -346,105 +344,105 @@ uchar           replyLen = 0, flags = USB_FLG_USE_DEFAULT_RW;
     }
 #endif
     if(usbRxToken == (uchar)USBPID_SETUP){
+        if(len != 8)    /* Setup size must be always 8 bytes. Ignore otherwise. */
+            return;
         usbTxLen = USBPID_NAK;  /* abort pending transmit */
-        if(len == 8){   /* Setup size must be always 8 bytes. Ignore otherwise. */
-            uchar type = rq->bmRequestType & USBRQ_TYPE_MASK;
-            if(type == USBRQ_TYPE_STANDARD){
-                #define SET_REPLY_LEN(len)  replyLen = (len); usbMsgPtr = replyData
-                /* This macro ensures that replyLen and usbMsgPtr are always set in the same way.
-                 * That allows optimization of common code in if() branches */
-                uchar *replyData = usbTxBuf + 9; /* there is 3 bytes free space at the end of the buffer */
-                replyData[0] = 0;   /* common to USBRQ_GET_STATUS and USBRQ_GET_INTERFACE */
-                if(rq->bRequest == USBRQ_GET_STATUS){           /* 0 */
-                    uchar __attribute__((__unused__)) recipient = rq->bmRequestType & USBRQ_RCPT_MASK;  /* assign arith ops to variables to enforce byte size */
+        uchar type = rq->bmRequestType & USBRQ_TYPE_MASK;
+        if(type == USBRQ_TYPE_STANDARD){
+            #define SET_REPLY_LEN(len)  replyLen = (len); usbMsgPtr = replyData
+            /* This macro ensures that replyLen and usbMsgPtr are always set in the same way.
+             * That allows optimization of common code in if() branches */
+            uchar *replyData = usbTxBuf + 9; /* there is 3 bytes free space at the end of the buffer */
+            replyData[0] = 0;   /* common to USBRQ_GET_STATUS and USBRQ_GET_INTERFACE */
+            if(rq->bRequest == USBRQ_GET_STATUS){           /* 0 */
+                uchar __attribute__((__unused__)) recipient = rq->bmRequestType & USBRQ_RCPT_MASK;  /* assign arith ops to variables to enforce byte size */
 #if USB_CFG_IS_SELF_POWERED
-                    if(recipient == USBRQ_RCPT_DEVICE)
-                        replyData[0] =  USB_CFG_IS_SELF_POWERED;
+                if(recipient == USBRQ_RCPT_DEVICE)
+                    replyData[0] =  USB_CFG_IS_SELF_POWERED;
 #endif
 #if USB_CFG_HAVE_INTRIN_ENDPOINT && USB_CFG_IMPLEMENT_HALT
-                    if(recipient == USBRQ_RCPT_ENDPOINT && rq->wIndex.bytes[0] == 0x81)   /* request status for endpoint 1 */
-                        replyData[0] = usbTxLen1 == USBPID_STALL;
+                if(recipient == USBRQ_RCPT_ENDPOINT && rq->wIndex.bytes[0] == 0x81)   /* request status for endpoint 1 */
+                    replyData[0] = usbTxLen1 == USBPID_STALL;
 #endif
-                    replyData[1] = 0;
-                    SET_REPLY_LEN(2);
-                }else if(rq->bRequest == USBRQ_SET_ADDRESS){    /* 5 */
-                    usbNewDeviceAddr = rq->wValue.bytes[0];
+                replyData[1] = 0;
+                SET_REPLY_LEN(2);
+            }else if(rq->bRequest == USBRQ_SET_ADDRESS){    /* 5 */
+                usbNewDeviceAddr = rq->wValue.bytes[0];
 #ifdef USB_SET_ADDRESS_HOOK
-                    USB_SET_ADDRESS_HOOK();
+                USB_SET_ADDRESS_HOOK();
 #endif
-                }else if(rq->bRequest == USBRQ_GET_DESCRIPTOR){ /* 6 */
-                    flags = USB_FLG_MSGPTR_IS_ROM | USB_FLG_USE_DEFAULT_RW;
-                    if(rq->wValue.bytes[1] == USBDESCR_DEVICE){ /* 1 */
-                        GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_DEVICE, usbDescriptorDevice)
-                    }else if(rq->wValue.bytes[1] == USBDESCR_CONFIG){   /* 2 */
-                        GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_CONFIGURATION, usbDescriptorConfiguration)
-                    }else if(rq->wValue.bytes[1] == USBDESCR_STRING){   /* 3 */
+            }else if(rq->bRequest == USBRQ_GET_DESCRIPTOR){ /* 6 */
+                flags = USB_FLG_MSGPTR_IS_ROM | USB_FLG_USE_DEFAULT_RW;
+                if(rq->wValue.bytes[1] == USBDESCR_DEVICE){ /* 1 */
+                    GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_DEVICE, usbDescriptorDevice)
+                }else if(rq->wValue.bytes[1] == USBDESCR_CONFIG){   /* 2 */
+                    GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_CONFIGURATION, usbDescriptorConfiguration)
+                }else if(rq->wValue.bytes[1] == USBDESCR_STRING){   /* 3 */
 #if USB_CFG_DESCR_PROPS_STRINGS & USB_PROP_IS_DYNAMIC
-                        if(USB_CFG_DESCR_PROPS_STRINGS & USB_PROP_IS_RAM)
-                            flags &= ~USB_FLG_MSGPTR_IS_ROM;
-                        replyLen = usbFunctionDescriptor(rq);
+                    if(USB_CFG_DESCR_PROPS_STRINGS & USB_PROP_IS_RAM)
+                        flags &= ~USB_FLG_MSGPTR_IS_ROM;
+                    replyLen = usbFunctionDescriptor(rq);
 #else   /* USB_CFG_DESCR_PROPS_STRINGS & USB_PROP_IS_DYNAMIC */
-                        if(rq->wValue.bytes[0] == 0){   /* descriptor index */
-                            GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_STRING_0, usbDescriptorString0)
-                        }else if(rq->wValue.bytes[0] == 1){
-                            GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_STRING_VENDOR, usbDescriptorStringVendor)
-                        }else if(rq->wValue.bytes[0] == 2){
-                            GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_STRING_PRODUCT, usbDescriptorStringDevice)
-                        }else if(rq->wValue.bytes[0] == 3){
-                            GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_STRING_SERIAL_NUMBER, usbDescriptorStringSerialNumber)
-                        }else if(USB_CFG_DESCR_PROPS_UNKNOWN & USB_PROP_IS_DYNAMIC){
-                            replyLen = usbFunctionDescriptor(rq);
-                        }
-#endif  /* USB_CFG_DESCR_PROPS_STRINGS & USB_PROP_IS_DYNAMIC */
-#if USB_CFG_DESCR_PROPS_HID_REPORT  /* only support HID descriptors if enabled */
-                    }else if(rq->wValue.bytes[1] == USBDESCR_HID){          /* 0x21 */
-                        GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_HID, usbDescriptorConfiguration + 18)
-                    }else if(rq->wValue.bytes[1] == USBDESCR_HID_REPORT){   /* 0x22 */
-                        GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_HID_REPORT, usbDescriptorHidReport)
-#endif  /* USB_CFG_DESCR_PROPS_HID_REPORT */
+                    if(rq->wValue.bytes[0] == 0){   /* descriptor index */
+                        GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_STRING_0, usbDescriptorString0)
+                    }else if(rq->wValue.bytes[0] == 1){
+                        GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_STRING_VENDOR, usbDescriptorStringVendor)
+                    }else if(rq->wValue.bytes[0] == 2){
+                        GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_STRING_PRODUCT, usbDescriptorStringDevice)
+                    }else if(rq->wValue.bytes[0] == 3){
+                        GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_STRING_SERIAL_NUMBER, usbDescriptorStringSerialNumber)
                     }else if(USB_CFG_DESCR_PROPS_UNKNOWN & USB_PROP_IS_DYNAMIC){
                         replyLen = usbFunctionDescriptor(rq);
                     }
-                }else if(rq->bRequest == USBRQ_GET_CONFIGURATION){  /* 8 */
-                    replyData = &usbConfiguration;  /* send current configuration value */
-                    SET_REPLY_LEN(1);
-                }else if(rq->bRequest == USBRQ_SET_CONFIGURATION){  /* 9 */
-                    usbConfiguration = rq->wValue.bytes[0];
-                    usbResetStall();
-                }else if(rq->bRequest == USBRQ_GET_INTERFACE){      /* 10 */
-                    SET_REPLY_LEN(1);
+#endif  /* USB_CFG_DESCR_PROPS_STRINGS & USB_PROP_IS_DYNAMIC */
+#if USB_CFG_DESCR_PROPS_HID_REPORT  /* only support HID descriptors if enabled */
+                }else if(rq->wValue.bytes[1] == USBDESCR_HID){          /* 0x21 */
+                    GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_HID, usbDescriptorConfiguration + 18)
+                }else if(rq->wValue.bytes[1] == USBDESCR_HID_REPORT){   /* 0x22 */
+                    GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_HID_REPORT, usbDescriptorHidReport)
+#endif  /* USB_CFG_DESCR_PROPS_HID_REPORT */
+                }else if(USB_CFG_DESCR_PROPS_UNKNOWN & USB_PROP_IS_DYNAMIC){
+                    replyLen = usbFunctionDescriptor(rq);
+                }
+            }else if(rq->bRequest == USBRQ_GET_CONFIGURATION){  /* 8 */
+                replyData = &usbConfiguration;  /* send current configuration value */
+                SET_REPLY_LEN(1);
+            }else if(rq->bRequest == USBRQ_SET_CONFIGURATION){  /* 9 */
+                usbConfiguration = rq->wValue.bytes[0];
+                usbResetStall();
+            }else if(rq->bRequest == USBRQ_GET_INTERFACE){      /* 10 */
+                SET_REPLY_LEN(1);
 #if USB_CFG_HAVE_INTRIN_ENDPOINT
-                }else if(rq->bRequest == USBRQ_SET_INTERFACE){      /* 11 */
-                    usbResetDataToggling();
-                    usbResetStall();
+            }else if(rq->bRequest == USBRQ_SET_INTERFACE){      /* 11 */
+                usbResetDataToggling();
+                usbResetStall();
 #   if USB_CFG_IMPLEMENT_HALT
-                }else if(rq->bRequest == USBRQ_CLEAR_FEATURE || rq->bRequest == USBRQ_SET_FEATURE){   /* 1|3 */
-                    if(rq->wValue.bytes[0] == 0 && rq->wIndex.bytes[0] == 0x81){   /* feature 0 == HALT for endpoint == 1 */
-                        usbTxLen1 = rq->bRequest == USBRQ_CLEAR_FEATURE ? USBPID_NAK : USBPID_STALL;
-                        usbResetDataToggling();
-                    }
+            }else if(rq->bRequest == USBRQ_CLEAR_FEATURE || rq->bRequest == USBRQ_SET_FEATURE){   /* 1|3 */
+                if(rq->wValue.bytes[0] == 0 && rq->wIndex.bytes[0] == 0x81){   /* feature 0 == HALT for endpoint == 1 */
+                    usbTxLen1 = rq->bRequest == USBRQ_CLEAR_FEATURE ? USBPID_NAK : USBPID_STALL;
+                    usbResetDataToggling();
+                }
 #   endif
 #endif
-                }else{
-                    /* the following requests can be ignored, send default reply */
-                    /* 1: CLEAR_FEATURE, 3: SET_FEATURE, 7: SET_DESCRIPTOR */
-                    /* 12: SYNCH_FRAME */
-                }
-                #undef SET_REPLY_LEN
-            }else{  /* not a standard request -- must be vendor or class request */
-                replyLen = usbFunctionSetup(data);
+            }else{
+                /* the following requests can be ignored, send default reply */
+                /* 1: CLEAR_FEATURE, 3: SET_FEATURE, 7: SET_DESCRIPTOR */
+                /* 12: SYNCH_FRAME */
             }
-#if USB_CFG_IMPLEMENT_FN_READ || USB_CFG_IMPLEMENT_FN_WRITE
-            if(replyLen == 0xff){   /* use user-supplied read/write function */
-                if((rq->bmRequestType & USBRQ_DIR_MASK) == USBRQ_DIR_DEVICE_TO_HOST){
-                    replyLen = rq->wLength.bytes[0];    /* IN transfers only */
-                }
-                flags &= ~USB_FLG_USE_DEFAULT_RW;  /* we have no valid msg, use user supplied read/write functions */
-            }else   /* The 'else' prevents that we limit a replyLen of 0xff to the maximum transfer len. */
-#endif
-            if(!rq->wLength.bytes[1] && replyLen > rq->wLength.bytes[0])  /* limit length to max */
-                replyLen = rq->wLength.bytes[0];
+            #undef SET_REPLY_LEN
+        }else{  /* not a standard request -- must be vendor or class request */
+            replyLen = usbFunctionSetup(data);
         }
+#if USB_CFG_IMPLEMENT_FN_READ || USB_CFG_IMPLEMENT_FN_WRITE
+        if(replyLen == 0xff){   /* use user-supplied read/write function */
+            if((rq->bmRequestType & USBRQ_DIR_MASK) == USBRQ_DIR_DEVICE_TO_HOST){
+                replyLen = rq->wLength.bytes[0];    /* IN transfers only */
+            }
+            flags &= ~USB_FLG_USE_DEFAULT_RW;  /* we have no valid msg, use user supplied read/write functions */
+        }else   /* The 'else' prevents that we limit a replyLen of 0xff to the maximum transfer len. */
+#endif
+        if(!rq->wLength.bytes[1] && replyLen > rq->wLength.bytes[0])  /* limit length to max */
+            replyLen = rq->wLength.bytes[0];
         /* make sure that data packets which are sent as ACK to an OUT transfer are always zero sized */
     }else{  /* DATA packet from out request */
 #if USB_CFG_IMPLEMENT_FN_WRITE
