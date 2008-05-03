@@ -617,10 +617,12 @@ USB_PUBLIC void usbInit(void)
 #endif
     USB_INTR_ENABLE |= (1 << USB_INTR_ENABLE_BIT);
     usbResetDataToggling();
-/* We don't reset usbTxLen1 and usbTxLen3 to USBPID_NAK because this is done
- * in RESET condition anyway (usbResetStall()). If an IN token is received
- * BEFORE USB Reset, we send out 256 bytes of nonsense.
- */
+#if USB_CFG_HAVE_INTRIN_ENDPOINT
+    usbTxLen1 = USBPID_NAK;
+#if USB_CFG_HAVE_INTRIN_ENDPOINT3
+    usbTxLen3 = USBPID_NAK;
+#endif
+#endif
 }
 
 /* ------------------------------------------------------------------------- */
