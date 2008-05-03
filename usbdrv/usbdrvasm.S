@@ -53,7 +53,7 @@ the file appropriate for the given clock rate.
 
     extern  usbRxBuf, usbDeviceAddr, usbNewDeviceAddr, usbInputBufOffset
     extern  usbCurrentTok, usbRxLen, usbRxToken, usbTxLen
-    extern  usbTxBuf, usbMsgLen, usbTxLen1, usbTxBuf1, usbTxLen3, usbTxBuf3
+    extern  usbTxBuf, usbTxStatus1, usbTxStatus3
 #   if USB_COUNT_SOF
         extern usbSofCount
 #   endif
@@ -93,6 +93,11 @@ the file appropriate for the given clock rate.
 #   define  USB_LOAD_PENDING(reg)   lds reg, USB_INTR_PENDING
 #   define  USB_STORE_PENDING(reg)  sts USB_INTR_PENDING, reg
 #endif
+
+#define usbTxLen1   usbTxStatus1
+#define usbTxBuf1   (usbTxStatus1 + 1)
+#define usbTxLen3   usbTxStatus3
+#define usbTxBuf3   (usbTxStatus3 + 1)
 
 
 ;----------------------------------------------------------------------------
