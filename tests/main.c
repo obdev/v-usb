@@ -111,7 +111,7 @@ static PROGMEM char myDescriptorConfiguration[] = { /* USB configuration descrip
 #endif
 };
 
-uchar usbFunctionDescriptor(usbRequest_t *rq)
+USB_PUBLIC usbMsgLen_t usbFunctionDescriptor(usbRequest_t *rq)
 {
 uchar *p = 0, len = 0;
 
@@ -127,7 +127,7 @@ uchar *p = 0, len = 0;
 }
 #endif
 
-USB_PUBLIC uchar    usbFunctionSetup(uchar data[8])
+USB_PUBLIC usbMsgLen_t  usbFunctionSetup(uchar data[8])
 {
 usbRequest_t    *rq = (void *)data;
 
