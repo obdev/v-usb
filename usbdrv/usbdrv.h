@@ -150,6 +150,19 @@ USB messages, even if they address another (low-speed) device on the same bus.
 #endif
 /* shortcuts for well defined 8 bit integer types */
 
+#if USB_CFG_LONG_TRANSFERS  /* if more than 254 bytes transfer size required */
+#   define usbMsgLen_t unsigned
+#else
+#   define usbMsgLen_t uchar
+#endif
+/* usbMsgLen_t is the data type used for transfer lengths. By default, it is
+ * defined to uchar, allowing a maximum of 254 bytes (255 is reserved for
+ * USB_NO_MSG below). If the usbconfig.h defines USB_CFG_LONG_TRANSFERS to 1,
+ * a 16 bit data type is used, allowing up to 16384 bytes (the rest is used
+ * for flags in the descriptor configuration).
+ */
+#define USB_NO_MSG  ((usbMsgLen_t)-1)   /* constant meaning "no message" */
+
 struct usbRequest;  /* forward declaration */
 
 USB_PUBLIC void usbInit(void);
@@ -168,7 +181,7 @@ extern uchar *usbMsgPtr;
  * implementation of usbFunctionWrite(). It is also used internally by the
  * driver for standard control requests.
  */
-USB_PUBLIC uchar usbFunctionSetup(uchar data[8]);
+USB_PUBLIC usbMsgLen_t usbFunctionSetup(uchar data[8]);
 /* This function is called when the driver receives a SETUP transaction from
  * the host which is not answered by the driver itself (in practice: class and
  * vendor requests). All control transfers start with a SETUP transaction where
@@ -181,21 +194,21 @@ USB_PUBLIC uchar usbFunctionSetup(uchar data[8]);
  * requested data to the driver. There are two ways to transfer this data:
  * (1) Set the global pointer 'usbMsgPtr' to the base of the static RAM data
  * block and return the length of the data in 'usbFunctionSetup()'. The driver
- * will handle the rest. Or (2) return 0xff in 'usbFunctionSetup()'. The driver
- * will then call 'usbFunctionRead()' when data is needed. See the
+ * will handle the rest. Or (2) return USB_NO_MSG in 'usbFunctionSetup()'. The
+ * driver will then call 'usbFunctionRead()' when data is needed. See the
  * documentation for usbFunctionRead() for details.
  *
  * If the SETUP indicates a control-out transfer, the only way to receive the
  * data from the host is through the 'usbFunctionWrite()' call. If you
- * implement this function, you must return 0xff in 'usbFunctionSetup()' to
- * indicate that 'usbFunctionWrite()' should be used. See the documentation of
- * this function for more information. If you just want to ignore the data sent
- * by the host, return 0 in 'usbFunctionSetup()'.
+ * implement this function, you must return USB_NO_MSG in 'usbFunctionSetup()'
+ * to indicate that 'usbFunctionWrite()' should be used. See the documentation
+ * of this function for more information. If you just want to ignore the data
+ * sent by the host, return 0 in 'usbFunctionSetup()'.
  *
  * Note that calls to the functions usbFunctionRead() and usbFunctionWrite()
  * are only done if enabled by the configuration in usbconfig.h.
  */
-USB_PUBLIC uchar usbFunctionDescriptor(struct usbRequest *rq);
+USB_PUBLIC usbMsgLen_t usbFunctionDescriptor(struct usbRequest *rq);
 /* You need to implement this function ONLY if you provide USB descriptors at
  * runtime (which is an expert feature). It is very similar to
  * usbFunctionSetup() above, but it is called only to request USB descriptor
@@ -209,7 +222,6 @@ USB_PUBLIC void usbSetInterrupt(uchar *data, uchar len);
  * interrupt status to the host.
  * If you need to transfer more bytes, use a control read after the interrupt.
  */
-extern volatile uchar usbTxLen1;
 #define usbInterruptIsReady()   (usbTxLen1 & 0x10)
 /* This macro indicates whether the last interrupt message has already been
  * sent. If you set a new interrupt message before the old was sent, the
@@ -217,7 +229,6 @@ extern volatile uchar usbTxLen1;
  */
 #if USB_CFG_HAVE_INTRIN_ENDPOINT3
 USB_PUBLIC void usbSetInterrupt3(uchar *data, uchar len);
-extern volatile uchar usbTxLen3;
 #define usbInterruptIsReady3()   (usbTxLen3 & 0x10)
 /* Same as above for endpoint 3 */
 #endif
@@ -369,16 +380,16 @@ extern volatile schar   usbRxLen;
  * about the various methods to define USB descriptors. If you do nothing,
  * the default descriptors will be used.
  */
-#define USB_PROP_IS_DYNAMIC     (1 << 8)
+#define USB_PROP_IS_DYNAMIC     (1 << 14)
 /* If this property is set for a descriptor, usbFunctionDescriptor() will be
  * used to obtain the particular descriptor.
  */
-#define USB_PROP_IS_RAM         (1 << 9)
+#define USB_PROP_IS_RAM         (1 << 15)
 /* If this property is set for a descriptor, the data is read from RAM
  * memory instead of Flash. The property is used for all methods to provide
  * external descriptors.
  */
-#define USB_PROP_LENGTH(len)    ((len) & 0xff)
+#define USB_PROP_LENGTH(len)    ((len) & 0x3fff)
 /* If a static external descriptor is used, this is the total length of the
  * descriptor in bytes.
  */
@@ -610,7 +621,17 @@ at90s1200, attiny11, attiny12, attiny15, attiny28: these have no RAM
 
 #ifndef __ASSEMBLER__
 
-extern uchar    usbTxBuf1[USB_BUFSIZE], usbTxBuf3[USB_BUFSIZE];
+typedef struct usbTxStatus{
+    volatile uchar   len;
+    uchar   buffer[USB_BUFSIZE];
+}usbTxStatus_t;
+
+extern usbTxStatus_t   usbTxStatus1, usbTxStatus3;
+#define usbTxLen1   usbTxStatus1.len
+#define usbTxBuf1   usbTxStatus1.buffer
+#define usbTxLen3   usbTxStatus3.len
+#define usbTxBuf3   usbTxStatus3.buffer
+
 
 typedef union usbWord{
     unsigned    word;
