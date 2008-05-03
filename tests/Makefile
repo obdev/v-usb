@@ -28,31 +28,33 @@ help:
 sizes sizes.txt:
 	rm -f $(SIZES_TMP) sizes.txt
 	$(MAKE) null.elf
-	avr-size null.elf | tail -1 | awk '{print "null", $$1+$$2, $$3}' >$(SIZES_TMP)
+	avr-size null.elf | tail -1 | awk '{print "null", $$1+$$2, $$3+$$2}' >$(SIZES_TMP)
 	$(MAKE) clean; $(MAKE) main.elf
-	avr-size main.elf | tail -1 | awk '{print "Minimum_with_16_MHz", $$1+$$2, $$3}' >>$(SIZES_TMP)
+	avr-size main.elf | tail -1 | awk '{print "Minimum_with_16_MHz", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
 	$(MAKE) clean; $(MAKE) main.elf F_CPU=12000000
-	avr-size main.elf | tail -1 | awk '{print "Minimum_with_12_MHz", $$1+$$2, $$3}' >>$(SIZES_TMP)
+	avr-size main.elf | tail -1 | awk '{print "Minimum_with_12_MHz", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
 	$(MAKE) clean; $(MAKE) main.elf F_CPU=15000000
-	avr-size main.elf | tail -1 | awk '{print "Minimum_with_15_MHz", $$1+$$2, $$3}' >>$(SIZES_TMP)
+	avr-size main.elf | tail -1 | awk '{print "Minimum_with_15_MHz", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
 	$(MAKE) clean; $(MAKE) main.elf F_CPU=16500000
-	avr-size main.elf | tail -1 | awk '{print "Minimum_with_16_5_MHz", $$1+$$2, $$3}' >>$(SIZES_TMP)
+	avr-size main.elf | tail -1 | awk '{print "Minimum_with_16_5_MHz", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
 	$(MAKE) clean; $(MAKE) main.elf DEFINES=-DUSB_CFG_IMPLEMENT_FN_WRITE=1
-	avr-size main.elf | tail -1 | awk '{print "With_usbFunctionWrite", $$1+$$2, $$3}' >>$(SIZES_TMP)
+	avr-size main.elf | tail -1 | awk '{print "With_usbFunctionWrite", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
 	$(MAKE) clean; $(MAKE) main.elf DEFINES=-DUSB_CFG_IMPLEMENT_FN_READ=1
-	avr-size main.elf | tail -1 | awk '{print "With_usbFunctionRead", $$1+$$2, $$3}' >>$(SIZES_TMP)
+	avr-size main.elf | tail -1 | awk '{print "With_usbFunctionRead", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
 	$(MAKE) clean; $(MAKE) main.elf "DEFINES=-DUSB_CFG_IMPLEMENT_FN_READ=1 -DUSB_CFG_IMPLEMENT_FN_WRITE=1"
-	avr-size main.elf | tail -1 | awk '{print "With_usbFunctionRead_and_Write", $$1+$$2, $$3}' >>$(SIZES_TMP)
+	avr-size main.elf | tail -1 | awk '{print "With_usbFunctionRead_and_Write", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
 	$(MAKE) clean; $(MAKE) main.elf "DEFINES=-DUSB_CFG_IMPLEMENT_FN_WRITEOUT=1"
-	avr-size main.elf | tail -1 | awk '{print "With_usbFunctionWriteOut", $$1+$$2, $$3}' >>$(SIZES_TMP)
+	avr-size main.elf | tail -1 | awk '{print "With_usbFunctionWriteOut", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
 	$(MAKE) clean; $(MAKE) main.elf "DEFINES=-DUSB_CFG_HAVE_INTRIN_ENDPOINT=1"
-	avr-size main.elf | tail -1 | awk '{print "With_Interrupt_In_Endpoint_1", $$1+$$2, $$3}' >>$(SIZES_TMP)
+	avr-size main.elf | tail -1 | awk '{print "With_Interrupt_In_Endpoint_1", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
 	$(MAKE) clean; $(MAKE) main.elf "DEFINES=-DUSB_CFG_IMPLEMENT_HALT=1 -DUSB_CFG_HAVE_INTRIN_ENDPOINT=1"
-	avr-size main.elf | tail -1 | awk '{print "With_Interrupt_In_Endpoint_1_and_Halt", $$1+$$2, $$3}' >>$(SIZES_TMP)
+	avr-size main.elf | tail -1 | awk '{print "With_Interrupt_In_Endpoint_1_and_Halt", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
 	$(MAKE) clean; $(MAKE) main.elf "DEFINES=-DUSB_CFG_HAVE_INTRIN_ENDPOINT3=1"
-	avr-size main.elf | tail -1 | awk '{print "With_Interrupt_In_Endpoint_1_and_3", $$1+$$2, $$3}' >>$(SIZES_TMP)
+	avr-size main.elf | tail -1 | awk '{print "With_Interrupt_In_Endpoint_1_and_3", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
 	$(MAKE) clean; $(MAKE) main.elf "DEFINES=-DUSE_DYNAMIC_DESCRIPTOR=1"
-	avr-size main.elf | tail -1 | awk '{print "With_Dynamic_Descriptor", $$1+$$2, $$3}' >>$(SIZES_TMP)
+	avr-size main.elf | tail -1 | awk '{print "With_Dynamic_Descriptor", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
+	$(MAKE) clean; $(MAKE) main.elf "DEFINES=-DUSB_CFG_LONG_TRANSFERS=1"
+	avr-size main.elf | tail -1 | awk '{print "With_Long_Transfers", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
 	cat $(SIZES_TMP) | awk 'BEGIN{printf("%39s %5s %5s %5s %5s\n"), "Variation", "Flash", "RAM", "+F", "+RAM"}\
 		/^null/{nullRom=$$2; nullRam=$$3; next} \
 		{rom=$$2-nullRom; ram=$$3-nullRam; if(!refRom){refRom=rom; refRam=ram} \
@@ -61,7 +63,7 @@ sizes sizes.txt:
 
 test:
 	for freq in 12000000 15000000 16000000 16500000; do \
-		for opt in USB_COUNT_SOF USB_CFG_HAVE_INTRIN_ENDPOINT USB_CFG_HAVE_INTRIN_ENDPOINT3 USB_CFG_HAVE_MEASURE_FRAME_LENGTH; do \
+		for opt in USB_COUNT_SOF USB_CFG_HAVE_INTRIN_ENDPOINT USB_CFG_HAVE_INTRIN_ENDPOINT3 USB_CFG_HAVE_MEASURE_FRAME_LENGTH USB_CFG_LONG_TRANSFERS; do \
 			$(MAKE) clean; $(MAKE) main.elf F_CPU=$$freq "DEFINES=-D$$opt=1"; \
 			$(MAKE) clean; $(MAKE) main.elf F_CPU=$$freq "DEFINES=-D$$opt=1 -DDUSB_CFG_IMPLEMENT_FN_WRITEOUT=1"; \
 		done \
