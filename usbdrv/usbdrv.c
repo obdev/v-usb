@@ -429,13 +429,14 @@ skipMsgPtrAssignment:
  */
 static inline void usbProcessRx(uchar *data, uchar len)
 {
-usbRequest_t        *rq = (void *)data;
+usbRequest_t    *rq = (void *)data;
 
 /* usbRxToken can be:
- * 0x2d 00101101 (USBPID_SETUP for any endpoint)
- * 0...0x10 for OUT on endpoint X
+ * 0x2d 00101101 (USBPID_SETUP for setup data)
+ * 0xe1 11100001 (USBPID_OUT: data phase of setup transfer)
+ * 0...0x0f for OUT on endpoint X
  */
-    DBG2(0x10 + (usbRxToken & 0xf), data, len); /* SETUP0=1d */
+    DBG2(0x10 + (usbRxToken & 0xf), data, len); /* SETUP=1d, SETUP-DATA=11, OUTx=1x */
     USB_RX_USER_HOOK(data, len)
 #if USB_CFG_IMPLEMENT_FN_WRITEOUT
     if(usbRxToken < 0x10){  /* OUT to endpoint != 0: endpoint number in usbRxToken */
@@ -473,7 +474,7 @@ usbRequest_t        *rq = (void *)data;
                 replyLen = rq->wLength.word;
         }
         usbMsgLen = replyLen;
-    }else{  /* token is not SETUP our OUT to other endpoint, must be OUT */
+    }else{  /* usbRxToken must be USBPID_OUT, which means data phase of setup (control-out) */
 #if USB_CFG_IMPLEMENT_FN_WRITE
         if(usbMsgFlags & USB_FLG_USE_USER_RW){
             uchar rval = usbFunctionWrite(data, len);
