@@ -36,6 +36,10 @@ END{
 	}
 	for(i = 0; i < opt; i++){
 		option = options[i];
-		printf("%39s %+6d %+5d\n", option, flash[file2, option] - flash[file1, option], ram[file2, option] - ram[file1, option]);
+        if(!flash[file2, option] || !flash[file1, option]){
+            printf("%39s %6s %5s\n", option, "n/a", "n/a");
+        }else{
+            printf("%39s %+6d %+5d\n", option, flash[file2, option] - flash[file1, option], ram[file2, option] - ram[file1, option]);
+        }
 	}
 }
