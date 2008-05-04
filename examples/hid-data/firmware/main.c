@@ -82,7 +82,7 @@ uchar   usbFunctionWrite(uchar *data, uchar len)
 
 /* ------------------------------------------------------------------------- */
 
-uchar   usbFunctionSetup(uchar data[8])
+usbMsgLen_t usbFunctionSetup(uchar data[8])
 {
 usbRequest_t    *rq = (void *)data;
 
@@ -91,12 +91,12 @@ usbRequest_t    *rq = (void *)data;
             /* since we have only one report type, we can ignore the report-ID */
             bytesRemaining = 128;
             currentAddress = 0;
-            return 0xff;        /* use usbFunctionRead() to obtain data */
+            return USB_NO_MSG;  /* use usbFunctionRead() to obtain data */
         }else if(rq->bRequest == USBRQ_HID_SET_REPORT){
             /* since we have only one report type, we can ignore the report-ID */
             bytesRemaining = 128;
             currentAddress = 0;
-            return 0xff;        /* use usbFunctionWrite() to receive data from host */
+            return USB_NO_MSG;  /* use usbFunctionWrite() to receive data from host */
         }
     }else{
         /* ignore vendor type requests, we don't use any */
@@ -106,11 +106,11 @@ usbRequest_t    *rq = (void *)data;
 
 /* ------------------------------------------------------------------------- */
 
-int	main(void)
+int main(void)
 {
 uchar   i;
 
-	wdt_enable(WDTO_1S);
+    wdt_enable(WDTO_1S);
     /* Even if you don't use the watchdog, turn it off here. On newer devices,
      * the status of the watchdog (on/off, period) is PRESERVED OVER RESET!
      */
@@ -119,8 +119,8 @@ uchar   i;
      * That's the way we need D+ and D-. Therefore we don't need any
      * additional hardware initialization.
      */
-	odDebugInit();
-	usbInit();
+    odDebugInit();
+    usbInit();
     usbDeviceDisconnect();  /* enforce re-enumeration, do this while interrupts are disabled! */
     i = 0;
     while(--i){             /* fake USB disconnect for > 250 ms */
@@ -128,14 +128,14 @@ uchar   i;
         _delay_ms(1);
     }
     usbDeviceConnect();
-	sei();
+    sei();
     DBG1(0x01, 0, 0);       /* debug output: main loop starts */
-	for(;;){                /* main event loop */
+    for(;;){                /* main event loop */
         DBG1(0x02, 0, 0);   /* debug output: main loop iterates */
-		wdt_reset();
-		usbPoll();
-	}
-	return 0;
+        wdt_reset();
+        usbPoll();
+    }
+    return 0;
 }
 
 /* ------------------------------------------------------------------------- */
