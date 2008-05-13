@@ -66,13 +66,25 @@ sizes sizes.txt:
 test:
 	for freq in 12000000 15000000 16000000 16500000 20000000; do \
 		for opt in USB_COUNT_SOF USB_CFG_HAVE_INTRIN_ENDPOINT USB_CFG_HAVE_INTRIN_ENDPOINT3 USB_CFG_HAVE_MEASURE_FRAME_LENGTH USB_CFG_LONG_TRANSFERS; do \
-			$(MAKE) clean; $(MAKE) main.elf F_CPU=$$freq "DEFINES=-D$$opt=1"; \
-			$(MAKE) clean; $(MAKE) main.elf F_CPU=$$freq "DEFINES=-D$$opt=1 -DDUSB_CFG_IMPLEMENT_FN_WRITEOUT=1"; \
+			$(MAKE) clean; $(MAKE) main.elf F_CPU=$$freq "DEFINES=-D$$opt=1" || exit 1; \
+			$(MAKE) clean; $(MAKE) main.elf F_CPU=$$freq "DEFINES=-D$$opt=1 -DDUSB_CFG_IMPLEMENT_FN_WRITEOUT=1" || exit 1; \
 		done \
 	done
 
-#	$(MAKE) clean; $(MAKE) main_i.elf "DEFINES=-DUSBPUBLIC=static -DUSE_INCLUDE=1"
-#	avr-size main_i.elf | tail -1 | awk '{print "static", $$1+$$2, $$3}' >>$(SIZES_TMP)
+# The following rule is used to check the compiler
+devices: #exclude devices without RAM for stack and atmega603 for gcc 3
+	excludes="at90s1200 attiny11 attiny12 attiny15 attiny28"; \
+	for gccVersion in 3 4; do \
+		avr-gcc-select $$gccVersion; \
+		for device in `echo | avr-gcc -xc -mmcu=x - 2>&1 | egrep '^ *at[a-zA-Z0-9_-]+$$'`; do \
+			if echo "$$excludes" | grep "$$device" >/dev/null; then continue; fi; \
+			if [ "$$gccVersion" = 3 -a "$$device" = atmega603 ]; then continue; fi; \
+			$(MAKE) clean; $(MAKE) null.elf DEVICE=$$device || exit 1; \
+		done \
+	done
+	$(MAKE) clean
+	avr-gcc-select 3
+	@echo "+++ Device test succeeded!"
 
 # rule for deleting dependent files (those which can be built by Make):
 clean:

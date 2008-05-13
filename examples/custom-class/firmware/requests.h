@@ -16,6 +16,10 @@
 #ifndef __REQUESTS_H_INCLUDED__
 #define __REQUESTS_H_INCLUDED__
 
+#define CUSTOM_RQ_ECHO          0
+/* Request that the device sends back wValue and wIndex. This is used with
+ * random data to test the reliability of the communication.
+ */
 #define CUSTOM_RQ_SET_STATUS    1
 /* Set the LED status. Control-OUT.
  * The requested status is passed in the "wValue" field of the control

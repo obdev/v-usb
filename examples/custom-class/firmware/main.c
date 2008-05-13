@@ -37,15 +37,22 @@ different port or bit, change the macros below:
 usbMsgLen_t usbFunctionSetup(uchar data[8])
 {
 usbRequest_t    *rq = (void *)data;
+static uchar    dataBuffer[4];  /* buffer must stay valid when usbFunctionSetup returns */
 
-    if(rq->bRequest == CUSTOM_RQ_SET_STATUS){
+    if(rq->bRequest == CUSTOM_RQ_ECHO){ /* echo -- used for reliability tests */
+        dataBuffer[0] = rq->wValue.bytes[0];
+        dataBuffer[1] = rq->wValue.bytes[1];
+        dataBuffer[2] = rq->wIndex.bytes[0];
+        dataBuffer[3] = rq->wIndex.bytes[1];
+        usbMsgPtr = dataBuffer;         /* tell the driver which data to return */
+        return 4;
+    }else if(rq->bRequest == CUSTOM_RQ_SET_STATUS){
         if(rq->wValue.bytes[0] & 1){    /* set LED */
             LED_PORT_OUTPUT |= _BV(LED_BIT);
         }else{                          /* clear LED */
             LED_PORT_OUTPUT &= ~_BV(LED_BIT);
         }
     }else if(rq->bRequest == CUSTOM_RQ_GET_STATUS){
-        static uchar dataBuffer[1];     /* buffer must stay valid when usbFunctionSetup returns */
         dataBuffer[0] = ((LED_PORT_OUTPUT & _BV(LED_BIT)) != 0);
         usbMsgPtr = dataBuffer;         /* tell the driver which data to return */
         return 1;                       /* tell the driver to send 1 byte */
