@@ -228,3 +228,4 @@ Scroll down to the bottom to see the most recent changes.
     descriptor.
   - Added config option for long transfers (above 254 bytes), see
     USB_CFG_LONG_TRANSFERS in usbconfig.h.
+  - Added 20 MHz module provided by Jeroen Benschop.

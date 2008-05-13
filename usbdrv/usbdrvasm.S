@@ -307,6 +307,8 @@ usbMFTimeout:
 #   include "usbdrvasm16.inc"
 #elif USB_CFG_CLOCK_KHZ == 16500
 #   include "usbdrvasm165.inc"
+#elif USB_CFG_CLOCK_KHZ == 20000
+#   include "usbdrvasm20.inc"
 #else
 #   error "USB_CFG_CLOCK_KHZ is not one of the supported rates!"
 #endif

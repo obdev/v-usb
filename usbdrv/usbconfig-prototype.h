@@ -44,10 +44,10 @@ section at the end of this file).
  * markers every millisecond.]
  */
 #define USB_CFG_CLOCK_KHZ       (F_CPU/1000)
-/* Clock rate of the AVR in MHz. Legal values are 12000, 15000, 16000 or 16500.
- * The 16.5 MHz version of the code requires no crystal, it tolerates +/- 1%
- * deviation from the nominal frequency. All other rates require a precision
- * of 2000 ppm and thus a crystal!
+/* Clock rate of the AVR in MHz. Legal values are 12000, 15000, 16000, 16500
+ * and 20000. The 16.5 MHz version of the code requires no crystal, it
+ * tolerates +/- 1% deviation from the nominal frequency. All other rates
+ * require a precision of 2000 ppm and thus a crystal!
  * Default if not specified: 12 MHz
  */
 
