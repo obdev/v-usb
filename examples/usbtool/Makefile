@@ -27,7 +27,7 @@ NAME = usbtool
 OBJECTS = opendevice.o $(NAME).o
 
 CC		= gcc
-CFLAGS	= $(USBFLAGS) -O -g -Wall
+CFLAGS	= $(CPPFLAGS) $(USBFLAGS) -O -g -Wall
 LIBS	= $(USBLIBS)
 
 PROGRAM = $(NAME)$(EXE_SUFFIX)
