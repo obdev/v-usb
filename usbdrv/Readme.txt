@@ -80,6 +80,11 @@ ATTiny26.
 See the EasyLogger example at http://www.obdev.at/avrusb/easylogger.html for
 code which calibrates the RC oscillator based on the USB frame clock.
 
+20 MHz Clock
+This module is for people who won't do it with less than the maximum. Since
+20 MHz is not divisible by the USB low speed bit clock of 1.5 MHz, the code
+uses similar tricks as the 16 MHz module to insert leap cycles.
+
 
 USB IDENTIFIERS
 ===============
