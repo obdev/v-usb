@@ -33,9 +33,9 @@ static void usage(char *name)
     fprintf(stderr, "  %s on ....... turn on LED\n", name);
     fprintf(stderr, "  %s off ...... turn off LED\n", name);
     fprintf(stderr, "  %s status ... ask current status of LED\n", name);
-#if HAVE_TEST
+#if ENABLE_TEST
     fprintf(stderr, "  %s test ..... run driver reliability test\n", name);
-#endif
+#endif /* ENABLE_TEST */
 }
 
 int main(int argc, char **argv)
@@ -78,15 +78,15 @@ int                 cnt, vid, pid, isOn;
         if(cnt < 0){
             fprintf(stderr, "USB error: %s\n", usb_strerror());
         }
-#if HAVE_TEST
+#if ENABLE_TEST
     }else if(strcasecmp(argv[1], "test") == 0){
         int i;
         srandomdev();
-        for(i = 0; i < 5000; i++){
+        for(i = 0; i < 50000; i++){
             int value = random() & 0xffff, index = random() & 0xffff;
             int rxValue, rxIndex;
             if((i+1) % 100 == 0){
-                fprintf(stderr, "\r%04d", i+1);
+                fprintf(stderr, "\r%05d", i+1);
                 fflush(stderr);
             }
             cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, CUSTOM_RQ_ECHO, value, index, buffer, sizeof(buffer), 5000);
@@ -106,7 +106,7 @@ int                 cnt, vid, pid, isOn;
             }
         }
         fprintf(stderr, "\nTest completed.\n");
-#endif
+#endif /* ENABLE_TEST */
     }else{
         usage(argv[0]);
         exit(1);
