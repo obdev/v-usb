@@ -222,10 +222,12 @@ Scroll down to the bottom to see the most recent changes.
 
 * Release 2008-04-18
 
-  - Restructured usbdrv.c so that it is easier to read and understand
-  - Better code optimization with gcc 4
+  - Restructured usbdrv.c so that it is easier to read and understand.
+  - Better code optimization with gcc 4.
   - If a second interrupt in endpoint is enabled, also add it to config
     descriptor.
   - Added config option for long transfers (above 254 bytes), see
     USB_CFG_LONG_TRANSFERS in usbconfig.h.
-  - Added 20 MHz module provided by Jeroen Benschop.
+  - Added 20 MHz module contributed by Jeroen Benschop.
+
+* Release 2008-05-13
