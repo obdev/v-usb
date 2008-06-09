@@ -307,7 +307,7 @@ int bytesReceived, maxLen = *len;
     *len = bytesReceived;
     if(!usesReportIDs){
         buffer[-1] = reportNumber;  /* add dummy report ID */
-        *len++;
+        (*len)++;
     }
     return 0;
 }
