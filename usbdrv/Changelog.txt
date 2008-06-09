@@ -231,3 +231,8 @@ Scroll down to the bottom to see the most recent changes.
   - Added 20 MHz module contributed by Jeroen Benschop.
 
 * Release 2008-05-13
+
+  - Fixed bug in libs-host/hiddata.c function usbhidGetReport(): length
+    was not incremented, pointer to length was incremented instead.
+  - Added code to command line tool(s) which claims an interface. This code
+    is disabled by default, but may be necessary on newer Linux kernels.
