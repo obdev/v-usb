@@ -44,6 +44,9 @@ usbTxStatus_t  usbTxStatus1;
 usbTxStatus_t  usbTxStatus3;
 #   endif
 #endif
+#if USB_CFG_CHECK_DATA_TOGGLING
+uchar       usbCurrentDataToken;/* when we check data toggling to ignore duplicate packets */
+#endif
 
 /* USB status registers / not shared with asm code */
 uchar               *usbMsgPtr;     /* data to transmit next -- ROM or RAM address */

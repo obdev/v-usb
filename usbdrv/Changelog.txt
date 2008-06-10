@@ -236,3 +236,4 @@ Scroll down to the bottom to see the most recent changes.
     was not incremented, pointer to length was incremented instead.
   - Added code to command line tool(s) which claims an interface. This code
     is disabled by default, but may be necessary on newer Linux kernels.
+  - Added usbconfig.h option "USB_CFG_CHECK_DATA_TOGGLING".

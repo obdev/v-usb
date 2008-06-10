@@ -339,6 +339,12 @@ extern volatile uchar   usbSofCount;
  * the macro USB_COUNT_SOF is defined to a value != 0.
  */
 #endif
+#if USB_CFG_CHECK_DATA_TOGGLING
+extern uchar    usbCurrentDataToken;
+/* This variable can be checked in usbFunctionWrite() and usbFunctionWriteOut()
+ * to ignore duplicate packets.
+ */
+#endif
 
 #define USB_STRING_DESCRIPTOR_HEADER(stringLength) ((2*(stringLength)+2) | (3<<8))
 /* This macro builds a descriptor header for a string descriptor given the

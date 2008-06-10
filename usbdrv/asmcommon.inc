@@ -103,8 +103,8 @@ sofError:
     reti
 
 handleData:
-    lds     token, usbCurrentTok;[18]
-    tst     token               ;[20]
+    lds     shift, usbCurrentTok;[18]
+    tst     shift               ;[20]
     breq    doReturn            ;[21]
     lds     x2, usbRxLen        ;[22]
     tst     x2                  ;[24]
@@ -113,8 +113,11 @@ handleData:
 ; recognized if usbPoll() was called less frequently than once every 4 ms.
     cpi     cnt, 4              ;[26] zero sized data packets are status phase only -- ignore and ack
     brmi    sendAckAndReti      ;[27] keep rx buffer clean -- we must not NAK next SETUP
+#if USB_CFG_CHECK_DATA_TOGGLING
+    sts     usbCurrentDataToken, token  ; store for checking by C code
+#endif
     sts     usbRxLen, cnt       ;[28] store received data, swap buffers
-    sts     usbRxToken, token   ;[30]
+    sts     usbRxToken, shift   ;[30]
     lds     x2, usbInputBufOffset;[32] swap buffers
     ldi     cnt, USB_BUFSIZE    ;[34]
     sub     cnt, x2             ;[35]
