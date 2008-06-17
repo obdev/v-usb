@@ -33,7 +33,7 @@ The driver consists of the following files:
                            defined to a value greater than 0. Link this module
                            to your code!
   oddebug.h .............. Interface definitions of the debug module.
-  iarcompat.h ............ Compatibility definitions for IAR C-compiler.
+  usbportability.h ....... Header with compiler-dependent stuff.
   usbdrvasm.asm .......... Compatibility stub for IAR-C-compiler. Use this
                            module instead of usbdrvasm.S when you assembler
                            with IAR's tools.

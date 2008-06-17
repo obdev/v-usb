@@ -15,12 +15,9 @@ general code (preprocessor acrobatics and CRC computation) and then includes
 the file appropriate for the given clock rate.
 */
 
-#include "iarcompat.h"
+#define __SFR_OFFSET 0      /* used by avr-libc's register definitions */
+#include "usbportability.h"
 #ifndef __IAR_SYSTEMS_ASM__
-    /* configs for io.h */
-#   define __SFR_OFFSET 0
-#   define _VECTOR(N)   __vector_ ## N   /* io.h does not define this for asm */
-#   include <avr/io.h> /* for CPU I/O register definitions and vectors */
 #   define macro    .macro  /* GNU Assembler macro definition */
 #   define endm     .endm   /* End of GNU Assembler macro definition */
 #endif  /* __IAR_SYSTEMS_ASM__ */

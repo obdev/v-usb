@@ -11,7 +11,7 @@
 #ifndef __usbdrv_h_included__
 #define __usbdrv_h_included__
 #include "usbconfig.h"
-#include "iarcompat.h"
+#include "usbportability.h"
 
 /*
 Hardware Prerequisites:

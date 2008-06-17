@@ -29,10 +29,7 @@ the output and a memory block to dump in hex ('data' and 'len').
 #endif
 
 /* make sure we have the UART defines: */
-#include "iarcompat.h"
-#ifndef __IAR_SYSTEMS_ICC__
-#   include <avr/io.h>
-#endif
+#include "usbportability.h"
 
 #ifndef uchar
 #   define  uchar   unsigned char

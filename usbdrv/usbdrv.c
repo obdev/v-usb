@@ -8,11 +8,7 @@
  * This Revision: $Id$
  */
 
-#include "iarcompat.h"
-#ifndef __IAR_SYSTEMS_ICC__
-#   include <avr/io.h>
-#   include <avr/pgmspace.h>
-#endif
+#include "usbportability.h"
 #include "usbdrv.h"
 #include "oddebug.h"
 
