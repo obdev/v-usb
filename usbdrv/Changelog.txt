@@ -237,3 +237,5 @@ Scroll down to the bottom to see the most recent changes.
   - Added code to command line tool(s) which claims an interface. This code
     is disabled by default, but may be necessary on newer Linux kernels.
   - Added usbconfig.h option "USB_CFG_CHECK_DATA_TOGGLING".
+  - New header "usbportability.h" prepares ports to other development
+    environments.

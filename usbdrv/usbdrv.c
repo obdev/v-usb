@@ -55,7 +55,7 @@ static uchar        usbMsgFlags;    /* flag values see below */
 /*
 optimizing hints:
 - do not post/pre inc/dec integer values in operations
-- assign value of PRG_RDB() to register variables and don't use side effects in arg
+- assign value of USB_READ_FLASH() to register variables and don't use side effects in arg
 - use narrow scope for variables which should be in X/Y/Z register
 - assign char sized expressions to variables to force 8 bit arithmetics
 */
@@ -190,15 +190,6 @@ PROGMEM char usbDescriptorConfiguration[] = {    /* USB configuration descriptor
     USB_CFG_INTR_POLL_INTERVAL, /* in ms */
 #endif
 };
-#endif
-
-/* ------------------------------------------------------------------------- */
-
-/* We don't use prog_int or prog_int16_t for compatibility with various libc
- * versions. Here's an other compatibility hack:
- */
-#ifndef PRG_RDB
-#define PRG_RDB(addr)   pgm_read_byte(addr)
 #endif
 
 /* ------------------------------------------------------------------------- */
@@ -504,7 +495,7 @@ static uchar usbDeviceRead(uchar *data, uchar len)
             uchar i = len, *r = usbMsgPtr;
             if(usbMsgFlags & USB_FLG_MSGPTR_IS_ROM){    /* ROM data */
                 do{
-                    uchar c = PRG_RDB(r);    /* assign to char size variable to enforce byte ops */
+                    uchar c = USB_READ_FLASH(r);    /* assign to char size variable to enforce byte ops */
                     *data++ = c;
                     r++;
                 }while(--i);
