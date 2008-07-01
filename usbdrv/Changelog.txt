@@ -239,3 +239,5 @@ Scroll down to the bottom to see the most recent changes.
   - Added usbconfig.h option "USB_CFG_CHECK_DATA_TOGGLING".
   - New header "usbportability.h" prepares ports to other development
     environments.
+  - Long transfers (above 254 bytes) did not work when usbFunctionRead() was
+    used to supply the data. Fixed this bug. [Thanks to Alexander Neumann!]
