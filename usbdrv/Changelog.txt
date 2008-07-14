@@ -241,3 +241,6 @@ Scroll down to the bottom to see the most recent changes.
     environments.
   - Long transfers (above 254 bytes) did not work when usbFunctionRead() was
     used to supply the data. Fixed this bug. [Thanks to Alexander Neumann!]
+  - In hiddata.c (example code for sending/receiving data over HID), use
+    USB_RECIP_DEVICE instead of USB_RECIP_INTERFACE for control transfers so
+    that we need not claim the interface. 
