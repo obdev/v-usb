@@ -586,7 +586,7 @@ uchar   i;
             usbBuildTxBlock();
         }
     }
-    for(i = 10; i > 0; i--){
+    for(i = 20; i > 0; i--){
         uchar usbLineStatus = USBIN & USBMASK;
         if(usbLineStatus != 0)  /* SE0 has ended */
             break;

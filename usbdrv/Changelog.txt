@@ -243,4 +243,6 @@ Scroll down to the bottom to see the most recent changes.
     used to supply the data. Fixed this bug. [Thanks to Alexander Neumann!]
   - In hiddata.c (example code for sending/receiving data over HID), use
     USB_RECIP_DEVICE instead of USB_RECIP_INTERFACE for control transfers so
-    that we need not claim the interface. 
+    that we need not claim the interface.
+  - in usbPoll() loop 20 times polling for RESET state instead of 10 times.
+    This accounts for the higher clock rates we now support.
