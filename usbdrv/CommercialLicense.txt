@@ -1,5 +1,5 @@
 AVR-USB Driver Software License Agreement
-Version 2008-04-15
+Version 2008-10-07
 
 THIS LICENSE AGREEMENT GRANTS YOU CERTAIN RIGHTS IN A SOFTWARE. YOU CAN
 ENTER INTO THIS AGREEMENT AND ACQUIRE THE RIGHTS OUTLINED BELOW BY PAYING
@@ -26,11 +26,11 @@ and host side software examples and libraries.
 code of AVR-USB.
 
 2.2 Distribution and Use. OBJECTIVE DEVELOPMENT grants you the
-non-exclusive right to use and distribute AVR-USB with your hardware
+non-exclusive right to use, copy and distribute AVR-USB with your hardware
 product(s), restricted by the limitations in section 3 below.
 
 2.3 Modifications. OBJECTIVE DEVELOPMENT grants you the right to modify
-your copy of AVR-USB according to your needs.
+the source code and your copy of AVR-USB according to your needs.
 
 2.4 USB IDs. OBJECTIVE DEVELOPMENT grants you the exclusive rights to use
 USB Product ID(s) sent to you in e-mail after receiving your payment in
