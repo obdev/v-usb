@@ -289,12 +289,12 @@ macro POP_STANDARD ; 16 cycles
     pop     x1
     pop     shift
     pop     YH
-endm
+    endm
 macro POP_RETI     ; 5 cycles
     pop     YL
     out     SREG, YL
     pop     YL
-endm
+    endm
 
 #include "asmcommon.inc"
 

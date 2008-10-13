@@ -334,12 +334,12 @@ macro POP_STANDARD ; 16 cycles
     pop     shift
     pop     YH
     pop     r0
-endm
+    endm
 macro POP_RETI     ; 5 cycles
     pop     YL
     out     SREG, YL
     pop     YL
-endm
+    endm
 
 #include "asmcommon.inc"
 

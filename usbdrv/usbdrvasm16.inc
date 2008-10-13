@@ -208,13 +208,13 @@ macro POP_STANDARD ; 14 cycles
     pop     x1
     pop     shift
     pop     bitcnt
-endm
+    endm
 macro POP_RETI     ; 7 cycles
     pop     YH
     pop     YL
     out     SREG, YL
     pop     YL
-endm
+    endm
 
 #include "asmcommon.inc"
 
