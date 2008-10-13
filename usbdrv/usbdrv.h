@@ -388,7 +388,9 @@ extern volatile schar   usbRxLen;
  */
 #define USB_PROP_IS_DYNAMIC     (1 << 14)
 /* If this property is set for a descriptor, usbFunctionDescriptor() will be
- * used to obtain the particular descriptor.
+ * used to obtain the particular descriptor. Data directly returned via
+ * usbMsgPtr are FLASH data by default, combine (OR) with USB_PROP_IS_RAM to
+ * return RAM data.
  */
 #define USB_PROP_IS_RAM         (1 << 15)
 /* If this property is set for a descriptor, the data is read from RAM
