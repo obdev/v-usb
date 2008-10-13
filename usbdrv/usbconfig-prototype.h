@@ -251,7 +251,9 @@ section at the end of this file).
  * no properties are defined or if they are 0, the default descriptor is used.
  * Possible properties are:
  *   + USB_PROP_IS_DYNAMIC: The data for the descriptor should be fetched
- *     at runtime via usbFunctionDescriptor().
+ *     at runtime via usbFunctionDescriptor(). If the usbMsgPtr mechanism is
+ *     used, the data is in FLASH by default. Add property USB_PROP_IS_RAM if
+ *     you want RAM pointers.
  *   + USB_PROP_IS_RAM: The data returned by usbFunctionDescriptor() or found
  *     in static memory is in RAM, not in flash memory.
  *   + USB_PROP_LENGTH(len): If the data is in static memory (RAM or flash),
@@ -283,6 +285,12 @@ section at the end of this file).
  *   USB_CFG_DESCR_PROPS_HID_REPORT
  *   USB_CFG_DESCR_PROPS_UNKNOWN (for all descriptors not handled by the driver)
  *
+ * Note about string descriptors: String descriptors are not just strings, they
+ * are Unicode strings prefixed with a 2 byte header. Example:
+ * int  serialNumberDescriptor[] = {
+ *     USB_STRING_DESCRIPTOR_HEADER(6),
+ *     'S', 'e', 'r', 'i', 'a', 'l'
+ * };
  */
 
 #define USB_CFG_DESCR_PROPS_DEVICE                  0
