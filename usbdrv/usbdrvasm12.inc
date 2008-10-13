@@ -250,12 +250,12 @@ macro POP_STANDARD ; 12 cycles
     pop     x1
     pop     shift
     pop     YH
-endm
+    endm
 macro POP_RETI     ; 5 cycles
     pop     YL
     out     SREG, YL
     pop     YL
-endm
+    endm
 
 #include "asmcommon.inc"
 
@@ -263,25 +263,16 @@ endm
 ; Transmitting data
 ;----------------------------------------------------------------------------
 
-bitstuff0:                  ;1 (for branch taken)
-    eor     x1, x4          ;1
-    ldi     x2, 0           ;1
-    out     USBOUT, x1      ;1 <-- out
-    rjmp    didStuff0       ;2 branch back 2 cycles earlier
-bitstuff1:                  ;1 (for branch taken)
-    eor     x1, x4          ;1
-    rjmp    didStuff1       ;2 we know that C is clear, jump back to do OUT and ror 0 into x2
-bitstuff2:                  ;1 (for branch taken)
-    eor     x1, x4          ;1
-    rjmp    didStuff2       ;2 jump back 4 cycles earlier and do out and ror 0 into x2
-bitstuff3:                  ;1 (for branch taken)
-    eor     x1, x4          ;1
-    rjmp    didStuff3       ;2 jump back earlier and ror 0 into x2
-bitstuff4:                  ;1 (for branch taken)
-    eor     x1, x4          ;1
-    ldi     x2, 0           ;1
-    out     USBOUT, x1      ;1 <-- out
-    rjmp    didStuff4       ;2 jump back 2 cycles earlier
+txByteLoop:
+txBitloop:
+stuffN1Delay:                   ;     [03]
+    ror     shift               ;[-5] [11] [59]
+    brcc    doExorN1            ;[-4]      [60]
+    subi    x4, 1               ;[-3]
+    brne    commonN1            ;[-2]
+    lsl     shift               ;[-1] compensate ror after rjmp stuffDelay
+    nop                         ;[00] stuffing consists of just waiting 8 cycles
+    rjmp    stuffN1Delay        ;[01] after ror, C bit is reliably clear
 
 sendNakAndReti:                 ;0 [-19] 19 cycles until SOP
     ldi     x3, USBPID_NAK      ;1 [-18]
@@ -306,122 +297,91 @@ usbSendX3:                      ;0 [-16]
 ;usbSend:
 ;pointer to data in 'Y'
 ;number of bytes in 'cnt' -- including sync byte
-;uses: x1...x4, shift, cnt, Y
+;uses: x1...x3, shift, cnt, Y [x1 = mirror USBOUT, x2 = USBMASK, x3 = bitstuff cnt]
 ;Numbers in brackets are time since first bit of sync pattern is sent
-usbSendAndReti:             ;0 [-13] timing: 13 cycles until SOP
-    in      x2, USBDDR      ;1 [-12]
-    ori     x2, USBMASK     ;1 [-11]
-    sbi     USBOUT, USBMINUS;2 [-9] prepare idle state; D+ and D- must have been 0 (no pullups)
-    in      x1, USBOUT      ;1 [-8] port mirror for tx loop
-    out     USBDDR, x2      ;1 [-7] <- acquire bus
-; need not init x2 (bitstuff history) because sync starts with 0
-    push    x4              ;2 [-5]
-    ldi     x4, USBMASK     ;1 [-4] exor mask
-    ldi     shift, 0x80     ;1 [-3] sync byte is first byte sent
-txLoop:                     ;       [62]
-    sbrs    shift, 0        ;1 [-2] [62]
-    eor     x1, x4          ;1 [-1] [63]
-    out     USBOUT, x1      ;1 [0] <-- out bit 0
-    ror     shift           ;1 [1]
-    ror     x2              ;1 [2]
-didStuff0:
-    cpi     x2, 0xfc        ;1 [3]
-    brsh    bitstuff0       ;1 [4]
-    sbrs    shift, 0        ;1 [5]
-    eor     x1, x4          ;1 [6]
-    ror     shift           ;1 [7]
-didStuff1:
-    out     USBOUT, x1      ;1 [8] <-- out bit 1
-    ror     x2              ;1 [9]
-    cpi     x2, 0xfc        ;1 [10]
-    brsh    bitstuff1       ;1 [11]
-    sbrs    shift, 0        ;1 [12]
-    eor     x1, x4          ;1 [13]
-    ror     shift           ;1 [14]
-didStuff2:
-    ror     x2              ;1 [15]
-    out     USBOUT, x1      ;1 [16] <-- out bit 2
-    cpi     x2, 0xfc        ;1 [17]
-    brsh    bitstuff2       ;1 [18]
-    sbrs    shift, 0        ;1 [19]
-    eor     x1, x4          ;1 [20]
-    ror     shift           ;1 [21]
-didStuff3:
-    ror     x2              ;1 [22]
-    cpi     x2, 0xfc        ;1 [23]
-    out     USBOUT, x1      ;1 [24] <-- out bit 3
-    brsh    bitstuff3       ;1 [25]
-    nop2                    ;2 [27]
-    ld      x3, y+          ;2 [29]
-    sbrs    shift, 0        ;1 [30]
-    eor     x1, x4          ;1 [31]
-    out     USBOUT, x1      ;1 [32] <-- out bit 4
-    ror     shift           ;1 [33]
-    ror     x2              ;1 [34]
-didStuff4:
-    cpi     x2, 0xfc        ;1 [35]
-    brsh    bitstuff4       ;1 [36]
-    sbrs    shift, 0        ;1 [37]
-    eor     x1, x4          ;1 [38]
-    ror     shift           ;1 [39]
-didStuff5:
-    out     USBOUT, x1      ;1 [40] <-- out bit 5
-    ror     x2              ;1 [41]
-    cpi     x2, 0xfc        ;1 [42]
-    brsh    bitstuff5       ;1 [43]
-    sbrs    shift, 0        ;1 [44]
-    eor     x1, x4          ;1 [45]
-    ror     shift           ;1 [46]
-didStuff6:
-    ror     x2              ;1 [47]
-    out     USBOUT, x1      ;1 [48] <-- out bit 6
-    cpi     x2, 0xfc        ;1 [49]
-    brsh    bitstuff6       ;1 [50]
-    sbrs    shift, 0        ;1 [51]
-    eor     x1, x4          ;1 [52]
-    ror     shift           ;1 [53]
-didStuff7:
-    ror     x2              ;1 [54]
-    cpi     x2, 0xfc        ;1 [55]
-    out     USBOUT, x1      ;1 [56] <-- out bit 7
-    brsh    bitstuff7       ;1 [57]
-    mov     shift, x3       ;1 [58]
-    dec     cnt             ;1 [59]
-    brne    txLoop          ;1/2 [60/61]
+usbSendAndReti:
+    in      x2, USBDDR          ;[-12] 12 cycles until SOP
+    ori     x2, USBMASK         ;[-11]
+    sbi     USBOUT, USBMINUS    ;[-10] prepare idle state; D+ and D- must have been 0 (no pullups)
+    out     USBDDR, x2          ;[-8] <--- acquire bus
+    in      x1, USBOUT          ;[-7] port mirror for tx loop
+    ldi     shift, 0x40         ;[-6] sync byte is first byte sent (we enter loop after ror)
+    ldi     x2, USBMASK         ;[-5]
+    push    x4                  ;[-4]
+doExorN1:
+    eor     x1, x2              ;[-2] [06] [62]
+    ldi     x4, 6               ;[-1] [07] [63]
+commonN1:
+stuffN2Delay:
+    out     USBOUT, x1          ;[00] [08] [64] <--- set bit
+    ror     shift               ;[01]
+    brcc    doExorN2            ;[02]
+    subi    x4, 1               ;[03]
+    brne    commonN2            ;[04]
+    lsl     shift               ;[05] compensate ror after rjmp stuffDelay
+    rjmp    stuffN2Delay        ;[06] after ror, C bit is reliably clear
+doExorN2:
+    eor     x1, x2              ;[04] [12]
+    ldi     x4, 6               ;[05] [13]
+commonN2:
+    nop                         ;[06] [14]
+    subi    cnt, 171            ;[07] [15]
+    out     USBOUT, x1          ;[08] [16] <--- set bit
+    brcs    txBitloop           ;[09]      [25] [41]
+
+stuff6Delay:
+    ror     shift               ;[42] [50]
+    brcc    doExor6             ;[43]
+    subi    x4, 1               ;[44]
+    brne    common6             ;[45]
+    lsl     shift               ;[46] compensate ror after rjmp stuffDelay
+    nop                         ;[47] stuffing consists of just waiting 8 cycles
+    rjmp    stuff6Delay         ;[48] after ror, C bit is reliably clear
+doExor6:
+    eor     x1, x2              ;[45] [53]
+    ldi     x4, 6               ;[46]
+common6:
+stuff7Delay:
+    ror     shift               ;[47] [55]
+    out     USBOUT, x1          ;[48] <--- set bit
+    brcc    doExor7             ;[49]
+    subi    x4, 1               ;[50]
+    brne    common7             ;[51]
+    lsl     shift               ;[52] compensate ror after rjmp stuffDelay
+    rjmp    stuff7Delay         ;[53] after ror, C bit is reliably clear
+doExor7:
+    eor     x1, x2              ;[51] [59]
+    ldi     x4, 6               ;[52]
+common7:
+    ld      shift, y+           ;[53]
+    tst     cnt                 ;[55]
+    out     USBOUT, x1          ;[56] <--- set bit
+    brne    txByteLoop          ;[57]
+
 ;make SE0:
-    cbr     x1, USBMASK     ;1 [61] prepare SE0 [spec says EOP may be 15 to 18 cycles]
-    pop     x4              ;2 [63]
-;brackets are cycles from start of SE0 now
-    out     USBOUT, x1      ;1 [0] <-- out SE0 -- from now 2 bits = 16 cycles until bus idle
+    cbr     x1, USBMASK         ;[58] prepare SE0 [spec says EOP may be 15 to 18 cycles]
+    lds     x2, usbNewDeviceAddr;[59]
+    lsl     x2                  ;[61] we compare with left shifted address
+    subi    YL, 2 + 20          ;[62] Only assign address on data packets, not ACK/NAK in x3
+    sbci    YH, 0               ;[63]
+    out     USBOUT, x1          ;[00] <-- out SE0 -- from now 2 bits = 16 cycles until bus idle
 ;2006-03-06: moved transfer of new address to usbDeviceAddr from C-Code to asm:
 ;set address only after data packet was sent, not after handshake
-    lds     x2, usbNewDeviceAddr;2 [2]
-    lsl     x2;             ;1 [3] we compare with left shifted address
-    subi    YL, 20 + 2      ;1 [4] Only assign address on data packets, not ACK/NAK in x3
-    sbci    YH, 0           ;1 [5]
-    breq    skipAddrAssign  ;2 [7]
-    sts     usbDeviceAddr, x2; if not skipped: SE0 is one cycle longer
+    breq    skipAddrAssign      ;[01]
+    sts     usbDeviceAddr, x2   ; if not skipped: SE0 is one cycle longer
 skipAddrAssign:
 ;end of usbDeviceAddress transfer
-    ldi     x2, 1<<USB_INTR_PENDING_BIT;1 [8] int0 occurred during TX -- clear pending flag
-    USB_STORE_PENDING(x2)   ;1 [9]
-    ori     x1, USBIDLE     ;1 [10]
-    in      x2, USBDDR      ;1 [11]
-    cbr     x2, USBMASK     ;1 [12] set both pins to input
-    mov     x3, x1          ;1 [13]
-    cbr     x3, USBMASK     ;1 [14] configure no pullup on both pins
-    out     USBOUT, x1      ;1 [15] <-- out J (idle) -- end of SE0 (EOP signal)
-    out     USBDDR, x2      ;1 [16] <-- release bus now
-    out     USBOUT, x3      ;1 [17] <-- ensure no pull-up resistors are active
+    ldi     x2, 1<<USB_INTR_PENDING_BIT;[03] int0 occurred during TX -- clear pending flag
+    USB_STORE_PENDING(x2)       ;[04]
+    ori     x1, USBIDLE         ;[05]
+    in      x2, USBDDR          ;[06]
+    cbr     x2, USBMASK         ;[07] set both pins to input
+    mov     x3, x1              ;[08]
+    cbr     x3, USBMASK         ;[09] configure no pullup on both pins
+    pop     x4                  ;[10]
+    nop2                        ;[12]
+    nop2                        ;[14]
+    out     USBOUT, x1          ;[16] <-- out J (idle) -- end of SE0 (EOP signal)
+    out     USBDDR, x2          ;[17] <-- release bus now
+    out     USBOUT, x3          ;[18] <-- ensure no pull-up resistors are active
     rjmp    doReturn
-
-bitstuff5:                  ;1 (for branch taken)
-    eor     x1, x4          ;1
-    rjmp    didStuff5       ;2 same trick as in bitstuff1...
-bitstuff6:                  ;1 (for branch taken)
-    eor     x1, x4          ;1
-    rjmp    didStuff6       ;2 same trick as above...
-bitstuff7:                  ;1 (for branch taken)
-    eor     x1, x4          ;1
-    rjmp    didStuff7       ;2 same trick as above...
-
