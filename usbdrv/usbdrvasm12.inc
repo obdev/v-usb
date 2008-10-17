@@ -297,8 +297,8 @@ usbSendX3:                      ;0 [-16]
 ;usbSend:
 ;pointer to data in 'Y'
 ;number of bytes in 'cnt' -- including sync byte
-;uses: x1...x3, shift, cnt, Y [x1 = mirror USBOUT, x2 = USBMASK, x3 = bitstuff cnt]
-;Numbers in brackets are time since first bit of sync pattern is sent
+;uses: x1...x2, x4, shift, cnt, Y [x1 = mirror USBOUT, x2 = USBMASK, x4 = bitstuff cnt]
+;Numbers in brackets are time since first bit of sync pattern is sent (start of instruction)
 usbSendAndReti:
     in      x2, USBDDR          ;[-12] 12 cycles until SOP
     ori     x2, USBMASK         ;[-11]
@@ -325,7 +325,7 @@ doExorN2:
     ldi     x4, 6               ;[05] [13]
 commonN2:
     nop                         ;[06] [14]
-    subi    cnt, 171            ;[07] [15]
+    subi    cnt, 171            ;[07] [15] trick: (3 * 171) & 0xff = 1
     out     USBOUT, x1          ;[08] [16] <--- set bit
     brcs    txBitloop           ;[09]      [25] [41]
 
