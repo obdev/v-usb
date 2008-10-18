@@ -34,8 +34,8 @@ usbDeviceConnect() and usbDeviceDisconnect() further down in this file.
 
 Please adapt the values in usbconfig.h according to your hardware!
 
-The device MUST be clocked at exactly 12 MHz, 15 MHz or 16 MHz
-or at 16.5 MHz +/- 1%. See usbconfig-prototype.h for details.
+The device MUST be clocked at exactly 12 MHz, 15 MHz, 16 MHz or 20 MHz
+or at 12.8 MHz resp. 16.5 MHz +/- 1%. See usbconfig-prototype.h for details.
 
 
 Limitations:
