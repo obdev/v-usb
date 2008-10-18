@@ -380,7 +380,7 @@ unstuff0c:
     andi    fix, ~(1 << 0)      ;[07]
     ifioclr USBIN, USBMINUS     ;[00]
     ifioset USBIN, USBPLUS      ;[01]
-    rjmp    bit0IsClr           ;[02] executed if first expr false or second true
+    rjmp    bit0IsSet           ;[02] executed if first expr false or second true
     rjmp    se0AndStore         ;[03] executed only if both bits 0
 bit0IsSet:
     ifrclr  phase, USBMINUS     ;[04] check phase only if D- changed
