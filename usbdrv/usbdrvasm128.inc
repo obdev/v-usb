@@ -1,8 +1,36 @@
+/* Name: usbdrvasm128.inc
+ * Project: AVR USB driver
+ * Author: Christian Starkjohann
+ * Creation Date: 2008-10-11
+ * Tabsize: 4
+ * Copyright: (c) 2008 by OBJECTIVE DEVELOPMENT Software GmbH
+ * License: GNU GPL v2 (see License.txt) or proprietary (CommercialLicense.txt)
+ * This Revision: $Id$
+ */
 
-/*****************************************************************************
+/* Do not link this file! Link usbdrvasm.S instead, which includes the
+ * appropriate implementation!
+ */
+
+/*
+General Description:
+This file is the 12.8 MHz version of the USB driver. It is intended for use
+with the internal RC oscillator. Although 12.8 MHz is outside the guaranteed
+calibration range of the oscillator, almost all AVRs can reach this frequency.
+This version contains a phase locked loop in the receiver routine to cope with
+slight clock rate deviations of up to +/- 1%.
+
+See usbdrv.h for a description of the entire driver.
+
+Since almost all of this code is timing critical, don't change unless you
+really know what you are doing! Many parts require not only a maximum number
+of CPU cycles, but even an exact number of cycles!
+
+Implementation notes:
+======================
 min frequency: 67 cycles for 8 bit -> 12.5625 MHz
-max frequency: 69.666 cycles for 8 bit -> 13.0625 MHz
-nominal frequency: 12.81 MHz ( = sqrt(min * max))
+max frequency: 69.286 cycles for 8 bit -> 12.99 MHz
+nominal frequency: 12.77 MHz ( = sqrt(min * max))
 
 sampling positions: (next even number in range [+/- 0.5])
 cycle index range: 0 ... 66
@@ -10,19 +38,18 @@ bits:
 .5, 8.875, 17.25, 25.625, 34, 42.375, 50.75, 59.125
 [0/1], [9], [17], [25/+26], [34], [+42/43], [51], [59]
 
-
 bit number:     0   1   2   3   4   5   6   7
 spare cycles    1   2   1   2   1   1   1   0
 
 operations to perform:      duration cycle
                             ----------------
-    eor     x3, shift           1 -> 00
+    eor     fix, shift          1 -> 00
     andi    phase, USBMASK      1 -> 08
     breq    se0                 1 -> 16 (moved to 11)
-    st      y+, x3              2 -> 24, 25
-    mov     x3, x4              1 -> 33
-    ser     x4                  1 -> 41
-    dec     cnt                 1 -> 49
+    st      y+, data            2 -> 24, 25
+    mov     data, fix           1 -> 33
+    ser     data                1 -> 41
+    subi    cnt, 1              1 -> 49
     brcs    overflow            1 -> 50
 
 layout of samples and operations:
@@ -41,12 +68,20 @@ layout of samples and operations:
 *****************************************************************************/
 
 /* we prefer positive expressions (do if condition) instead of negative
- * (skip if condition), therefore use defines for skip instructions
+ * (skip if condition), therefore use defines for skip instructions:
  */
 #define ifioclr sbis
 #define ifioset sbic
 #define ifrclr  sbrs
 #define ifrset  sbrc
+
+/* The registers "fix" and "data" swap their meaning during the loop. Use
+ * defines to keep their name constant.
+ */
+#define fix     x2
+#define data    x1
+#undef phase        /* phase has a default definition to x4 */
+#define phase   x3
 
 
 USB_INTR_VECTOR:
@@ -81,9 +116,6 @@ waitForK:
     sts     usbSofCount, YL
 #endif  /* USB_COUNT_SOF */
     rjmp    sofError
-
-#undef phase
-#define phase   x3
 
 foundK:
 ;{3, 5} after falling D- edge, average delay: 4 cycles [we want 4 for center sampling]
@@ -125,7 +157,7 @@ haveTwoBitsK:
     ifioset USBIN, USBMINUS     ;[17] <--- bit 2
     ori     data, 3<<2          ;[18] store in bit 2 AND bit 3
     eor     shift, data         ;[19] do nrzi decoding
-    andi    data, 1<<USBMINUS   ;[20]
+    andi    data, 1<<3          ;[20]
     in      phase, USBIN        ;[21] <- phase
     brne    jumpToEntryAfterSet ;[22] if USBMINS at bit 3 was 1
     nop                         ;[23]
@@ -492,7 +524,7 @@ txBitloop:
 stuffN1Delay:                   ;     [03]
     ror     shift               ;[-5] [11] [63]
     brcc    doExorN1            ;[-4]      [64]
-    subi    x4, 1               ;[-3]
+    subi    x3, 1               ;[-3]
     brne    commonN1            ;[-2]
     lsl     shift               ;[-1] compensate ror after rjmp stuffDelay
     nop                         ;[00] stuffing consists of just waiting 8 cycles
@@ -607,6 +639,8 @@ skipAddrAssign:
     out     USBDDR, x2          ;[17] <-- release bus now
     out     USBOUT, x3          ;[18] <-- ensure no pull-up resistors are active
     rjmp    doReturn
+
+
 
 /*****************************************************************************
 The following PHP script generates a code skeleton for the receiver routine:
