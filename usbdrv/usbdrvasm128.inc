@@ -22,6 +22,19 @@ slight clock rate deviations of up to +/- 1%.
 
 See usbdrv.h for a description of the entire driver.
 
+LIMITATIONS
+===========
+Although it may seem very handy to save the crystal and use the internal
+RC oscillator of the CPU, this method (and this module) has some serious
+limitations:
+(1) The guaranteed calibration range of the oscillator is only 8.1 MHz.
+They typical range is 14.5 MHz and most AVRs can actually reach this rate.
+(2) Writing EEPROM and Flash may be unreliable (short data lifetime) since
+the write procedure is timed from the RC oscillator.
+(3) End Of Packet detection is between bit 0 and bit 1 where the EOP condition
+may not be reliable when a hub is used. It should be in bit 1.
+(4) Code size is much larger than that of the other modules.
+
 Since almost all of this code is timing critical, don't change unless you
 really know what you are doing! Many parts require not only a maximum number
 of CPU cycles, but even an exact number of cycles!
