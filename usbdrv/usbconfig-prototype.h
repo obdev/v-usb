@@ -156,6 +156,24 @@ section at the end of this file).
  * counts SOF packets. This feature requires that the hardware interrupt is
  * connected to D- instead of D+.
  */
+/* #ifdef __ASSEMBLER__
+ * macro myAssemblerMacro
+ *     in      YL, TCNT0
+ *     sts     timer0Snapshot, YL
+ *     endm
+ * #endif
+ * #define USB_SOF_HOOK                    myAssemblerMacro
+ * This macro (if defined) is executed in the assembler module when a
+ * Start Of Frame condition is detected. It is recommended to define it to
+ * the name of an assembler macro which is defined here as well so that more
+ * than one assembler instruction can be used. The macro may use registers
+ * YL and YH and SREG.
+ * What can you do with this hook? Since the SOF signal occurs exactly every
+ * 1 ms (unless the host is in sleep mode), you can use it to tune OSCCAL in
+ * designs running on the internal RC oscillator.
+ * Please note that Start Of Frame detection works only if D- is wired to the
+ * interrupt, not D+. THIS IS DIFFERENT THAN MOST EXAMPLES!
+ */
 #define USB_CFG_CHECK_DATA_TOGGLING     0
 /* define this macro to 1 if you want to filter out duplicate data packets
  * sent by the host. Duplicates occur only as a consequence of communication

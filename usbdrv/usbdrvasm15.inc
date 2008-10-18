@@ -70,6 +70,9 @@ waitForK:			 ;-
     inc     YL
     sts     usbSofCount, YL
 #endif  /* USB_COUNT_SOF */
+#ifdef USB_SOF_HOOK
+    USB_SOF_HOOK
+#endif
     rjmp    sofError
 ;------------------------------------------------------------------------------
 ; {3, 5} after falling D- edge, average delay: 4 cycles [we want 5 for 
