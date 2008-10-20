@@ -17,11 +17,6 @@
  * signal (a single SE0 bit) repeating every millisecond immediately after
  * a USB RESET. We first do a binary search for the OSCCAL value and then
  * optimize this value with a neighboorhod search.
- * This algorithm may also be used to calibrate the RC oscillator directly to
- * 12 MHz (no PLL involved, can therefore be used on almost ALL AVRs), but this
- * is wide outside the spec for the OSCCAL value and the required precision for
- * the 12 MHz clock! Use the RC oscillator calibrated to 12 MHz for
- * experimental purposes only!
  */
 void    calibrateOscillator(void)
 {

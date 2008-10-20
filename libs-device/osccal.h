@@ -17,7 +17,17 @@ immediately after a USB RESET condition. Timing is done by counting CPU
 cycles, so all interrupts must be disabled while the calibration runs. For
 low level timing measurements, usbMeasureFrameLength() is called. This
 function must be enabled in usbconfig.h by defining
-USB_CFG_HAVE_MEASURE_FRAME_LENGTH to 1.
+USB_CFG_HAVE_MEASURE_FRAME_LENGTH to 1. It is also recommended to call
+calibrateOscillator() from the reset hook in usbconfig.h:
+
+#ifndef __ASSEMBLER__
+#include <avr/interrupt.h>  /* for sei() */
+extern void calibrateOscillator(void);
+#endif
+#define USB_RESET_HOOK(resetStarts)  if(!resetStarts){cli(); calibrateOscillator(); sei();}
+
+This routine is an alternative to the continuous synchronization described
+in osctune.h.
 
 Algorithm used:
 calibrateOscillator() first does a binary search in the OSCCAL register for
@@ -33,9 +43,9 @@ optimum value is far below 192. It may therefore exceed the allowed clock
 frequency of the CPU in low voltage designs!
 Precision depends on the OSCCAL vs. frequency dependency of the oscillator.
 Typical precision for an ATMega168 (derived from the OSCCAL vs. F_RC diagram
-in the data sheet) should be in the range of 0.4%. Only the 16.5 MHz version
-of AVR-USB (with built-in receiver PLL) can tolerate this deviation! All other
-frequency modules require at least 0.3% precision.
+in the data sheet) should be in the range of 0.4%. Only the 12.8 MHz and
+16.5 MHz versions of AVR-USB (with built-in receiver PLL) can tolerate this
+deviation! All other frequency modules require at least 0.2% precision.
 */
 
 #ifndef __OSCCAL_H_INCLUDED__
