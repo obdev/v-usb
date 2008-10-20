@@ -648,9 +648,8 @@ skipAddrAssign:
     cbr     x2, USBMASK         ;[07] set both pins to input
     mov     x3, x1              ;[08]
     cbr     x3, USBMASK         ;[09] configure no pullup on both pins
-    nop2                        ;[10]
-    nop2                        ;[12]
-    nop2                        ;[14]
+    lpm                         ;[10]
+    lpm                         ;[13]
     out     USBOUT, x1          ;[16] <-- out J (idle) -- end of SE0 (EOP signal)
     out     USBDDR, x2          ;[17] <-- release bus now
     out     USBOUT, x3          ;[18] <-- ensure no pull-up resistors are active
