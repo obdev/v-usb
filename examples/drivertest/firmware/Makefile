@@ -13,7 +13,7 @@ FUSE_L  = 0x94
 FUSE_H  = 0xc9
 AVRDUDE = avrdude -c stk500v2 -P avrdoper -p $(DEVICE) # edit this line for your programmer
 
-CFLAGS  = -Iusbdrv -I. -DDEBUG_LEVEL=0 -DTUNE_OSCCAL=0 -DCALIBRATE_OSCCAL=1
+CFLAGS  = -Iusbdrv -I. -DDEBUG_LEVEL=0 -DTUNE_OSCCAL=1 -DCALIBRATE_OSCCAL=0
 OBJECTS = usbdrv/usbdrv.o usbdrv/usbdrvasm.o usbdrv/oddebug.o main.o
 
 COMPILE = avr-gcc -Wall -Os -DF_CPU=$(F_CPU) $(CFLAGS) -mmcu=$(DEVICE)
