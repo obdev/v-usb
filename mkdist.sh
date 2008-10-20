@@ -54,6 +54,7 @@ fi
 
 if [ "$isPublic" = yes ]; then
 (
+    currentGcc=`avr-gcc-select | awk '{print $NF}'`
     cd tests
     for i in 3 4; do
         avr-gcc-select $i >/dev/null 2>&1
@@ -64,6 +65,7 @@ if [ "$isPublic" = yes ]; then
         svn add sizes-reference/$file
         svn commit -m "Added sizes file for this version" sizes-reference/$file
     done
+    avr-gcc-select $currentGcc
 )
 fi
 
