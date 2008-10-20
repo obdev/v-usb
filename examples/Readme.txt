@@ -67,11 +67,11 @@ http://www.obdev.at/goto.php?t=avrusb-wiki.
 To mention just a few:
 
 Using RC oscillator for system clock
-  The 16.5 MHz module of AVR-USB has been designed to cope with clock rate
-  deviations up to 1%. This allows an RC oscillator to be used. Since the
-  AVR's RC oscillator has a factory precision of only 10%, it must be
-  calibrated to an external reference. The EasyLogger example shows how this
-  is done.
+  The 12.8 MHz and 16.5 MHz modules of AVR-USB have been designed to cope
+  with clock rate deviations up to 1%. This allows an RC oscillator to be
+  used. Since the AVR's RC oscillator has a factory precision of only 10%,
+  it must be calibrated to an external reference. The EasyLogger example
+  shows how this can be done.
 
 Dynamically generated descriptors
   Sometimes you want to implement different typtes of USB device depending

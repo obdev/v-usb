@@ -47,9 +47,9 @@ The driver consists of the following files:
 
 CPU CORE CLOCK FREQUENCY
 ========================
-We supply assembler modules for clock frequencies of 12 MHz, 15 MHz, 16 MHz and
-16.5 MHz. Other clock rates are not supported. The actual clock rate must be
-configured in usbdrv.h unless you use the default 12 MHz.
+We supply assembler modules for clock frequencies of 12 MHz, 12.8 MHz, 15 MHz,
+16 MHz, 16.5 MHz and 20 MHz. Other clock rates are not supported. The actual
+clock rate must be configured in usbdrv.h unless you use the default 12 MHz.
 
 12 MHz Clock
 This is the traditional clock rate of AVR-USB because it's the lowest clock
@@ -67,15 +67,15 @@ if you need the slightly higher clock rate for performance reasons. Since
 16 MHz is not divisible by the USB low speed bit clock of 1.5 MHz, the code
 is somewhat tricky and has to insert a leap cycle every third byte.
 
-16.5 MHz Clock
-The assembler module for this clock rate differs from the other modules because
-it has been built for an RC oscillator with only 1% precision. The receiver
-code inserts leap cycles to compensate for clock deviations. 1% is also the
-precision which can be achieved by calibrating the internal RC oscillator of
-the AVR. Please note that only AVRs with internal 64 MHz PLL oscillator can be
-used since the 8 MHz RC oscillator cannot be trimmed up to 16.5 MHz. This
-includes the very popular ATTiny25, ATTiny45, ATTiny85 series as well as the
-ATTiny26.
+12.8 MHz and 16.5 MHz Clock
+The assembler modules for these clock rates differ from the other modules
+because they have been built for an RC oscillator with only 1% precision. The
+receiver code inserts leap cycles to compensate for clock deviations. 1% is
+also the precision which can be achieved by calibrating the internal RC
+oscillator of the AVR. Please note that only AVRs with internal 64 MHz PLL
+oscillator can reach 16.5 MHz with the RC oscillator. This includes the very
+popular ATTiny25, ATTiny45, ATTiny85 series as well as the ATTiny26. Almost
+all AVRs can reach 12.8 MHz, although this is outside the specified range.
 
 See the EasyLogger example at http://www.obdev.at/avrusb/easylogger.html for
 code which calibrates the RC oscillator based on the USB frame clock.
