@@ -43,8 +43,8 @@ tiny45-rc.png and tiny45-rc.sch (EAGLE schematics):
   This is mostly an example for connecting an 8 pin device using the internal
   RC oscillator for system clock. This example uses series diodes to limit
   the supply, but you may choose any other method. Please note that you must
-  choose a clock rate of 16.5 MHz because only the receiver module for this
-  frequency has a PLL to allow higher clock rate tolerances.
+  choose a clock rate of 12.8 or 16.5 MHz because only the receiver modules
+  for these frequencies have a PLL to allow higher clock rate tolerances.
 
 
 GENERAL DESIGN NOTES
@@ -53,6 +53,10 @@ All examples have D+ on hardware interrupt INT0 because this is the highest
 priority interrupt on AVRs. You may use other hardware interrupts (and
 configure the options at the end of usbconfig.h accordingly) if you make sure
 that no higher priority interrupt is used.
+
+If you use USB_SOF_HOOK or USB_COUNT_SOF in usbconfig.h, you must wire D- to
+the interrupt instead. This way the interrupt is triggered on USB Start Of
+Frame pulses as well.
 
 Most examples have a 1M pull-down resistor at D+. This pull-up ensures that
 in self-powered designs no interrupts occur while USB is not connected. You
