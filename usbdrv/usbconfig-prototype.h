@@ -167,7 +167,7 @@ section at the end of this file).
  * Start Of Frame condition is detected. It is recommended to define it to
  * the name of an assembler macro which is defined here as well so that more
  * than one assembler instruction can be used. The macro may use registers
- * YL and YH and SREG.
+ * YL and SREG.
  * What can you do with this hook? Since the SOF signal occurs exactly every
  * 1 ms (unless the host is in sleep mode), you can use it to tune OSCCAL in
  * designs running on the internal RC oscillator.
