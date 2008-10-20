@@ -107,6 +107,21 @@ uchar   i;
     for(;;){                /* main event loop */
         wdt_reset();
         usbPoll();
+        cli();              /* disable interrupts for some cycles, use other cli as nop */
+        cli();
+        cli();
+        cli();
+        cli();
+        cli();
+        cli();
+        cli();
+        cli();
+        cli();
+        cli();
+        cli();
+        cli();
+        cli();
+        sei();
     }
     return 0;
 }
