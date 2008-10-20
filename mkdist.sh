@@ -126,6 +126,7 @@ find . -mindepth 2 -name 'make-files.sh' -execdir ./make-files.sh \;
 # Remove unnecessary files from distribution and create archive
 #-------------------------------------------------------------------
 
+rm -rf examples/drivertest
 find . -name '.svn' -prune -exec rm -rf '{}' \; # remove SVN files
 find . -name 'make-files.sh' -exec rm '{}' \;   # remove helper scripts
 rm -f mkdist.sh make-files.sh
