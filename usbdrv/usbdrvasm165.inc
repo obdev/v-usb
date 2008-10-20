@@ -46,10 +46,14 @@ USB_INTR_VECTOR:
 ;----------------------------------------------------------------------------
 ;sync byte (D-) pattern LSb to MSb: 01010100 [1 = idle = J, 0 = K]
 ;sync up with J to K edge during sync pattern -- use fastest possible loops
-;first part has no timeout because it waits for IDLE or SE1 (== disconnected)
+;The first part waits at most 1 bit long since we must be in sync pattern.
+;YL is guarenteed to be < 0x80 because I flag is clear. When we jump to
+;waitForJ, ensure that this prerequisite is met.
 waitForJ:
-    sbis    USBIN, USBMINUS     ;[-18] wait for D- == 1
-    rjmp    waitForJ
+    sbic    USBIN, USBMINUS
+    rjmp    waitForK
+    inc     YL
+    brne    waitForJ        ; just make sure we have ANY timeout
 waitForK:
 ;The following code results in a sampling window of < 1/4 bit which meets the spec.
     sbis    USBIN, USBMINUS     ;[-15]

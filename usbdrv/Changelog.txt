@@ -248,3 +248,4 @@ Scroll down to the bottom to see the most recent changes.
     This accounts for the higher clock rates we now support.
   - Added a module for 12.8 MHz RC oscillator with PLL in receiver loop.
   - Added hook to SOF code so that oscillator can be tuned to USB frame clock.
+  - Added timeout to waitForJ loop. Helps preventing unexpected hangs.
