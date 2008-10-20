@@ -589,14 +589,14 @@ uchar   i;
     for(i = 20; i > 0; i--){
         uchar usbLineStatus = USBIN & USBMASK;
         if(usbLineStatus != 0)  /* SE0 has ended */
-            break;
+            goto isNotReset;
     }
-    if(i == 0){ /* RESET condition, called multiple times during reset */
-        usbNewDeviceAddr = 0;
-        usbDeviceAddr = 0;
-        usbResetStall();
-        DBG1(0xff, 0, 0);
-    }
+    /* RESET condition, called multiple times during reset */
+    usbNewDeviceAddr = 0;
+    usbDeviceAddr = 0;
+    usbResetStall();
+    DBG1(0xff, 0, 0);
+isNotReset:
     usbHandleResetHook(i);
 }
 
