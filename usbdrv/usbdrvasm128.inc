@@ -111,9 +111,8 @@ USB_INTR_VECTOR:
 ;YL is guarenteed to be < 0x80 because I flag is clear. When we jump to
 ;waitForJ, ensure that this prerequisite is met.
 waitForJ:
-    sbic    USBIN, USBMINUS
-    rjmp    waitForK
     inc     YL
+    sbis    USBIN, USBMINUS
     brne    waitForJ        ; just make sure we have ANY timeout
 waitForK:
 ;The following code results in a sampling window of 1/4 bit which meets the spec.
