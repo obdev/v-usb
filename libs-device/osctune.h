@@ -35,6 +35,8 @@ range and allows a precision of better than +/-1%. A prescaler factor of 8
 allows tuning to slightly more than +/-6% of the default frequency and is
 more precise than one step of OSCCAL. It is therefore not suitable to tune
 an 8 MHz oscillator to 12.5 MHz.
+
+Thanks to Henrik Haftmann for the idea to this routine!
 */
 
 #define TIMER0_PRESCALING           64 /* must match the configuration for TIMER0 in main */
