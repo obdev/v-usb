@@ -166,8 +166,9 @@ section at the end of this file).
  * This macro (if defined) is executed in the assembler module when a
  * Start Of Frame condition is detected. It is recommended to define it to
  * the name of an assembler macro which is defined here as well so that more
- * than one assembler instruction can be used. The macro may use registers
- * YL and SREG.
+ * than one assembler instruction can be used. The macro may use the register
+ * YL and modify SREG. If it lasts longer than a couple of cycles, USB messages
+ * immediately after an SOF pulse may be lost and must be retried by the host.
  * What can you do with this hook? Since the SOF signal occurs exactly every
  * 1 ms (unless the host is in sleep mode), you can use it to tune OSCCAL in
  * designs running on the internal RC oscillator.
