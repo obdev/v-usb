@@ -34,7 +34,7 @@ uchar       usbTxBuf[USB_BUFSIZE];/* data to transmit with next IN, free if usbT
 #if USB_COUNT_SOF
 volatile uchar  usbSofCount;    /* incremented by assembler module every SOF */
 #endif
-#if USB_CFG_HAVE_INTRIN_ENDPOINT
+#if USB_CFG_HAVE_INTRIN_ENDPOINT && !USB_CFG_SUPPRESS_INTR_CODE
 usbTxStatus_t  usbTxStatus1;
 #   if USB_CFG_HAVE_INTRIN_ENDPOINT3
 usbTxStatus_t  usbTxStatus3;
@@ -196,7 +196,7 @@ PROGMEM char usbDescriptorConfiguration[] = {    /* USB configuration descriptor
 
 static inline void  usbResetDataToggling(void)
 {
-#if USB_CFG_HAVE_INTRIN_ENDPOINT
+#if USB_CFG_HAVE_INTRIN_ENDPOINT && !USB_CFG_SUPPRESS_INTR_CODE
     USB_SET_DATATOKEN1(USB_INITIAL_DATATOKEN);  /* reset data toggling for interrupt endpoint */
 #   if USB_CFG_HAVE_INTRIN_ENDPOINT3
     USB_SET_DATATOKEN3(USB_INITIAL_DATATOKEN);  /* reset data toggling for interrupt endpoint */
@@ -216,6 +216,7 @@ static inline void  usbResetStall(void)
 
 /* ------------------------------------------------------------------------- */
 
+#if !USB_CFG_SUPPRESS_INTR_CODE
 #if USB_CFG_HAVE_INTRIN_ENDPOINT
 static void usbGenericSetInterrupt(uchar *data, uchar len, usbTxStatus_t *txStatus)
 {
@@ -253,6 +254,7 @@ USB_PUBLIC void usbSetInterrupt3(uchar *data, uchar len)
     usbGenericSetInterrupt(data, len, &usbTxStatus3);
 }
 #endif
+#endif /* USB_CFG_SUPPRESS_INTR_CODE */
 
 /* ------------------ utilities for code following below ------------------- */
 
@@ -398,7 +400,7 @@ uchar   index = rq->wIndex.bytes[0];
         usbResetStall();
     SWITCH_CASE(USBRQ_GET_INTERFACE)        /* 10 */
         len = 1;
-#if USB_CFG_HAVE_INTRIN_ENDPOINT
+#if USB_CFG_HAVE_INTRIN_ENDPOINT && !USB_CFG_SUPPRESS_INTR_CODE
     SWITCH_CASE(USBRQ_SET_INTERFACE)        /* 11 */
         usbResetDataToggling();
         usbResetStall();
@@ -612,7 +614,7 @@ USB_PUBLIC void usbInit(void)
 #endif
     USB_INTR_ENABLE |= (1 << USB_INTR_ENABLE_BIT);
     usbResetDataToggling();
-#if USB_CFG_HAVE_INTRIN_ENDPOINT
+#if USB_CFG_HAVE_INTRIN_ENDPOINT && !USB_CFG_SUPPRESS_INTR_CODE
     usbTxLen1 = USBPID_NAK;
 #if USB_CFG_HAVE_INTRIN_ENDPOINT3
     usbTxLen3 = USBPID_NAK;

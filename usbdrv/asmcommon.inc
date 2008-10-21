@@ -153,6 +153,7 @@ handleIn:
 ; RAM this way and avoid potential problems with endless retries. The rest of
 ; the driver assumes error-free transfers anyway.
 
+#if !USB_CFG_SUPPRESS_INTR_CODE
 #if USB_CFG_HAVE_INTRIN_ENDPOINT    /* placed here due to relative jump range */
 handleIn1:                      ;[38]
 #if USB_CFG_HAVE_INTRIN_ENDPOINT3
@@ -179,3 +180,8 @@ handleIn3:
     ldi     YH, hi8(usbTxBuf3)  ;[48]
     rjmp    usbSendAndReti      ;[49] 51 + 12 = 63 until SOP
 #endif
+#else /* USB_CFG_SUPPRESS_INTR_CODE */
+handleIn1:
+    ldi     cnt, USBPID_NAK
+    rjmp    sendCntAndReti
+#endif /* USB_CFG_SUPPRESS_INTR_CODE */

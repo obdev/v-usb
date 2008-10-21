@@ -94,6 +94,14 @@ section at the end of this file).
  * it is required by the standard. We have made it a config option because it
  * bloats the code considerably.
  */
+#define USB_CFG_SUPPRESS_INTR_CODE      0
+/* Define this to 1 if you want to declare interrupt-in endpoints, but don't
+ * want to send any data over them. If this macro is defined to 1, functions
+ * usbSetInterrupt() and usbSetInterrupt3() are omitted. This is useful if
+ * you need the interrupt-in endpoints in order to comply to an interface
+ * (e.g. HID), but never want to send any data. This option saves a couple
+ * of bytes in flash memory and the transmit buffers in RAM.
+ */
 #define USB_CFG_INTR_POLL_INTERVAL      10
 /* If you compile a version with endpoint 1 (interrupt-in), this is the poll
  * interval. The value is in milliseconds and must not be less than 10 ms for
