@@ -251,3 +251,4 @@ Scroll down to the bottom to see the most recent changes.
   - Added timeout to waitForJ loop. Helps preventing unexpected hangs.
   - Added example code for oscillator tuning to libs-device (thanks to
     Henrik Haftmann for the idea to this routine).
+  - Implemented option USB_CFG_SUPPRESS_INTR_CODE.
