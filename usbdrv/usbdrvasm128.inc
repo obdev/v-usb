@@ -596,8 +596,7 @@ doExorN2:
     eor     x1, x2              ;[04] [12]
     ldi     x3, 6               ;[05] [13]
 commonN2:
-    nop                         ;[06] [14]
-    nop                         ;[07] [15]
+    nop2                        ;[06] [14]
     subi    cnt, 171            ;[08] [16] trick: (3 * 171) & 0xff = 1
     out     USBOUT, x1          ;[09] [17] <--- set bit
     brcs    txBitloop           ;[10]      [27] [44]
