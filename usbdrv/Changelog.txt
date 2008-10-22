@@ -252,3 +252,5 @@ Scroll down to the bottom to see the most recent changes.
   - Added example code for oscillator tuning to libs-device (thanks to
     Henrik Haftmann for the idea to this routine).
   - Implemented option USB_CFG_SUPPRESS_INTR_CODE.
+
+* Release 2008-10-22
