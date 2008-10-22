@@ -27,14 +27,20 @@ received. Do not store the value on every received message because the EEPROM
 has a limited endurance.
 
 Notes:
-Good values for Timer 0 prescaling depend on how precise the clock must be
-tuned and how far away from the default clock rate the target clock is. For
-precise tuning, choose a low prescaler factor, for a broad range of tuning
+(*) You must declare the global character variable "lastTimer0Value" in your
+main code.
+
+(*) Timer 0 must be free running (not written by your code) and the prescaling
+must be consistent with the TIMER0_PRESCALING define.
+
+(*) Good values for Timer 0 prescaling depend on how precise the clock must
+be tuned and how far away from the default clock rate the target clock is.
+For precise tuning, choose a low prescaler factor, for a broad range of tuning
 choose a high one. A prescaler factor of 64 is good for the entire OSCCAL
 range and allows a precision of better than +/-1%. A prescaler factor of 8
 allows tuning to slightly more than +/-6% of the default frequency and is
-more precise than one step of OSCCAL. It is therefore not suitable to tune
-an 8 MHz oscillator to 12.5 MHz.
+more precise than one step of OSCCAL. It is therefore not suitable to tune an
+8 MHz oscillator to 12.5 MHz.
 
 Thanks to Henrik Haftmann for the idea to this routine!
 */
@@ -53,7 +59,11 @@ macro tuneOsccal
     sts     lastTimer0Value, YL             ;[5]
     sub     YL, YH                          ;[7] time passed since last frame
     subi    YL, EXPECTED_TIMER0_INCREMENT   ;[8]
-    in      YH, OSCCAL                      ;[9]
+#if OSCCAL > 0x3f
+    lds     YH, 0x20 + OSCCAL               ;[6]
+#else
+    in      YH, OSCCAL                      ;[6]
+#endif
     cpi     YL, TOLERATED_DEVIATION + 1     ;[10]
     brmi    notTooHigh                      ;[11]
     subi    YH, 1                           ;[12] clock rate was too high
@@ -65,7 +75,11 @@ notTooHigh:
     inc     YH                              ;[15] clock rate was too low
 ;   breq    tuningOverflow                  ; optionally check for overflow
 osctuneDone:
-    out     OSCCAL, YH                      ;[15-16] store tuned value
+#if OSCCAL > 0x3f
+    sts     0x20 + OSCCAL, YH               ;[12-13] store tuned value
+#else
+    out     OSCCAL, YH                      ;[12-13] store tuned value
+#endif
 tuningOverflow:
     pop     YH                              ;[17]
     endm                                    ;[19] max number of cycles
