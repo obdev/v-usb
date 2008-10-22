@@ -554,6 +554,10 @@ int usbDescriptorStringSerialNumber[];
 #define USB_CFG_EP3_NUMBER  3
 #endif
 
+#ifndef USB_CFG_HAVE_INTRIN_ENDPOINT3
+#define USB_CFG_HAVE_INTRIN_ENDPOINT3   0
+#endif
+
 #define USB_BUFSIZE     11  /* PID, 8 bytes data, 2 bytes CRC */
 
 /* ----- Try to find registers and bits responsible for ext interrupt 0 ----- */
