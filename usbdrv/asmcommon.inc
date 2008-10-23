@@ -134,7 +134,11 @@ handleIn:
     ldi     x1, USBPID_NAK      ;[34] prepare value for usbTxLen
 #if USB_CFG_HAVE_INTRIN_ENDPOINT
     andi    x3, 0xf             ;[35] x3 contains endpoint
+#if USB_CFG_SUPPRESS_INTR_CODE
+    brne    sendNakAndReti      ;[36]
+#else
     brne    handleIn1           ;[36]
+#endif
 #endif
     lds     cnt, usbTxLen       ;[37]
     sbrc    cnt, 4              ;[39] all handshake tokens have bit 4 set
@@ -153,8 +157,7 @@ handleIn:
 ; RAM this way and avoid potential problems with endless retries. The rest of
 ; the driver assumes error-free transfers anyway.
 
-#if !USB_CFG_SUPPRESS_INTR_CODE
-#if USB_CFG_HAVE_INTRIN_ENDPOINT    /* placed here due to relative jump range */
+#if !USB_CFG_SUPPRESS_INTR_CODE && USB_CFG_HAVE_INTRIN_ENDPOINT /* placed here due to relative jump range */
 handleIn1:                      ;[38]
 #if USB_CFG_HAVE_INTRIN_ENDPOINT3
 ; 2006-06-10 as suggested by O.Tamura: support second INTR IN / BULK IN endpoint
@@ -168,9 +171,8 @@ handleIn1:                      ;[38]
     ldi     YL, lo8(usbTxBuf1)  ;[46]
     ldi     YH, hi8(usbTxBuf1)  ;[47]
     rjmp    usbSendAndReti      ;[48] 50 + 12 = 62 until SOP
-#endif
 
-#if USB_CFG_HAVE_INTRIN_ENDPOINT && USB_CFG_HAVE_INTRIN_ENDPOINT3
+#if USB_CFG_HAVE_INTRIN_ENDPOINT3
 handleIn3:
     lds     cnt, usbTxLen3      ;[41]
     sbrc    cnt, 4              ;[43]
@@ -180,8 +182,4 @@ handleIn3:
     ldi     YH, hi8(usbTxBuf3)  ;[48]
     rjmp    usbSendAndReti      ;[49] 51 + 12 = 63 until SOP
 #endif
-#else /* USB_CFG_SUPPRESS_INTR_CODE */
-handleIn1:
-    ldi     cnt, USBPID_NAK
-    rjmp    sendCntAndReti
-#endif /* USB_CFG_SUPPRESS_INTR_CODE */
+#endif
