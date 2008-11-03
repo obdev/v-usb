@@ -59,10 +59,10 @@ macro tuneOsccal
     sts     lastTimer0Value, YL             ;[5]
     sub     YL, YH                          ;[7] time passed since last frame
     subi    YL, EXPECTED_TIMER0_INCREMENT   ;[8]
-#if OSCCAL > 0x3f
-    lds     YH, 0x20 + OSCCAL               ;[6]
+#if OSCCAL > 0x3f   /* outside I/O addressable range */
+    lds     YH, OSCCAL                      ;[6]
 #else
-    in      YH, OSCCAL                      ;[6]
+    in      YH, OSCCAL                      ;[6] assembler modle uses __SFR_OFFSET == 0
 #endif
     cpi     YL, TOLERATED_DEVIATION + 1     ;[10]
     brmi    notTooHigh                      ;[11]
@@ -75,8 +75,8 @@ notTooHigh:
     inc     YH                              ;[15] clock rate was too low
 ;   breq    tuningOverflow                  ; optionally check for overflow
 osctuneDone:
-#if OSCCAL > 0x3f
-    sts     0x20 + OSCCAL, YH               ;[12-13] store tuned value
+#if OSCCAL > 0x3f   /* outside I/O addressable range */
+    sts     OSCCAL, YH                      ;[12-13] store tuned value
 #else
     out     OSCCAL, YH                      ;[12-13] store tuned value
 #endif

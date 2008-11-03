@@ -254,3 +254,6 @@ Scroll down to the bottom to see the most recent changes.
   - Implemented option USB_CFG_SUPPRESS_INTR_CODE.
 
 * Release 2008-10-22
+
+  - Fixed libs-device/osctune.h: OSCCAL is memory address on ATMega88 and
+    similar, not offset of 0x20 needs to be added.
