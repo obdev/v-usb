@@ -61,9 +61,11 @@ http://www.obdev.at/goto.php?t=avrusb-wiki.
 LICENSE
 =======
 AVR-USB and related code is distributed under the terms of the GNU General
-Public License (GPL) version 2 (see License.txt for details). In addition to
-the terms of the GPL, we strongly encourage you to publish your entire
-project and mail OBJECTIVE DEVELOPMENT a link to your publication.
+Public License (GPL) version 2 (see License.txt for details) and the GNU
+General Public License (GPL) version 3. It is your choice whether you apply
+the terms of version 2 or version 3. In addition to the terms of the GPL, we
+strongly encourage you to publish your entire project and mail OBJECTIVE
+DEVELOPMENT a link to your publication.
 
 Alternatively, we offer a commercial license without the restrictions of the
 GPL. See CommercialLicense.txt for details.

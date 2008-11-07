@@ -115,10 +115,11 @@ usbdrv.c because this module has been deliberately optimized for gcc.
 USING AVR-USB FOR FREE
 ======================
 The AVR firmware driver is published under the GNU General Public License
-Version 2 (GPL2). See the file "License.txt" for details.
+Version 2 (GPL2) and the GNU General Public License Version 3 (GPL3). It is
+your choice whether you apply the terms of version 2 or version 3.
 
-If you decide for the free GPL2, we STRONGLY ENCOURAGE you to do the following
-things IN ADDITION to the obligations from the GPL2:
+If you decide for the free GPL2 or GPL3, we STRONGLY ENCOURAGE you to do the
+following things IN ADDITION to the obligations from the GPL:
 
 (1) Publish your entire project on a web site and drop us a note with the URL.
 Use the form at http://www.obdev.at/avrusb/feedback.html for your submission.
@@ -139,7 +140,7 @@ to your modifications for our commercial license offerings.
 
 COMMERCIAL LICENSES FOR AVR-USB
 ===============================
-If you don't want to publish your source code under the terms of the GPL2,
+If you don't want to publish your source code under the terms of the GPL,
 you can simply pay money for AVR-USB. As an additional benefit you get
 USB PIDs for free, licensed exclusively to you. See the file
 "CommercialLicense.txt" for details.

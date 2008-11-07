@@ -4,7 +4,7 @@
  * Creation Date: 2008-04-10
  * Tabsize: 4
  * Copyright: (c) 2008 by OBJECTIVE DEVELOPMENT Software GmbH
- * License: GNU GPL v2 (see License.txt) or proprietary (CommercialLicense.txt)
+ * License: GNU GPL v2 (see License.txt), GNU GPL v3 or proprietary (CommercialLicense.txt)
  * This Revision: $Id$
  */
 
@@ -17,7 +17,7 @@ obtain textual descriptions from a device.
 
 To use this functionality, simply copy opendevice.c and opendevice.h into your
 project and add them to your Makefile. You may modify and redistribute these
-files according to the GNU General Public License (GPL) version 2.
+files according to the GNU General Public License (GPL) version 2 or 3.
 */
 
 #ifndef __OPENDEVICE_H_INCLUDED__

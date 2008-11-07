@@ -1,6 +1,8 @@
 OBJECTIVE DEVELOPMENT GmbH's AVR-USB driver software is distributed under the
-terms and conditions of the GNU GPL version 2, see the text below. In addition
-to the requirements in the GPL, we STRONGLY ENCOURAGE you to do the following:
+terms and conditions of the GNU GPL version 2 or the GNU GPL version 3. It is
+your choice whether you apply the terms of version 2 or version 3. The full
+text of GPLv2 is included below. In addition to the requirements in the GPL,
+we STRONGLY ENCOURAGE you to do the following:
 
 (1) Publish your entire project on a web site and drop us a note with the URL.
 Use the form at http://www.obdev.at/avrusb/feedback.html for your submission.
