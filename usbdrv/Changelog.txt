@@ -257,3 +257,7 @@ Scroll down to the bottom to see the most recent changes.
 
   - Fixed libs-device/osctune.h: OSCCAL is memory address on ATMega88 and
     similar, not offset of 0x20 needs to be added.
+  - Allow distribution under GPLv3 for those who have to link against other
+    code distributed under GPLv3.
+
+* Release 2008-11-26
