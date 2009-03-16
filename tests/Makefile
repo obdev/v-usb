@@ -39,6 +39,8 @@ sizes sizes.txt:
 	avr-size main.elf | tail -1 | awk '{print "Minimum_with_15_MHz", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
 	$(MAKE) clean; $(MAKE) main.elf F_CPU=16500000
 	avr-size main.elf | tail -1 | awk '{print "Minimum_with_16_5_MHz", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
+	$(MAKE) clean; $(MAKE) main.elf F_CPU=18000000
+	avr-size main.elf | tail -1 | awk '{print "Minimum_with_18_MHz+CRC", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
 	$(MAKE) clean; $(MAKE) main.elf F_CPU=20000000
 	avr-size main.elf | tail -1 | awk '{print "Minimum_with_20_MHz", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
 	$(MAKE) clean; $(MAKE) main.elf DEFINES=-DUSB_CFG_IMPLEMENT_FN_WRITE=1
@@ -66,7 +68,7 @@ sizes sizes.txt:
 	rm $(SIZES_TMP)
 
 test:
-	for freq in 12000000 12800000 15000000 16000000 16500000 20000000; do \
+	for freq in 12000000 12800000 15000000 16000000 16500000 18000000 20000000; do \
 		for opt in USB_COUNT_SOF USB_CFG_HAVE_INTRIN_ENDPOINT USB_CFG_HAVE_INTRIN_ENDPOINT3 USB_CFG_HAVE_MEASURE_FRAME_LENGTH USB_CFG_LONG_TRANSFERS; do \
 			$(MAKE) clean; $(MAKE) main.elf F_CPU=$$freq "DEFINES=-D$$opt=1" || exit 1; \
 			$(MAKE) clean; $(MAKE) main.elf F_CPU=$$freq "DEFINES=-D$$opt=1 -DDUSB_CFG_IMPLEMENT_FN_WRITEOUT=1" || exit 1; \
