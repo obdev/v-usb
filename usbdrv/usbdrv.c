@@ -428,7 +428,7 @@ usbRequest_t    *rq = (void *)data;
  * 0xe1 11100001 (USBPID_OUT: data phase of setup transfer)
  * 0...0x0f for OUT on endpoint X
  */
-    DBG2(0x10 + (usbRxToken & 0xf), data, len); /* SETUP=1d, SETUP-DATA=11, OUTx=1x */
+    DBG2(0x10 + (usbRxToken & 0xf), data, len + 2); /* SETUP=1d, SETUP-DATA=11, OUTx=1x */
     USB_RX_USER_HOOK(data, len)
 #if USB_CFG_IMPLEMENT_FN_WRITEOUT
     if(usbRxToken < 0x10){  /* OUT to endpoint != 0: endpoint number in usbRxToken */
