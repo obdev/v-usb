@@ -103,6 +103,9 @@ sofError:
     reti
 
 handleData:
+#if USB_CFG_CHECK_CRC
+    CRC_CLEANUP_AND_CHECK       ; jumps to ignorePacket if CRC error
+#endif
     lds     shift, usbCurrentTok;[18]
     tst     shift               ;[20]
     breq    doReturn            ;[21]

@@ -44,11 +44,17 @@ section at the end of this file).
  * markers every millisecond.]
  */
 #define USB_CFG_CLOCK_KHZ       (F_CPU/1000)
-/* Clock rate of the AVR in MHz. Legal values are 12000, 12800, 15000, 16000,
+/* Clock rate of the AVR in kHz. Legal values are 12000, 12800, 15000, 16000,
  * 16500 and 20000. The 12.8 MHz and 16.5 MHz versions of the code require no
  * crystal, they tolerate +/- 1% deviation from the nominal frequency. All
  * other rates require a precision of 2000 ppm and thus a crystal!
  * Default if not specified: 12 MHz
+ */
+#define USB_CFG_CHECK_CRC       0
+/* Define this to 1 if you want that the driver checks data integrity of data
+ * packets (CRC checks). CRC checks cost quite a bit of code size and are
+ * currently only available for 18 MHz crystal clock. You must choose
+ * USB_CFG_CLOCK_KHZ = 18000 if you enable this option.
  */
 
 /* ----------------------- Optional Hardware Config ------------------------ */
