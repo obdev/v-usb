@@ -110,7 +110,7 @@ int         err;
         }
     }else if(strcasecmp(argv[1], "write") == 0){
         int i, pos;
-        bzero(buffer, sizeof(buffer));
+        memset(buffer, 0, sizeof(buffer));
         for(pos = 1, i = 2; i < argc && pos < sizeof(buffer); i++){
             pos += hexread(buffer + pos, argv[i], sizeof(buffer) - pos);
         }
