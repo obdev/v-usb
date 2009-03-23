@@ -48,8 +48,9 @@ The driver consists of the following files:
 CPU CORE CLOCK FREQUENCY
 ========================
 We supply assembler modules for clock frequencies of 12 MHz, 12.8 MHz, 15 MHz,
-16 MHz, 16.5 MHz and 20 MHz. Other clock rates are not supported. The actual
-clock rate must be configured in usbdrv.h unless you use the default 12 MHz.
+16 MHz, 16.5 MHz 18 MHz and 20 MHz. Other clock rates are not supported. The
+actual clock rate must be configured in usbdrv.h unless you use the default
+12 MHz.
 
 12 MHz Clock
 This is the traditional clock rate of AVR-USB because it's the lowest clock
@@ -79,6 +80,16 @@ all AVRs can reach 12.8 MHz, although this is outside the specified range.
 
 See the EasyLogger example at http://www.obdev.at/avrusb/easylogger.html for
 code which calibrates the RC oscillator based on the USB frame clock.
+
+18 MHz Clock
+This module is closer to the USB specification because it performs an on the
+fly CRC check for incoming packets. Packets with invalid checksum are
+discarded as required by the spec. If you also implement checks for data
+PID toggling on application level (see option USB_CFG_CHECK_DATA_TOGGLING
+in usbconfig.h for more info), this ensures data integrity. Due to the CRC
+tables and alignment requirements, this code is bigger than modules for other
+clock rates. To activate this module, you must define USB_CFG_CHECK_CRC to 1
+and USB_CFG_CLOCK_KHZ to 18000 in usbconfig.h.
 
 20 MHz Clock
 This module is for people who won't do it with less than the maximum. Since

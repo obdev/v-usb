@@ -49,8 +49,8 @@ of CPU cycles, but even an exact number of cycles!
 ;	x4 is used as temp register to store different results
 ;	the initialization of the crc register is not 0xFFFF but 0xFE54. This is because during the receipt of the
 ;	first data byte an virtual zero data byte is added to the crc register, this results in the correct initial
-;	value of 0xFFFF at beginning of the second data byte before the first data byte is added to the crc
-;	the magic number 0xFE54 results form the crc table: At tabH[0x54] = 0xFF = crcH (required) and
+;	value of 0xFFFF at beginning of the second data byte before the first data byte is added to the crc.
+;	The magic number 0xFE54 results form the crc table: At tabH[0x54] = 0xFF = crcH (required) and
 ;	tabL[0x54] = 0x01  ->  crcL = 0x01 xor 0xFE = 0xFF
 ;  bitcnt is renamed to x5 and is used for unstuffing purposes, the unstuffing works like in the 12MHz version
 ;--------------------------------------------------------------------------------------------------------------
@@ -199,7 +199,7 @@ haveTwoBitsK:
 ; receives the pid byte
 ; there is no real unstuffing algorithm implemented here as a stuffing bit is impossible in the pid byte.
 ; That's because the last four bits of the byte are the inverted of the first four bits. If we detect a
-; unstuffing condition something went wrong and we abort
+; unstuffing condition something went wrong and abort
 ; shift has to be initialized to 0x80
 ;--------------------------------------------------------------------------------------------------------------
 
