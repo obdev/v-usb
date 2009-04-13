@@ -2,6 +2,9 @@ This is the Readme file for V-USB and related code. V-USB is Objective
 Development's firmware-only USB driver for Atmel's(r) AVR(r) microcontrollers.
 For more information please visit http://www.obdev.at/vusb/.
 
+To avoid name confusion: This project was formerly known as AVR-USB. Due to
+a trademark issue, it was renamed to V-USB in April 2009.
+
 
 WHAT IS INCLUDED IN THIS PACKAGE?
 =================================
