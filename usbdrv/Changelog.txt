@@ -268,3 +268,7 @@ Scroll down to the bottom to see the most recent changes.
   - Integrated a module with CRC checks at 18 MHz by Lukas Schrittwieser.
 
 * Release 2009-03-23
+
+  - Renamed project to V-USB due to a trademark issue with Atmel(r).
+  - Changed CommercialLicense.txt and USBID-License.txt to make the
+    background of USB ID registration clearer.

@@ -1,5 +1,5 @@
 /* Name: usbdrvasm15.inc
- * Project: AVR USB driver
+ * Project: V-USB, virtual USB port for Atmel's(r) AVR(r) microcontrollers
  * Author: contributed by V. Bosch
  * Creation Date: 2007-08-06
  * Tabsize: 4

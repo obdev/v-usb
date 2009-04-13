@@ -1,5 +1,5 @@
 /* Name: opendevice.c
- * Project: AVR-USB host-side library
+ * Project: V-USB host-side library
  * Author: Christian Starkjohann
  * Creation Date: 2008-04-10
  * Tabsize: 4

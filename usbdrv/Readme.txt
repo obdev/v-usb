@@ -1,6 +1,6 @@
 This is the Readme file to Objective Development's firmware-only USB driver
 for Atmel AVR microcontrollers. For more information please visit
-http://www.obdev.at/avrusb/
+http://www.obdev.at/vusb/
 
 This directory contains the USB firmware only. Copy it as-is to your own
 project and add all .c and .S files to your project (these files are marked
@@ -53,7 +53,7 @@ actual clock rate must be configured in usbdrv.h unless you use the default
 12 MHz.
 
 12 MHz Clock
-This is the traditional clock rate of AVR-USB because it's the lowest clock
+This is the traditional clock rate of V-USB because it's the lowest clock
 rate where the timing constraints of the USB spec can be met.
 
 15 MHz Clock
@@ -78,7 +78,7 @@ oscillator can reach 16.5 MHz with the RC oscillator. This includes the very
 popular ATTiny25, ATTiny45, ATTiny85 series as well as the ATTiny26. Almost
 all AVRs can reach 12.8 MHz, although this is outside the specified range.
 
-See the EasyLogger example at http://www.obdev.at/avrusb/easylogger.html for
+See the EasyLogger example at http://www.obdev.at/vusb/easylogger.html for
 code which calibrates the RC oscillator based on the USB frame clock.
 
 18 MHz Clock
@@ -108,14 +108,14 @@ and hobbyists, we provide some VID/PID pairs for free. See the file
 USBID-License.txt for details.
 
 Objective Development also has some license offerings which include product
-IDs. See http://www.obdev.at/avrusb/ for details.
+IDs. See http://www.obdev.at/vusb/ for details.
 
 
 DEVELOPMENT SYSTEM
 ==================
 This driver has been developed and optimized for the GNU compiler version 3
 (gcc 3). It does work well with gcc 4, but with bigger code size. We recommend
-that you use the GNU compiler suite because it is freely available. AVR-USB
+that you use the GNU compiler suite because it is freely available. V-USB
 has also been ported to the IAR compiler and assembler. It has been tested
 with IAR 4.10B/W32 and 4.12A/W32 on an ATmega8 with the "small" and "tiny"
 memory model. Not every release is tested with IAR CC and the driver may
@@ -123,8 +123,8 @@ therefore fail to compile with IAR. Please note that gcc is more efficient for
 usbdrv.c because this module has been deliberately optimized for gcc.
 
 
-USING AVR-USB FOR FREE
-======================
+USING V-USB FOR FREE
+====================
 The AVR firmware driver is published under the GNU General Public License
 Version 2 (GPL2) and the GNU General Public License Version 3 (GPL3). It is
 your choice whether you apply the terms of version 2 or version 3.
@@ -133,26 +133,26 @@ If you decide for the free GPL2 or GPL3, we STRONGLY ENCOURAGE you to do the
 following things IN ADDITION to the obligations from the GPL:
 
 (1) Publish your entire project on a web site and drop us a note with the URL.
-Use the form at http://www.obdev.at/avrusb/feedback.html for your submission.
+Use the form at http://www.obdev.at/vusb/feedback.html for your submission.
 If you don't have a web site, you can publish the project in obdev's
 documentation wiki at
-http://www.obdev.at/goto.php?t=avrusb-wiki&p=hosted-projects.
+http://www.obdev.at/goto.php?t=vusb-wiki&p=hosted-projects.
 
 (2) Adhere to minimum publication standards. Please include AT LEAST:
     - a circuit diagram in PDF, PNG or GIF format
     - full source code for the host software
     - a Readme.txt file in ASCII format which describes the purpose of the
       project and what can be found in which directories and which files
-    - a reference to http://www.obdev.at/avrusb/
+    - a reference to http://www.obdev.at/vusb/
 
 (3) If you improve the driver firmware itself, please give us a free license
 to your modifications for our commercial license offerings.
 
 
-COMMERCIAL LICENSES FOR AVR-USB
-===============================
+COMMERCIAL LICENSES FOR V-USB
+=============================
 If you don't want to publish your source code under the terms of the GPL,
-you can simply pay money for AVR-USB. As an additional benefit you get
-USB PIDs for free, licensed exclusively to you. See the file
+you can simply pay money for V-USB. As an additional benefit you get
+USB PIDs for free, reserved exclusively to you. See the file
 "CommercialLicense.txt" for details.
 

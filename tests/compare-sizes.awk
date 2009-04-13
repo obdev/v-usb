@@ -1,6 +1,6 @@
 #!/usr/bin/awk -f
 # Name: compare-sizes.awk
-# Project: avr-usb
+# Project: v-usb
 # Author: Christian Starkjohann
 # Creation Date: 2008-04-29
 # Tabsize: 4

@@ -1,6 +1,6 @@
 #!/bin/sh
 # Name: mkdist.sh
-# Project: avr-usb
+# Project: v-usb
 # Author: Christian Starkjohann
 # Creation Date: 2008-04-18
 # Tabsize: 4
@@ -12,7 +12,7 @@
 # The "open" command is specific to Mac OS X and is used to start GUI
 # applications or open files and directories.
 
-name=avrusb
+name=vusb
 
 PATH="$PATH:/usr/local/EAGLE/bin"
 eagle=eagle

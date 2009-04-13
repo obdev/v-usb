@@ -1,5 +1,5 @@
 /* Name: asmcommon.inc
- * Project: AVR USB driver
+ * Project: V-USB, virtual USB port for Atmel's(r) AVR(r) microcontrollers
  * Author: Christian Starkjohann
  * Creation Date: 2007-11-05
  * Tabsize: 4

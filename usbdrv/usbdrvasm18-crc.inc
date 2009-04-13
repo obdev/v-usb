@@ -1,5 +1,5 @@
 /* Name: usbdrvasm18.inc
- * Project: AVR USB driver
+ * Project: V-USB, virtual USB port for Atmel's(r) AVR(r) microcontrollers
  * Author: Lukas Schrittwieser (based on 20 MHz usbdrvasm20.inc by Jeroen Benschop)
  * Creation Date: 2009-01-20
  * Tabsize: 4

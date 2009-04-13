@@ -1,10 +1,17 @@
-Royalty-Free Non-Exclusive License USB Product-ID
+Royalty-Free Non-Exclusive Use of USB Product-IDs
 =================================================
 
-Version 2008-04-07
+Version 2009-04-13
+
+Strictly speaking, this is not a license. You can't give a license to use
+a simple number (such as e.g. 1500) for any purpose. This is a set of rules
+which should make it possible to build USB devices without the requirement
+for individual USB IDs. If you break one of the rules, you will run into
+technical problems sooner or later, but you don't risk legal trouble.
+
 
 OBJECTIVE DEVELOPMENT Software GmbH hereby grants you the non-exclusive
-right to use three USB.org vendor-ID (VID) / product-ID (PID) pairs with
+right to use four USB.org vendor-ID (VID) / product-ID (PID) pairs with
 products based on Objective Development's firmware-only USB driver for
 Atmel AVR microcontrollers:
 
@@ -27,10 +34,11 @@ used by many companies and individuals for different products. To avoid
 conflicts, your device and host driver software MUST adhere to the rules
 outlined below.
 
-OBJECTIVE DEVELOPMENT Software GmbH has licensed these VID/PID pairs from
-Wouter van Ooijen (see www.voti.nl), who has licensed the VID from the USB
-Implementers Forum, Inc. (see www.usb.org). The VID is registered for the
-company name "Van Ooijen Technische Informatica".
+OBJECTIVE DEVELOPMENT Software GmbH has obtained these VID/PID pairs from
+Wouter van Ooijen (see www.voti.nl) for exclusive disposition. Wouter van
+Ooijen has obtained the VID from the USB Implementers Forum, Inc.
+(see www.usb.org). The VID is registered for the company name
+"Van Ooijen Technische Informatica".
 
 
 RULES AND RESTRICTIONS
@@ -44,7 +52,7 @@ MUST be available at least in USB language 0x0409 (English/US).
 domain name (e.g. "mycompany.com") registered and owned by you, or an
 e-mail address under your control (e.g. "myname@gmx.net"). You can embed
 the domain name or e-mail address in any string you like, e.g.  "Objective
-Development http://www.obdev.at/avrusb/".
+Development http://www.obdev.at/vusb/".
 
 (3) You are responsible for retaining ownership of the domain or e-mail
 address for as long as any of your products are in use.
@@ -142,5 +150,5 @@ violates the USB specification. If you do it, you do it at your own risk.
 
 To avoid possible incompatibilities, we highly recommend that you get your
 own VID/PID pair if you intend to sell your product. Objective
-Development's commercial licenses for AVR-USB include a PID for
+Development's commercial licenses for V-USB include a PID for
 unrestricted exclusive use.

@@ -1,18 +1,18 @@
-OBJECTIVE DEVELOPMENT GmbH's AVR-USB driver software is distributed under the
+OBJECTIVE DEVELOPMENT GmbH's V-USB driver software is distributed under the
 terms and conditions of the GNU GPL version 2 or the GNU GPL version 3. It is
 your choice whether you apply the terms of version 2 or version 3. The full
 text of GPLv2 is included below. In addition to the requirements in the GPL,
 we STRONGLY ENCOURAGE you to do the following:
 
 (1) Publish your entire project on a web site and drop us a note with the URL.
-Use the form at http://www.obdev.at/avrusb/feedback.html for your submission.
+Use the form at http://www.obdev.at/vusb/feedback.html for your submission.
 
 (2) Adhere to minimum publication standards. Please include AT LEAST:
     - a circuit diagram in PDF, PNG or GIF format
     - full source code for the host software
     - a Readme.txt file in ASCII format which describes the purpose of the
       project and what can be found in which directories and which files
-    - a reference to http://www.obdev.at/avrusb/
+    - a reference to http://www.obdev.at/vusb/
 
 (3) If you improve the driver firmware itself, please give us a free license
 to your modifications for our commercial license offerings.

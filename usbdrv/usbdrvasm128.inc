@@ -1,5 +1,5 @@
 /* Name: usbdrvasm128.inc
- * Project: AVR USB driver
+ * Project: V-USB, virtual USB port for Atmel's(r) AVR(r) microcontrollers
  * Author: Christian Starkjohann
  * Creation Date: 2008-10-11
  * Tabsize: 4

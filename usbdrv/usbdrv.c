@@ -1,5 +1,5 @@
 /* Name: usbdrv.c
- * Project: AVR USB driver
+ * Project: V-USB, virtual USB port for Atmel's(r) AVR(r) microcontrollers
  * Author: Christian Starkjohann
  * Creation Date: 2004-12-29
  * Tabsize: 4

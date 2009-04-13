@@ -1,4 +1,4 @@
-This is the Readme file for the AVR-USB example circuits directory.
+This is the Readme file for the V-USB example circuits directory.
 
 
 CIRCUITS IN THIS DIRECTORY

@@ -44,7 +44,7 @@ frequency of the CPU in low voltage designs!
 Precision depends on the OSCCAL vs. frequency dependency of the oscillator.
 Typical precision for an ATMega168 (derived from the OSCCAL vs. F_RC diagram
 in the data sheet) should be in the range of 0.4%. Only the 12.8 MHz and
-16.5 MHz versions of AVR-USB (with built-in receiver PLL) can tolerate this
+16.5 MHz versions of V-USB (with built-in receiver PLL) can tolerate this
 deviation! All other frequency modules require at least 0.2% precision.
 */
 

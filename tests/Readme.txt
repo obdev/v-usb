@@ -1,4 +1,4 @@
-This is the Readme file for the directory "tests" of AVR-USB, a firmware-only
+This is the Readme file for the directory "tests" of V-USB, a firmware-only
 USB driver for AVR microcontrollers.
 
 WHAT IS IN THIS DIRECTORY?

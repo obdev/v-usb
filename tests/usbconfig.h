@@ -1,5 +1,5 @@
 /* Name: usbconfig.h
- * Project: AVR USB driver
+ * Project: V-USB, virtual USB port for Atmel's(r) AVR(r) microcontrollers
  * Author: Christian Starkjohann
  * Creation Date: 2005-04-01
  * Tabsize: 4
@@ -14,7 +14,7 @@
 /*
 General Description:
 This file is an example configuration (with inline documentation) for the USB
-driver. It configures AVR-USB for USB D+ connected to Port D bit 2 (which is
+driver. It configures V-USB for USB D+ connected to Port D bit 2 (which is
 also hardware interrupt 0 on many devices) and USB D- to Port D bit 4. You may
 wire the lines to any other port, as long as D+ is also wired to INT0 (or any
 other hardware interrupt, as long as it is the highest level interrupt, see

@@ -1,5 +1,5 @@
 /* Name: usbdrvasm20.inc
- * Project: AVR USB driver
+ * Project: V-USB, virtual USB port for Atmel's(r) AVR(r) microcontrollers
  * Author: Jeroen Benschop
  * Based on usbdrvasm16.inc from Christian Starkjohann
  * Creation Date: 2008-03-05

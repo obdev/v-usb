@@ -1,4 +1,4 @@
-This is the Readme file for the directory "examples" of AVR-USB, a firmware-
+This is the Readme file for the directory "examples" of V-USB, a firmware-
 only USB driver for AVR microcontrollers.
 
 WHAT IS IN THIS DIRECTORY?
@@ -60,14 +60,14 @@ WHAT IS NOT DEMONSTRATED IN THESE EXAMPLES?
 ===========================================
 These examples show only the most basic functionality. More elaborate
 examples and real world applications showing more features of the driver are
-available at http://www.obdev.at/avrusb/projects.html. Most of these
+available at http://www.obdev.at/vusb/projects.html. Most of these
 features are described in our documentation wiki at
-http://www.obdev.at/goto.php?t=avrusb-wiki.
+http://www.obdev.at/goto.php?t=vusb-wiki.
 
 To mention just a few:
 
 Using RC oscillator for system clock
-  The 12.8 MHz and 16.5 MHz modules of AVR-USB have been designed to cope
+  The 12.8 MHz and 16.5 MHz modules of V-USB have been designed to cope
   with clock rate deviations up to 1%. This allows an RC oscillator to be
   used. Since the AVR's RC oscillator has a factory precision of only 10%,
   it must be calibrated to an external reference. The EasyLogger example
@@ -75,7 +75,7 @@ Using RC oscillator for system clock
 
 Dynamically generated descriptors
   Sometimes you want to implement different typtes of USB device depending
-  on a jumper or other condition. AVR-USB has a very flexible interface for
+  on a jumper or other condition. V-USB has a very flexible interface for
   providing USB descriptors. See AVR-Doper for how to provide descriptors
   at runtime.
 
@@ -86,17 +86,17 @@ Virtual COM port
   see AVR-CDC.
 
 Implementing suspend mode
-  AVR-USB does not implement suspend mode. This means that the device does
+  V-USB does not implement suspend mode. This means that the device does
   not reduce power consumption when the host goes into sleep mode. Device
   firmware is free to implement suspend mode, though. See USB2LPT for an
   example.
 
 The projects mentioned above can best be found on
 
-    http://www.obdev.at/avrusb/prjall.html
+    http://www.obdev.at/vusb/prjall.html
 
 where all projects are listed.
 
 ----------------------------------------------------------------------------
-(c) 2008 by OBJECTIVE DEVELOPMENT Software GmbH.
+(c) 2009 by OBJECTIVE DEVELOPMENT Software GmbH.
 http://www.obdev.at/

@@ -1,5 +1,5 @@
 /* Name: usbtool.c
- * Project: AVR-USB examples, host side
+ * Project: V-USB examples, host side
  * Author: Christian Starkjohann
  * Creation Date: 2008-04-06
  * Tabsize: 4
