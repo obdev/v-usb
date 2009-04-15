@@ -73,6 +73,13 @@ HIDD_ATTRIBUTES                     deviceAttributes;
         /* this call is for real: */
         SetupDiGetDeviceInterfaceDetail(deviceInfoList, &deviceInfo, deviceDetails, size, &size, NULL);
         DEBUG_PRINT(("checking HID path \"%s\"\n", deviceDetails->DevicePath));
+#if 0
+        /* If we want to access a mouse our keyboard, we can only use feature
+         * requests as the device is locked by Windows. It must be opened
+         * with ACCESS_TYPE_NONE.
+         */
+        handle = CreateFile(deviceDetails->DevicePath, ACCESS_TYPE_NONE, FILE_SHARE_READ | FILE_SHARE_WRITE, NULL, OPEN_EXISTING, openFlag, NULL);
+#endif
         /* attempt opening for R/W -- we don't care about devices which can't be accessed */
         handle = CreateFile(deviceDetails->DevicePath, GENERIC_READ|GENERIC_WRITE, FILE_SHARE_READ|FILE_SHARE_WRITE, NULL, OPEN_EXISTING, openFlag, NULL);
         if(handle == INVALID_HANDLE_VALUE){
