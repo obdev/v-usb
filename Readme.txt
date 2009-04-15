@@ -37,7 +37,7 @@ the IAR compiler. Previous versions have been tested with IAR 4.10B/W32 and
 
 Ready made avr-gcc tool chains are available for most operating systems:
   * Windows: WinAVR http://winavr.sourceforge.net/
-  * Mac: AVRMacPack http://www.obdev.at/avrmacpack/
+  * Mac: CrossPack for AVR Development http://www.obdev.at/crosspack/
   * Linux and other Unixes: Most free Unixes have optional packages for AVR
     development. If not, follow the instructions at
     http://www.nongnu.org/avr-libc/user-manual/install_tools.html
