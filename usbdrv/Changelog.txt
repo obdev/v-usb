@@ -273,3 +273,5 @@ Scroll down to the bottom to see the most recent changes.
   - Renamed project to V-USB due to a trademark issue with Atmel(r).
   - Changed CommercialLicense.txt and USBID-License.txt to make the
     background of USB ID registration clearer.
+
+* Release 2009-04-15
