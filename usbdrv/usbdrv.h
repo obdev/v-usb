@@ -167,7 +167,9 @@ struct usbRequest;  /* forward declaration */
 
 USB_PUBLIC void usbInit(void);
 /* This function must be called before interrupts are enabled and the main
- * loop is entered.
+ * loop is entered. We exepct that the PORT and DDR bits for D+ and D- have
+ * not been changed from their default status (which is 0). If you have changed
+ * them, set both back to 0 (configure them as input with no internal pull-up).
  */
 USB_PUBLIC void usbPoll(void);
 /* This function must be called at regular intervals from the main loop.
