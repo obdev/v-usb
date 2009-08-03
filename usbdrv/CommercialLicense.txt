@@ -38,13 +38,14 @@ you. OBJECTIVE DEVELOPMENT has obtained USB Product ID ranges under the
 Vendor ID 5824 from Wouter van Ooijen (Van Ooijen Technische Informatica)
 and under the Vendor ID 8352 from Jason Kotzin (Clay Logic). Both owners of
 the Vendor IDs have obtained these IDs from the USB Implementers Forum, Inc.
-(www.usb.org).
+(www.usb.org). OBJECTIVE DEVELOPMENT disclaims all liability which might
+arise from the assignment of USB IDs.
 
 2.5 USB Certification. Although not part of this agreement, we want to make
 it clear that you cannot become USB certified when you use V-USB or a USB
 Product ID assigned by OBJECTIVE DEVELOPMENT. AVR microcontrollers don't
 meet the electrical specifications required by the USB specification and
-the USB Implementers Forum certifies only members who own a Vendor ID of
+the USB Implementers Forum certifies only members who bought a Vendor ID of
 their own.
 
 
