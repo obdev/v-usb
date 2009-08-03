@@ -66,7 +66,7 @@ int usbOpenDevice(usb_dev_handle **device, int vendorID, char *vendorNamePattern
 #define USBOPEN_ERR_NOTFOUND    3   /* device not found */
 
 
-/* Obdev's free USB IDs, see USBID-License.txt for details */
+/* Obdev's free USB IDs, see USB-IDs-for-free.txt for details */
 
 #define USB_VID_OBDEV_SHARED        5824    /* obdev's shared vendor ID */
 #define USB_PID_OBDEV_SHARED_CUSTOM 1500    /* shared PID for custom class devices */

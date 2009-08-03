@@ -275,3 +275,8 @@ Scroll down to the bottom to see the most recent changes.
     background of USB ID registration clearer.
 
 * Release 2009-04-15
+
+  - Changed CommercialLicense.txt to reflect the new range of PIDs from
+    Jason Kotzin.
+  - Removed USBID-License.txt in favor of USB-IDs-for-free.txt and
+    USB-ID-FAQ.txt

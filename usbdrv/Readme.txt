@@ -39,8 +39,8 @@ The driver consists of the following files:
                            with IAR's tools.
   License.txt ............ Open Source license for this driver.
   CommercialLicense.txt .. Optional commercial license for this driver.
-  USBID-License.txt ...... Terms and conditions for using particular USB ID
-                           values for particular purposes.
+  USB-ID-FAQ.txt ......... General infos about USB Product- and Vendor-IDs.
+  USB-IDs-for-free.txt ... List and terms of use for free shared PIDs.
 
 (*) ... These files should be linked to your project.
 
@@ -105,7 +105,7 @@ can assign PIDs at will.
 
 Since an entry level cost of 1,500 USD is too high for most small companies
 and hobbyists, we provide some VID/PID pairs for free. See the file
-USBID-License.txt for details.
+USB-IDs-for-free.txt for details.
 
 Objective Development also has some license offerings which include product
 IDs. See http://www.obdev.at/vusb/ for details.

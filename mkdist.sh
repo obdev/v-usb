@@ -134,7 +134,7 @@ find . -name 'make-files.sh' -exec rm '{}' \;   # remove helper scripts
 rm -f mkdist.sh make-files.sh
 (
     cd usbdrv
-    cp Changelog.txt License.txt CommercialLicense.txt USBID-License.txt ..
+    cp Changelog.txt License.txt CommercialLicense.txt USB-IDs-for-free.txt USB-ID-FAQ.txt ..
 )
 cd ..
 echo "Creating /tmp/$pkgname.zip and /tmp/$pkgname.tar.gz"

@@ -1,5 +1,5 @@
 V-USB Driver Software License Agreement
-Version 2009-04-14
+Version 2009-08-03
 
 THIS LICENSE AGREEMENT GRANTS YOU CERTAIN RIGHTS IN A SOFTWARE. YOU CAN
 ENTER INTO THIS AGREEMENT AND ACQUIRE THE RIGHTS OUTLINED BELOW BY PAYING
@@ -34,11 +34,18 @@ the source code and your copy of V-USB according to your needs.
 
 2.4 USB IDs. OBJECTIVE DEVELOPMENT furnishes you with one or two USB Product
 ID(s), sent to you in e-mail. These Product IDs are reserved exclusively for
-you. They have been obtained from Wouter van Ooijen (www.voti.nl), who has
-reserved the Vendor ID 5824 (decimal) at the USB Implementers Forum, Inc.
-(www.usb.org). This mechanism ensures that there are no Product ID conflicts,
-but you cannot become USB certified (enter into the USB-IF Trademark License
-Agreement) as you would need your own Vendor ID for that.
+you. OBJECTIVE DEVELOPMENT has obtained USB Product ID ranges under the
+Vendor ID 5824 from Wouter van Ooijen (Van Ooijen Technische Informatica)
+and under the Vendor ID 8352 from Jason Kotzin (Clay Logic). Both owners of
+the Vendor IDs have obtained these IDs from the USB Implementers Forum, Inc.
+(www.usb.org).
+
+2.5 USB Certification. Although not part of this agreement, we want to make
+it clear that you cannot become USB certified when you use V-USB or a USB
+Product ID assigned by OBJECTIVE DEVELOPMENT. AVR microcontrollers don't
+meet the electrical specifications required by the USB specification and
+the USB Implementers Forum certifies only members who own a Vendor ID of
+their own.
 
 
 3 LICENSE RESTRICTIONS

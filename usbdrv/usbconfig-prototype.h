@@ -207,7 +207,7 @@ section at the end of this file).
 #define  USB_CFG_VENDOR_ID       0xc0, 0x16
 /* USB vendor ID for the device, low byte first. If you have registered your
  * own Vendor ID, define it here. Otherwise you use one of obdev's free shared
- * VID/PID pairs. Be sure to read USBID-License.txt for rules!
+ * VID/PID pairs. Be sure to read USB-IDs-for-free.txt for rules!
  * + This template uses obdev's shared VID/PID pair: 0x16c0/0x5dc.
  * + Use this VID/PID pair ONLY if you understand the implications!
  */
@@ -216,7 +216,7 @@ section at the end of this file).
  * scope of the vendor ID. If you have registered your own VID with usb.org
  * or if you have licensed a PID from somebody else, define it here. Otherwise
  * you use obdev's free shared VID/PID pair. Be sure to read the rules in
- * USBID-License.txt!
+ * USB-IDs-for-free.txt!
  * + This template uses obdev's shared VID/PID pair: 0x16c0/0x5dc.
  * + Use this VID/PID pair ONLY if you understand the implications!
  */
@@ -230,14 +230,14 @@ section at the end of this file).
  * are interpreted as Unicode (UTF-16) entities.
  * If you don't want a vendor name string, undefine these macros.
  * ALWAYS define a vendor name containing your Internet domain name if you use
- * obdev's free shared VID/PID pair. See the file USBID-License.txt for
+ * obdev's free shared VID/PID pair. See the file USB-IDs-for-free.txt for
  * details.
  */
 #define USB_CFG_DEVICE_NAME     'T', 'e', 'm', 'p', 'l', 'a', 't', 'e'
 #define USB_CFG_DEVICE_NAME_LEN 8
 /* Same as above for the device name. If you don't want a device name, undefine
- * the macros. See the file USBID-License.txt before you assign a name if you
- * use a shared VID/PID.
+ * the macros. See the file USB-IDs-for-free.txt before you assign a name if
+ * you use a shared VID/PID.
  */
 /*#define USB_CFG_SERIAL_NUMBER   'N', 'o', 'n', 'e' */
 /*#define USB_CFG_SERIAL_NUMBER_LEN   0 */

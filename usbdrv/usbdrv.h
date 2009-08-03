@@ -513,7 +513,7 @@ int usbDescriptorStringSerialNumber[];
 #if !defined __ASSEMBLER__ && (!defined USB_CFG_VENDOR_ID || !defined USB_CFG_DEVICE_ID)
 #warning "You should define USB_CFG_VENDOR_ID and USB_CFG_DEVICE_ID in usbconfig.h"
 /* If the user has not defined IDs, we default to obdev's free IDs.
- * See USBID-License.txt for details.
+ * See USB-IDs-for-free.txt for details.
  */
 #endif
 
