@@ -13,46 +13,17 @@
 
 /*
 General Description:
-This file is an example configuration (with inline documentation) for the USB
-driver. It configures V-USB for USB D+ connected to Port D bit 2 (which is
-also hardware interrupt 0 on many devices) and USB D- to Port D bit 4. You may
-wire the lines to any other port, as long as D+ is also wired to INT0 (or any
-other hardware interrupt, as long as it is the highest level interrupt, see
-section at the end of this file).
+This is the config file for tests. It is not updated to the latest set of
+features. Don't use it as a prototype, use usbconfig-prototype.h instead!
 */
 
 /* ---------------------------- Hardware Config ---------------------------- */
 
 #define USB_CFG_IOPORTNAME      D
-/* This is the port where the USB bus is connected. When you configure it to
- * "B", the registers PORTB, PINB and DDRB will be used.
- */
 #define USB_CFG_DMINUS_BIT      4
-/* This is the bit number in USB_CFG_IOPORT where the USB D- line is connected.
- * This may be any bit in the port.
- */
 #define USB_CFG_DPLUS_BIT       2
-/* This is the bit number in USB_CFG_IOPORT where the USB D+ line is connected.
- * This may be any bit in the port. Please note that D+ must also be connected
- * to interrupt pin INT0! [You can also use other interrupts, see section
- * "Optional MCU Description" below, or you can connect D- to the interrupt, as
- * it is required if you use the USB_COUNT_SOF feature. If you use D- for the
- * interrupt, the USB interrupt will also be triggered at Start-Of-Frame
- * markers every millisecond.]
- */
 #define USB_CFG_CLOCK_KHZ       (F_CPU/1000)
-/* Clock rate of the AVR in MHz. Legal values are 12000, 15000, 16000 or 16500.
- * The 16.5 MHz version of the code requires no crystal, it tolerates +/- 1%
- * deviation from the nominal frequency. All other rates require a precision
- * of 2000 ppm and thus a crystal!
- * Default if not specified: 12 MHz
- */
 #define USB_CFG_CHECK_CRC       (USB_CFG_CLOCK_KHZ == 18000)
-/* Define this to 1 if you want that the driver checks data integrity of data
- * packets (CRC checks). CRC checks cost quite a bit of code size and are
- * currently only available for 18 MHz crystal clock. You must choose
- * USB_CFG_CLOCK_KHZ = 18000 if you enable this option.
- */
 
 
 /* ----------------------- Optional Hardware Config ------------------------ */
