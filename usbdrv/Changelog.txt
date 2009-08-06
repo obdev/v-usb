@@ -280,3 +280,7 @@ Scroll down to the bottom to see the most recent changes.
     Jason Kotzin.
   - Removed USBID-License.txt in favor of USB-IDs-for-free.txt and
     USB-ID-FAQ.txt
+  - Fixed a bug in the 12.8 MHz module: End Of Packet decection was made in
+    the center between bit 0 and 1 of each byte. This is where the data lines
+    are expected to change and the sampled data may therefore be nonsense.
+    We therefore check EOP ONLY if bits 0 AND 1 have both been read as 0 on D-.
