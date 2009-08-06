@@ -31,8 +31,9 @@ limitations:
 They typical range is 14.5 MHz and most AVRs can actually reach this rate.
 (2) Writing EEPROM and Flash may be unreliable (short data lifetime) since
 the write procedure is timed from the RC oscillator.
-(3) End Of Packet detection is between bit 0 and bit 1 where the EOP condition
-may not be reliable when a hub is used. It should be in bit 1.
+(3) End Of Packet detection (SE0) should be in bit 1, bit it is only checked
+if bits 0 and 1 both read as 0 on D- and D+ read as 0 in the middle. This may
+cause problems with old hubs which delay SE0 by up to one cycle.
 (4) Code size is much larger than that of the other modules.
 
 Since almost all of this code is timing critical, don't change unless you
@@ -225,11 +226,11 @@ bit0IsClr:
     in      phase, USBIN        ;[06] <- phase (one cycle too late)
     ori     shift, 1 << 0       ;[07]
 bit1AfterClr:
-    andi    phase, USBMASK      ;[08]
+    andi    shift, ~(7 << 1)    ;[08] compensated by "ori shift, 1<<1" if bit1IsSet
     ifioset USBIN, USBMINUS     ;[09] <--- sample 1
     rjmp    bit1IsSet           ;[10]
-    breq    jumpToSe0AndStore   ;[11]
-    andi    shift, ~(7 << 1)    ;[12]
+    ifrclr  phase, USBPLUS      ;[11] if D- was 0 in bits 0 AND 1 and D+ was 0 in between, we have SE0
+    rjmp	se0AndStore			;[12]
     in      phase, USBIN        ;[13] <- phase
     breq    unstuff1c           ;[14]
     rjmp    bit2AfterClr        ;[15]
@@ -391,25 +392,24 @@ bit0IsSet:
     in      phase, USBIN        ;[06] <- phase (one cycle too late)
     ori     shift, 1 << 0       ;[07]
 bit1AfterSet:
-    andi    phase, USBMASK      ;[08]
+    andi    shift, ~(7 << 1)    ;[08] compensated by "ori shift, 1<<1" if bit1IsClr
     ifioclr USBIN, USBMINUS     ;[09] <--- sample 1
     rjmp    bit1IsClr           ;[10]
-    andi    shift, ~(7 << 1)    ;[11]
-    breq    unstuff1s           ;[12]
-    in      phase, USBIN        ;[13] <- phase
-    nop                         ;[14]
+    breq    unstuff1s           ;[11]
+    nop2                        ;[12] do not check for SE0 if bit 0 was 1
+    in      phase, USBIN        ;[14] <- phase (one cycle too late)
     rjmp    bit2AfterSet        ;[15]
 unstuff1s:
-    in      phase, USBIN        ;[14] <- phase (one cycle too late)
-    andi    fix, ~(1 << 1)      ;[15]
-    nop2                        ;[08]
+    in      phase, USBIN        ;[13] <- phase
+    andi    fix, ~(1 << 1)      ;[14]
+    lpm                         ;[07]
     nop2                        ;[10]
 bit1IsClr:
     ifrset  phase, USBMINUS     ;[12] check phase only if D- changed
     lpm                         ;[13]
     in      phase, USBIN        ;[14] <- phase (one cycle too late)
-    breq    se0AndStore         ;[15] if we come from unstuff1s, Z bit is never set
-    ori     shift, 1 << 1       ;[16]
+    ori     shift, 1 << 1       ;[15]
+    nop                         ;[16]
 bit2AfterClr:
     ifioset USBIN, USBMINUS     ;[17] <--- sample 2
     rjmp    bit2IsSet           ;[18]
