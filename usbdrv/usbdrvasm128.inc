@@ -218,19 +218,21 @@ unstuff0s:
     ifioclr USBIN, USBMINUS     ;[00]
     ifioset USBIN, USBPLUS      ;[01]
     rjmp    bit0IsClr           ;[02] executed if first expr false or second true
-jumpToSe0AndStore:
-    rjmp    se0AndStore         ;[03] executed only if both bits 0
+se0AndStore:                    ; executed only if both bits 0
+    st      y+, x1              ;[15/17] cycles after start of byte
+    rjmp    se0                 ;[17/19]
+
 bit0IsClr:
     ifrset  phase, USBMINUS     ;[04] check phase only if D- changed
     lpm                         ;[05]
     in      phase, USBIN        ;[06] <- phase (one cycle too late)
     ori     shift, 1 << 0       ;[07]
 bit1AfterClr:
-    andi    shift, ~(7 << 1)    ;[08] compensated by "ori shift, 1<<1" if bit1IsSet
+    andi    phase, USBMASK      ;[08]
     ifioset USBIN, USBMINUS     ;[09] <--- sample 1
     rjmp    bit1IsSet           ;[10]
-    ifrclr  phase, USBPLUS      ;[11] if D- was 0 in bits 0 AND 1 and D+ was 0 in between, we have SE0
-    rjmp	se0AndStore			;[12]
+    breq    se0AndStore         ;[11] if D- was 0 in bits 0 AND 1 and D+ was 0 in between, we have SE0
+    andi    shift, ~(7 << 1)    ;[12]
     in      phase, USBIN        ;[13] <- phase
     breq    unstuff1c           ;[14]
     rjmp    bit2AfterClr        ;[15]
@@ -355,10 +357,6 @@ unstuff7c:
     andi    fix, ~(1 << 7)      ;[58]
     nop                         ;[59]
     rjmp    bit7IsSet           ;[60]
-
-se0AndStore:
-    st      y+, x1              ;[15/17] cycles after start of byte
-    rjmp    se0                 ;[17/19]
 
 bit7IsClr:
     ifrset  phase, USBMINUS     ;[62] check phase only if D- changed
