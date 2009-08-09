@@ -284,3 +284,7 @@ Scroll down to the bottom to see the most recent changes.
     the center between bit 0 and 1 of each byte. This is where the data lines
     are expected to change and the sampled data may therefore be nonsense.
     We therefore check EOP ONLY if bits 0 AND 1 have both been read as 0 on D-.
+  - Fixed a bitstuffing problem in the 16 MHz module: If bit 6 was stuffed,
+    the unstuffing code in the receiver routine was 1 cycle too long. If
+    multiple bytes had the unstuffing in bit 6, the error summed up until the
+    receiver was out of sync. This problem was fixed.

@@ -117,12 +117,15 @@ haveTwoBitsK:
 ; Receiver loop (numbers in brackets are cycles within byte after instr)
 ;----------------------------------------------------------------------------
 
+; duration of unstuffing code should be 10.66666667 cycles. We adjust "leap"
+; accordingly to approximate this value in the long run.
+
 unstuff6:
     andi    x2, USBMASK ;[03]
     ori     x3, 1<<6    ;[04] will not be shifted any more
     andi    shift, ~0x80;[05]
     mov     x1, x2      ;[06] sampled bit 7 is actually re-sampled bit 6
-    subi    leap, 3     ;[07] since this is a short (10 cycle) bit, enforce leap bit
+    subi    leap, -1    ;[07] total duration = 11 bits -> subtract 1/3
     rjmp    didUnstuff6 ;[08]
 
 unstuff7:
@@ -130,7 +133,7 @@ unstuff7:
     in      x2, USBIN   ;[00] [10]  re-sample bit 7
     andi    x2, USBMASK ;[01]
     andi    shift, ~0x80;[02]
-    subi    leap, 3     ;[03] since this is a short (10 cycle) bit, enforce leap bit
+    subi    leap, 2     ;[03] total duration = 10 bits -> add 1/3
     rjmp    didUnstuff7 ;[04]
 
 unstuffEven:
@@ -139,8 +142,8 @@ unstuffEven:
     andi    shift, ~0x80;[01]
     andi    x1, USBMASK ;[02]
     breq    se0         ;[03]
-    subi    leap, 3     ;[04] since this is a short (10 cycle) bit, enforce leap bit
-    nop                 ;[05]
+    subi    leap, -1    ;[04] total duration = 11 bits -> subtract 1/3
+    nop2                ;[05]
     rjmp    didUnstuffE ;[06]
 
 unstuffOdd:
@@ -149,8 +152,8 @@ unstuffOdd:
     andi    shift, ~0x80;[01]
     andi    x2, USBMASK ;[02]
     breq    se0         ;[03]
-    subi    leap, 3     ;[04] since this is a short (10 cycle) bit, enforce leap bit
-    nop                 ;[05]
+    subi    leap, -1    ;[04] total duration = 11 bits -> subtract 1/3
+    nop2                ;[05]
     rjmp    didUnstuffO ;[06]
 
 rxByteLoop:
