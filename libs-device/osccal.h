@@ -17,11 +17,11 @@ immediately after a USB RESET condition. Timing is done by counting CPU
 cycles, so all interrupts must be disabled while the calibration runs. For
 low level timing measurements, usbMeasureFrameLength() is called. This
 function must be enabled in usbconfig.h by defining
-USB_CFG_HAVE_MEASURE_FRAME_LENGTH to 1. It is also recommended to call
+USB_CFG_HAVE_MEASURE_FRAME_LENGTH to 1. It is recommended to call
 calibrateOscillator() from the reset hook in usbconfig.h:
 
 #ifndef __ASSEMBLER__
-#include <avr/interrupt.h>  /* for sei() */
+#include <avr/interrupt.h>  // for sei()
 extern void calibrateOscillator(void);
 #endif
 #define USB_RESET_HOOK(resetStarts)  if(!resetStarts){cli(); calibrateOscillator(); sei();}
