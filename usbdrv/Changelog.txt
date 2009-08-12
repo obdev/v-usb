@@ -287,4 +287,6 @@ Scroll down to the bottom to see the most recent changes.
   - Fixed a bitstuffing problem in the 16 MHz module: If bit 6 was stuffed,
     the unstuffing code in the receiver routine was 1 cycle too long. If
     multiple bytes had the unstuffing in bit 6, the error summed up until the
-    receiver was out of sync. This problem was fixed.
+    receiver was out of sync.
+  - Included option for faster CRC routine.
+    Thanks to Slawomir Fras (BoskiDialer) for this code!

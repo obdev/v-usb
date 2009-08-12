@@ -139,16 +139,93 @@ RTMODEL "__rt_version", "3"
 
 #endif
 
-; extern unsigned usbCrc16(unsigned char *data, unsigned char len);
-; data: r24/25
-; len: r22
+#if USB_USE_FAST_CRC
+
+; This implementation is faster, but has bigger code size
+; Thanks to Slawomir Fras (BoskiDialer) for this code!
+; It implements the following C pseudo-code:
+; unsigned table(unsigned char x)
+; {
+; unsigned    value;
+; 
+;     value = (unsigned)x << 6;
+;     value ^= (unsigned)x << 7;
+;     if(parity(x))
+;         value ^= 0xc001;
+;     return value;
+; }
+; unsigned usbCrc16(unsigned char *argPtr, unsigned char argLen)
+; {
+; unsigned crc = 0xffff;
+; 
+;     while(argLen--)
+;         crc = table(lo8(crc) ^ *argPtr++) ^ hi8(crc);
+;     return ~crc;
+; }
+
+; extern unsigned usbCrc16(unsigned char *argPtr, unsigned char argLen);
+;   argPtr  r24+25 / r16+r17
+;   argLen  r22 / r18
 ; temp variables:
-;   r18: data byte
-;   r19: bit counter
-;   r20/21: polynomial
-;   r23: scratch
-;   r24/25: crc-sum
-;   r26/27=X: ptr
+;   byte    r18 / r22
+;   scratch r23
+;   resCrc  r24+r25 / r16+r17
+;   ptr     X / Z
+usbCrc16:
+    mov     ptrL, argPtrL
+    mov     ptrH, argPtrH
+    ldi     resCrcL, 0xFF
+    ldi     resCrcH, 0xFF
+    rjmp    usbCrc16LoopTest
+usbCrc16ByteLoop:
+    ld      byte, ptr+
+    eor     resCrcL, byte   ; resCrcL is now 'x' in table()
+    mov     byte, resCrcL   ; compute parity of 'x'
+    swap    byte
+    eor     byte, resCrcL
+    mov     scratch, byte
+    lsr     byte
+    lsr     byte
+    eor     byte, scratch
+    inc     byte
+    lsr     byte
+    andi    byte, 1         ; byte is now parity(x)
+    mov     scratch, resCrcL
+    mov     resCrcL, resCrcH
+    eor     resCrcL, byte   ; low byte of if(parity(x)) value ^= 0xc001;
+    neg     byte
+    andi    byte, 0xc0
+    mov     resCrcH, byte   ; high byte of if(parity(x)) value ^= 0xc001;
+    clr     byte
+    lsr     scratch
+    ror     byte
+    eor     resCrcH, scratch
+    eor     resCrcL, byte
+    lsr     scratch
+    ror     byte
+    eor     resCrcH, scratch
+    eor     resCrcL, byte
+usbCrc16LoopTest:
+    subi    argLen, 1
+    brsh    usbCrc16ByteLoop
+    com     resCrcL
+    com     resCrcH
+    ret
+
+#else   /* USB_USE_FAST_CRC */
+
+; This implementation is slower, but has less code size
+;
+; extern unsigned usbCrc16(unsigned char *argPtr, unsigned char argLen);
+;   argPtr  r24+25 / r16+r17
+;   argLen  r22 / r18
+; temp variables:
+;   byte    r18 / r22
+;   bitCnt  r19
+;   poly    r20+r21
+;   scratch r23
+;   resCrc  r24+r25 / r16+r17
+;   ptr     X / Z
 usbCrc16:
     mov     ptrL, argPtrL
     mov     ptrH, argPtrH
@@ -156,26 +233,29 @@ usbCrc16:
     ldi     resCrcH, 0
     ldi     polyL, lo8(0xa001)
     ldi     polyH, hi8(0xa001)
-    com     argLen      ; argLen = -argLen - 1
-crcByteLoop:
-    subi    argLen, -1
-    brcc    crcReady    ; modified loop to ensure that carry is set below
+    com     argLen      ; argLen = -argLen - 1: modified loop to ensure that carry is set
+    ldi     bitCnt, 0   ; loop counter with starnd condition = end condition
+    rjmp    usbCrcLoopEntry
+usbCrcByteLoop:
     ld      byte, ptr+
-    ldi     bitCnt, -8  ; strange loop counter to ensure that carry is set where we need it
     eor     resCrcL, byte
-crcBitLoop:
-    ror     resCrcH     ; carry is always set here
+usbCrcBitLoop:
+    ror     resCrcH     ; carry is always set here (see brcs jumps to here)
     ror     resCrcL
-    brcs    crcNoXor
+    brcs    usbCrcNoXor
     eor     resCrcL, polyL
     eor     resCrcH, polyH
-crcNoXor:
-    subi    bitCnt, -1
-    brcs    crcBitLoop
-    rjmp    crcByteLoop
-crcReady:
+usbCrcNoXor:
+    subi    bitCnt, 224 ; (8 * 224) % 256 = 0; this loop iterates 8 times
+    brcs    usbCrcBitLoop
+usbCrcLoopEntry:
+    subi    argLen, -1
+    brcs    usbCrcByteLoop
+usbCrcReady:
     ret
 ; Thanks to Reimar Doeffinger for optimizing this CRC routine!
+
+#endif /* USB_USE_FAST_CRC */
 
 ; extern unsigned usbCrc16Append(unsigned char *data, unsigned char len);
 usbCrc16Append:
