@@ -14,8 +14,8 @@
 
 name=vusb
 
-PATH="$PATH:/usr/local/EAGLE/bin"
-eagle=eagle
+#PATH="$PATH"
+eagle=~/Applications/EAGLE/EAGLE.app/Contents/MacOS/EAGLE
 
 #-------------------------------------------------------------------
 # initial user dialog:
@@ -45,7 +45,6 @@ fi
 #-------------------------------------------------------------------
 # determine version, commit and tag in SVN
 #-------------------------------------------------------------------
-open -a X11	# we need X11 for EAGLE
 
 version=`grep USBDRV_VERSION usbdrv/usbdrv.h | awk '{print $NF}'`
 if [ "$isPublic" != yes ]; then
