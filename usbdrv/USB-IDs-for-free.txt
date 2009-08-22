@@ -1,4 +1,4 @@
-Version 2009-08-03
+Version 2009-08-22
 
 ===========================
 FREE USB-IDs FOR SHARED USE
@@ -91,16 +91,16 @@ number. The serial number string MUST be available at least in USB language
 
 (2) The serial number MUST start with either an Internet domain name (e.g.
 "mycompany.com") registered and owned by you, or an e-mail address under your
-control (e.g. "myname@gmx.net"). You MAY append any string you like for
-further discrimination of your devices.
+control (e.g. "myname@gmx.net"), both terminated with a colon (":") character.
+You MAY append any string you like for further discrimination of your devices.
 
 (3) You are responsible for retaining ownership of the domain or e-mail
 address for as long as any of your products are in use.
 
 (5) Application side device look-up MUST be based on the serial number string
 in addition to VID/PID matching. The matching must start at the first
-character of the serial number string and MUST include your entire domain
-name or e-mail address. It MAY stop anywhere after that.
+character of the serial number string and include the colon character
+terminating your domain or e-mail address. It MAY stop anywhere after that.
 
 (6) For devices which implement a particular USB device class (e.g. HID), the
 operating system's default class driver MUST be used. If an operating system

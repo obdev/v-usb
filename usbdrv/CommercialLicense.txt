@@ -32,12 +32,13 @@ product(s), restricted by the limitations in section 3 below.
 2.3 Modifications. OBJECTIVE DEVELOPMENT grants you the right to modify
 the source code and your copy of V-USB according to your needs.
 
-2.4 USB IDs. OBJECTIVE DEVELOPMENT furnishes you with one or two USB Product
-ID(s), sent to you in e-mail. These Product IDs are reserved exclusively for
-you. OBJECTIVE DEVELOPMENT has obtained USB Product ID ranges under the
-Vendor ID 5824 from Wouter van Ooijen (Van Ooijen Technische Informatica)
-and under the Vendor ID 8352 from Jason Kotzin (Clay Logic). Both owners of
-the Vendor IDs have obtained these IDs from the USB Implementers Forum, Inc.
+2.4 USB IDs. OBJECTIVE DEVELOPMENT furnishes you with one or two USB
+Product ID(s), sent to you in e-mail. These Product IDs are reserved
+exclusively for you. OBJECTIVE DEVELOPMENT has obtained USB Product ID
+ranges under the Vendor ID 5824 from Wouter van Ooijen (Van Ooijen
+Technische Informatica, www.voti.nl) and under the Vendor ID 8352 from
+Jason Kotzin (Clay Logic, www.claylogic.com). Both owners of the Vendor IDs
+have obtained these IDs from the USB Implementers Forum, Inc.
 (www.usb.org). OBJECTIVE DEVELOPMENT disclaims all liability which might
 arise from the assignment of USB IDs.
 

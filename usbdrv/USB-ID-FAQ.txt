@@ -1,4 +1,4 @@
-Version 2009-08-03
+Version 2009-08-22
 
 ==========================
 WHY DO WE NEED THESE IDs?
@@ -104,11 +104,11 @@ your IDs:
 WHO IS THE OWNER OF THE VENDOR-ID?
 ==================================
 
-Objective Development has obtained three ranges of USB Product-IDs. Two
-ranges under the Vendor-ID 5824 from Wouter van Ooijen (Van Ooijen Technische
-Informatica, www.voti.nl): 1500-1509 and 10200-10299 and one under the
-Vendor-ID 8352 from Jason Kotzin (Clay Logic): 16384-32767. Both VID owners
-have received their Vendor-ID directly from usb.org.
+Objective Development has obtained ranges of USB Product-IDs under two
+Vendor-IDs: Under Vendor-ID 5824 from Wouter van Ooijen (Van Ooijen
+Technische Informatica, www.voti.nl) and under Vendor-ID 8352 from Jason
+Kotzin (Clay Logic, www.claylogic.com). Both VID owners have received their
+Vendor-ID directly from usb.org.
 
 
 =========================================================================
