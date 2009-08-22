@@ -519,16 +519,16 @@ int usbDescriptorStringSerialNumber[];
 
 /* make sure we have a VID and PID defined, byte order is lowbyte, highbyte */
 #ifndef USB_CFG_VENDOR_ID
-#   define  USB_CFG_VENDOR_ID   0xc0, 0x16  /* 5824 in dec, stands for VOTI */
+#   define  USB_CFG_VENDOR_ID   0xc0, 0x16  /* = 0x16c0 = 5824 = voti.nl */
 #endif
 
 #ifndef USB_CFG_DEVICE_ID
 #   if USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH
-#       define USB_CFG_DEVICE_ID    0xdf, 0x05  /* 1503 in dec, shared PID for HIDs */
+#       define USB_CFG_DEVICE_ID    0xdf, 0x05  /* = 0x5df = 1503, shared PID for HIDs */
 #   elif USB_CFG_INTERFACE_CLASS == 2
-#       define USB_CFG_DEVICE_ID    0xe1, 0x05  /* 1505 in dec, shared PID for CDC Modems */
+#       define USB_CFG_DEVICE_ID    0xe1, 0x05  /* = 0x5e1 = 1505, shared PID for CDC Modems */
 #   else
-#       define USB_CFG_DEVICE_ID    0xdc, 0x05  /* 1500 in dec, obdev's free PID */
+#       define USB_CFG_DEVICE_ID    0xdc, 0x05  /* = 0x5dc = 1500, obdev's free PID */
 #   endif
 #endif
 
