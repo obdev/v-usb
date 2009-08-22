@@ -292,3 +292,5 @@ Scroll down to the bottom to see the most recent changes.
     Thanks to Slawomir Fras (BoskiDialer) for this code!
   - Updated bits in Configuration Descriptor's bmAttributes according to
     USB 1.1 (in particular bit 7, it is a must-be-set bit now).
+
+* Release 2009-08-22
