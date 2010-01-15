@@ -372,6 +372,6 @@ tuningOverflow:
 /* #define USB_INTR_ENABLE_BIT     INT0 */
 /* #define USB_INTR_PENDING        GIFR */
 /* #define USB_INTR_PENDING_BIT    INTF0 */
-/* #define USB_INTR_VECTOR         SIG_INTERRUPT0 */
+/* #define USB_INTR_VECTOR         INT0_vect */
 
 #endif /* __usbconfig_h_included__ */
