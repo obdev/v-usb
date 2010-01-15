@@ -114,12 +114,12 @@ uchar   i;
     /* Even if you don't use the watchdog, turn it off here. On newer devices,
      * the status of the watchdog (on/off, period) is PRESERVED OVER RESET!
      */
-    DBG1(0x00, 0, 0);       /* debug output: main starts */
     /* RESET status: all port bits are inputs without pull-up.
      * That's the way we need D+ and D-. Therefore we don't need any
      * additional hardware initialization.
      */
     odDebugInit();
+    DBG1(0x00, 0, 0);       /* debug output: main starts */
     usbInit();
     usbDeviceDisconnect();  /* enforce re-enumeration, do this while interrupts are disabled! */
     i = 0;
