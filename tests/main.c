@@ -79,7 +79,7 @@ static PROGMEM char myDescriptorConfiguration[] = { /* USB configuration descrip
 #if USB_CFG_IS_SELF_POWERED
     USBATTR_SELFPOWER,      /* attributes */
 #else
-    (char)USBATTR_BUSPOWER, /* attributes */
+    0,                      /* attributes */
 #endif
     USB_CFG_MAX_BUS_POWER/2,            /* max USB current in 2mA units */
 /* interface descriptor follows inline: */
