@@ -105,9 +105,9 @@ interrupt routine.
 Interrupt latency:
 The application must ensure that the USB interrupt is not disabled for more
 than 25 cycles (this is for 12 MHz, faster clocks allow longer latency).
-This implies that all interrupt routines must either be declared as "INTERRUPT"
-instead of "SIGNAL" (see "avr/signal.h") or that they are written in assembler
-with "sei" as the first instruction.
+This implies that all interrupt routines must either have the "ISR_NOBLOCK"
+attribute set (see "avr/interrupt.h") or be written in assembler with "sei"
+as the first instruction.
 
 Maximum interrupt duration / CPU cycle consumption:
 The driver handles all USB communication during the interrupt service
