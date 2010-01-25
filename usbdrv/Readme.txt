@@ -49,8 +49,7 @@ CPU CORE CLOCK FREQUENCY
 ========================
 We supply assembler modules for clock frequencies of 12 MHz, 12.8 MHz, 15 MHz,
 16 MHz, 16.5 MHz 18 MHz and 20 MHz. Other clock rates are not supported. The
-actual clock rate must be configured in usbdrv.h unless you use the default
-12 MHz.
+actual clock rate must be configured in usbconfig.h.
 
 12 MHz Clock
 This is the traditional clock rate of V-USB because it's the lowest clock
