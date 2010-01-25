@@ -294,3 +294,9 @@ Scroll down to the bottom to see the most recent changes.
     USB 1.1 (in particular bit 7, it is a must-be-set bit now).
 
 * Release 2009-08-22
+
+  - Moved first DBG1() after odDebugInit() in all examples.
+  - Use vector INT0_vect instead of SIG_INTERRUPT0 if defined. This makes
+    V-USB compatible with the new "p" suffix devices (e.g. ATMega328p).
+  - USB_CFG_CLOCK_KHZ setting is now required in usbconfig.h (no default any
+    more).
