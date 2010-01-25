@@ -48,7 +48,6 @@ section at the end of this file).
  * 16500 and 20000. The 12.8 MHz and 16.5 MHz versions of the code require no
  * crystal, they tolerate +/- 1% deviation from the nominal frequency. All
  * other rates require a precision of 2000 ppm and thus a crystal!
- * Default if not specified: 12 MHz
  */
 #define USB_CFG_CHECK_CRC       0
 /* Define this to 1 if you want that the driver checks integrity of incoming
