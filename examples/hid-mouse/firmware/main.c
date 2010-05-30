@@ -124,7 +124,7 @@ usbRequest_t    *rq = (void *)data;
 
 /* ------------------------------------------------------------------------- */
 
-int main(void)
+int __attribute__((noreturn)) main(void)
 {
 uchar   i;
 
@@ -159,7 +159,6 @@ uchar   i;
             usbSetInterrupt((void *)&reportBuffer, sizeof(reportBuffer));
         }
     }
-    return 0;
 }
 
 /* ------------------------------------------------------------------------- */

@@ -62,7 +62,7 @@ static uchar    dataBuffer[4];  /* buffer must stay valid when usbFunctionSetup 
 
 /* ------------------------------------------------------------------------- */
 
-int main(void)
+int __attribute__((noreturn)) main(void)
 {
 uchar   i;
 
@@ -92,7 +92,6 @@ uchar   i;
         wdt_reset();
         usbPoll();
     }
-    return 0;
 }
 
 /* ------------------------------------------------------------------------- */
