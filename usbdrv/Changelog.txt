@@ -300,3 +300,5 @@ Scroll down to the bottom to see the most recent changes.
     V-USB compatible with the new "p" suffix devices (e.g. ATMega328p).
   - USB_CFG_CLOCK_KHZ setting is now required in usbconfig.h (no default any
     more).
+  - New USB_CFG_DRIVER_FLASH_PAGE allows boot loaders on devices with more
+    than 64 kB flash.
