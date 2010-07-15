@@ -24,7 +24,8 @@ for device and host and fully working examples for device and host:
   USB-IDs-for-free.txt .... List and terms of use for free shared PIDs.
 
 Each subdirectory contains a separate Readme file which explains its
-contents.
+contents. We recommend that you also read the Readme.txt file in the
+usbdrv subdirectory.
 
 
 PREREQUISITES
@@ -61,13 +62,7 @@ Documentation for host and device library files are in the respective header
 files. For more information, see our documentation wiki at
 http://www.obdev.at/goto.php?t=vusb-wiki.
 
-Since code size is often an issue when V-USB is used (especially with boot
-loaders), we add a link to a page with optimization hints:
-
-    http://www.tty1.net/blog/2008-04-29-avr-gcc-optimisations_en.html
-
-These optimizations are good for gcc 4.x. Version 3.x of gcc produces good
-code even without these flags.
+See the file usbdrv/Readme.txt for more info about the driver itself.
 
 
 LICENSE
@@ -84,5 +79,5 @@ GPL. See CommercialLicense.txt for details.
 
 
 ----------------------------------------------------------------------------
-(c) 2009 by OBJECTIVE DEVELOPMENT Software GmbH.
+(c) 2010 by OBJECTIVE DEVELOPMENT Software GmbH.
 http://www.obdev.at/
