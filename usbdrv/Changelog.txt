@@ -305,4 +305,4 @@ Scroll down to the bottom to see the most recent changes.
   - Built-in configuration descriptor allows custom definition for second
     endpoint now.
 
-* Release 2009-07-15
+* Release 2010-07-15
