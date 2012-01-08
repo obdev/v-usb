@@ -28,6 +28,7 @@ if [ -n "$changes" ]; then
 fi
 
 branch="$(git symbolic-ref HEAD)"
+branch="${branch##refs/heads/}"
 if [ "$branch" != master ]; then
     echo "Warning: On branch $branch, not master! Type enter to continue anyway."
     read dummy
