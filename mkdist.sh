@@ -54,7 +54,7 @@ EOF
         rm usbdrv/usbdrv.h
         mv usbdrv/usbdrv.h.new usbdrv/usbdrv.h
         git add usbdrv/usbdrv.h
-        git commit -m "Updated version number to $today"
+        git commit -m "RELEASE: Updated version number to $today"
     fi
 else
 	echo "For a public release (tagged in subversion) add parameter \"public\""
@@ -80,7 +80,7 @@ else
             mv sizes.txt sizes-reference/$file
             git add sizes-reference/$file
         done
-        git commit -m "Added sizes files for this version"
+        git commit -m "RELEASE: Added sizes files for this version"
         avr-gcc-select $currentGcc
     )
 	echo "Tagging $repository as $version"
@@ -129,7 +129,7 @@ find . -mindepth 2 -name 'make-files.sh' -execdir ./make-files.sh \;
 # Remove unnecessary files from distribution and create archive
 #-------------------------------------------------------------------
 
-rm -rf examples/drivertest
+rm -rf examples/drivertest v-usb.xcodeproj
 find . -name 'make-files.sh' -exec rm '{}' \;   # remove helper scripts
 rm -f mkdist.sh make-files.sh make-all.sh
 (
