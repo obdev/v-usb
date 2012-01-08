@@ -95,7 +95,7 @@ echo "Creating distribution for $name version $version"
 pkgname="$name-$version"
 
 mkdir "/tmp/$pkgname"
-git archive --format=tar | tar -x -C "/tmp/$pkgname"
+git archive --format tar "$branch" | tar -x -C "/tmp/$pkgname"
 cd "/tmp/$pkgname"
 
 #-------------------------------------------------------------------
