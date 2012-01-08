@@ -48,7 +48,7 @@ if [ "$1" = public ]; then
 s/^#define USBDRV_VERSION .*\$/#define USBDRV_VERSION  $today/g
 p
 EOF
-    if cmp --silent usbdrv/usbdrv.h usbdrv/usbdrv.h.new
+    if cmp --silent usbdrv/usbdrv.h usbdrv/usbdrv.h.new; then
         rm usbdrv/usbdrv.h.new  #files are equal
     else
         rm usbdrv/usbdrv.h
