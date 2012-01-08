@@ -21,6 +21,18 @@ eagle=~/Applications/EAGLE/EAGLE.app/Contents/MacOS/EAGLE
 # initial user dialog:
 #-------------------------------------------------------------------
 
+changes=$(git status --porcelain --untracked-files=no)
+if [ -n "$changes" ]; then
+    echo "There are unsaved changes. Please commit them before making a release!"
+    exit 1
+fi
+
+branch="$(git symbolic-ref HEAD)"
+if [ "$branch" != master ]; then
+    echo "Warning: On branch $branch, not master! Type enter to continue anyway."
+    read dummy
+fi
+
 if [ "$1" = public ]; then
 	echo "Generating a public (tagged) release"
 	isPublic=yes
@@ -35,65 +47,54 @@ if [ "$1" = public ]; then
 s/^#define USBDRV_VERSION .*\$/#define USBDRV_VERSION  $today/g
 p
 EOF
-    rm usbdrv/usbdrv.h
-    mv usbdrv/usbdrv.h.new usbdrv/usbdrv.h
+    if cmp --silent usbdrv/usbdrv.h usbdrv/usbdrv.h.new
+        rm usbdrv/usbdrv.h.new  #files are equal
+    else
+        rm usbdrv/usbdrv.h
+        mv usbdrv/usbdrv.h.new usbdrv/usbdrv.h
+        git add usbdrv/usbdrv.h
+        git commit -m "Updated version number to $today"
+    fi
 else
 	echo "For a public release (tagged in subversion) add parameter \"public\""
 	isPublic=no
 fi
 
 #-------------------------------------------------------------------
-# determine version, commit and tag in SVN
+# determine version and tag in GIT
 #-------------------------------------------------------------------
 
 version=`grep USBDRV_VERSION usbdrv/usbdrv.h | awk '{print $NF}'`
 if [ "$isPublic" != yes ]; then
 	version="$version"-priv
-fi
-
-if [ "$isPublic" = yes ]; then
-(
-    currentGcc=`avr-gcc-select | awk '{print $NF}'`
-    cd tests
-    for i in 3 4; do
-        avr-gcc-select $i >/dev/null 2>&1
-        gccvers=`avr-gcc --version | awk '{print $NF; exit}'`
-        file=sizes-$version-gcc$gccvers.txt
-        make sizes
-        mv sizes.txt sizes-reference/$file
-        svn add sizes-reference/$file
-        svn commit -m "Added sizes file for this version" sizes-reference/$file
-    done
-    avr-gcc-select $currentGcc
-)
-fi
-
-if svn commit; then
-	:
 else
-	echo "svn commit failed, aborting"
-	exit 1
-fi
-
-repository=`svn info | sed -n -e '/^URL:/ s|^URL: \(.*\)/trunk|\1| p'`
-if [ "$isPublic" = yes ]; then
+    (
+        currentGcc=`avr-gcc-select | awk '{print $NF}'`
+        cd tests
+        for i in 3 4; do
+            avr-gcc-select $i >/dev/null 2>&1
+            gccvers=`avr-gcc --version | awk '{print $NF; exit}'`
+            file=sizes-$version-gcc$gccvers.txt
+            make sizes
+            mv sizes.txt sizes-reference/$file
+            git add sizes-reference/$file
+        done
+        git commit -m "Added sizes files for this version"
+        avr-gcc-select $currentGcc
+    )
 	echo "Tagging $repository as $version"
-	svn copy "$repository/trunk" "$repository/tags/$version" -m "tagging as $version"
+    git tag "releases/$version"
 fi
 
 #-------------------------------------------------------------------
-# SVN checkout
+# checkout source from repository
 #-------------------------------------------------------------------
 
 echo "Creating distribution for $name version $version"
 pkgname="$name-$version"
 
-if svn checkout "$repository/trunk" "/tmp/$pkgname"; then
-	:
-else
-	echo "svn checkout failed, aborting"
-	exit 1
-fi
+mkdir "/tmp/$pkgname"
+git archive --format=tar | tar -x -C "/tmp/$pkgname"
 cd "/tmp/$pkgname"
 
 #-------------------------------------------------------------------
@@ -128,9 +129,8 @@ find . -mindepth 2 -name 'make-files.sh' -execdir ./make-files.sh \;
 #-------------------------------------------------------------------
 
 rm -rf examples/drivertest
-find . -name '.svn' -prune -exec rm -rf '{}' \; # remove SVN files
 find . -name 'make-files.sh' -exec rm '{}' \;   # remove helper scripts
-rm -f mkdist.sh make-files.sh
+rm -f mkdist.sh make-files.sh make-all.sh
 (
     cd usbdrv
     cp Changelog.txt License.txt CommercialLicense.txt USB-IDs-for-free.txt USB-ID-FAQ.txt ..
@@ -140,3 +140,8 @@ echo "Creating /tmp/$pkgname.zip and /tmp/$pkgname.tar.gz"
 zip -rq9 "$pkgname.zip" "$pkgname"
 tar cfz "$pkgname.tar.gz" "$pkgname"
 open /tmp
+
+echo
+echo "***********************************************************************"
+echo "Don't forget to push GIT repo to origin!"
+echo "***********************************************************************"
