@@ -307,5 +307,10 @@ Scroll down to the bottom to see the most recent changes.
 
 * Release 2010-07-15
 
+  - Fixed bug in usbDriverSetup() which prevented descriptor sizes above 255
+    bytes.
+  - Avoid a compiler warning for unused parameter in usbHandleResetHook() when
+    compiler option -Wextra is enabled.
+  - Fixed hex conversion of some IDs in USB-IDs-for-free.txt.
   - Keep a define for USBATTR_BUSPOWER, although the flag does not exist
     in USB 1.1 any more. Set it to 0.
