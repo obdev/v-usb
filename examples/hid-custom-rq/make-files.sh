@@ -12,10 +12,7 @@ if [ "$1" = remove ]; then
     rm -f firmware/usbconfig.h
     rm -rf firmware/usbdrv
     rm -f firmware/Makefile
-    rm -f commandline/set-led.c
-    rm -f commandline/Makefile.windows
-    rm -f commandline/Makefile
-    rm -f commandline/opendevice.[ch]
+    rm -rf commandline
     exit
 fi
 
@@ -42,6 +39,7 @@ s/^# Project: .*$/# Project: hid-custom-rq example/g
 p
 EOF
 
+mkdir commandline 2>/dev/null
 cat << \EOF | sed -n -f /dev/stdin ../custom-class/commandline/set-led.c >commandline/set-led.c
 /^\( [*] \)\{0,1\}[+].*$/ d
 s/^ [*] Project: .*$/ * Project: hid-custom-rq example/g
