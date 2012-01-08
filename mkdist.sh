@@ -144,5 +144,5 @@ open /tmp
 
 echo
 echo "***********************************************************************"
-echo "Don't forget to push GIT repo to origin!"
+echo "Don't forget to push GIT repo (including tags!) to origin!"
 echo "***********************************************************************"
