@@ -94,6 +94,8 @@ fi
 echo "Creating distribution for $name version $version"
 pkgname="$name-$version"
 
+rm -rf "/tmp/$pkgname"
+rm -f "/tmp/$pkgname".*
 mkdir "/tmp/$pkgname"
 git archive --format tar "$branch" | tar -x -C "/tmp/$pkgname"
 cd "/tmp/$pkgname"
