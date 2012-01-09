@@ -131,7 +131,7 @@ find . -mindepth 2 -name 'make-files.sh' -execdir ./make-files.sh \;
 
 rm -rf examples/drivertest v-usb.xcodeproj
 find . -name 'make-files.sh' -exec rm '{}' \;   # remove helper scripts
-rm -f mkdist.sh make-files.sh make-all.sh
+rm -f mkdist.sh make-files.sh make-all.sh .gitignore
 (
     cd usbdrv
     cp Changelog.txt License.txt CommercialLicense.txt USB-IDs-for-free.txt USB-ID-FAQ.txt ..
