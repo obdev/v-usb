@@ -315,3 +315,4 @@ Scroll down to the bottom to see the most recent changes.
   - Keep a define for USBATTR_BUSPOWER, although the flag does not exist
     in USB 1.1 any more. Set it to 0. This is for backward compatibility.
 
+* Release 2012-01-09
