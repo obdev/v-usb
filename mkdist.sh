@@ -83,7 +83,7 @@ else
         git commit -m "RELEASE: Added sizes files for this version"
         avr-gcc-select $currentGcc
     )
-	echo "Tagging $repository as $version"
+	echo "Tagging as version $version"
     git tag "releases/$version"
 fi
 
