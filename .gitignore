@@ -1,3 +1,17 @@
 .DS_Store
 ._*
+*.o
+*.elf
+*.hex
 /*.xcodeproj/project.xcworkspace/xcuserdata
+examples/*/*/Makefile*
+examples/*/*/opendevice.*
+examples/*/opendevice.*
+examples/*/firmware/usbdrv
+examples/*/firmware/usbconfig.h
+examples/*/firmware/osccal.*
+examples/*/commandline/hiddata.*
+examples/*/commandline/hidsdi.h
+examples/hid-custom-rq/commandline
+tests/sizes.txt
+tests/usbdrv
