@@ -163,6 +163,17 @@ USB messages, even if they address another (low-speed) device on the same bus.
  */
 #define USB_NO_MSG  ((usbMsgLen_t)-1)   /* constant meaning "no message" */
 
+#ifndef usbMsgPtr_t
+#define usbMsgPtr_t uchar *
+#endif
+/* Making usbMsgPtr_t a define allows the user of this library to define it to
+ * an 8 bit type on tiny devices. This reduces code size, especially if the
+ * compiler supports a tiny memory model.
+ * The type can be a pointer or scalar type, casts are made where necessary.
+ * Although it's paradoxical, Gcc 4 generates slightly better code for scalar
+ * types than for pointers.
+ */
+
 struct usbRequest;  /* forward declaration */
 
 USB_PUBLIC void usbInit(void);
@@ -178,7 +189,7 @@ USB_PUBLIC void usbPoll(void);
  * Please note that debug outputs through the UART take ~ 0.5ms per byte
  * at 19200 bps.
  */
-extern uchar *usbMsgPtr;
+extern usbMsgPtr_t usbMsgPtr;
 /* This variable may be used to pass transmit data to the driver from the
  * implementation of usbFunctionWrite(). It is also used internally by the
  * driver for standard control requests.
