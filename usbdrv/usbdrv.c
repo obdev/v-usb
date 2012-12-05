@@ -8,7 +8,6 @@
  * This Revision: $Id$
  */
 
-#include "usbportability.h"
 #include "usbdrv.h"
 #include "oddebug.h"
 
