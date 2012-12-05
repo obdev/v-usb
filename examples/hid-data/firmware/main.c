@@ -29,7 +29,7 @@ at least be connected to INT0 as well.
 /* ----------------------------- USB interface ----------------------------- */
 /* ------------------------------------------------------------------------- */
 
-PROGMEM char usbHidReportDescriptor[22] = {    /* USB report descriptor */
+PROGMEM const char usbHidReportDescriptor[22] = {    /* USB report descriptor */
     0x06, 0x00, 0xff,              // USAGE_PAGE (Generic Desktop)
     0x09, 0x01,                    // USAGE (Vendor Usage 1)
     0xa1, 0x01,                    // COLLECTION (Application)
