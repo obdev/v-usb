@@ -6,7 +6,6 @@
 # Tabsize: 4
 # Copyright: (c) 2008 by OBJECTIVE DEVELOPMENT Software GmbH
 # License: GNU GPL v2 (see License.txt), GNU GPL v3 or proprietary (CommercialLicense.txt)
-# This Revision: $Id$
 
 # This script was created for Mac OS X with EAGLE and ImageMagick installed
 # The "open" command is specific to Mac OS X and is used to start GUI
