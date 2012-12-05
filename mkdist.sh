@@ -125,7 +125,7 @@ rm /tmp/$tname.scr /tmp/$tname.sch
 # Generate all derived files
 #-------------------------------------------------------------------
 
-find . -mindepth 2 -name 'make-files.sh' -execdir ./make-files.sh \;
+make files
 
 #-------------------------------------------------------------------
 # Remove unnecessary files from distribution and create archive
@@ -133,7 +133,7 @@ find . -mindepth 2 -name 'make-files.sh' -execdir ./make-files.sh \;
 
 rm -rf examples/drivertest v-usb.xcodeproj
 find . -name 'make-files.sh' -exec rm '{}' \;   # remove helper scripts
-rm -f mkdist.sh make-files.sh make-all.sh .gitignore
+rm -f mkdist.sh .gitignore
 (
     cd usbdrv
     cp Changelog.txt License.txt CommercialLicense.txt USB-IDs-for-free.txt USB-ID-FAQ.txt ..

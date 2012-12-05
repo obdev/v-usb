@@ -41,7 +41,6 @@
 		40D2D15A0DAF6E2A00DC4278 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		40D2D15C0DAF6E2A00DC4278 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		40D2D1850DAF717600DC4278 /* requests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = requests.h; sourceTree = "<group>"; };
-		40D2D18C0DB0B3ED00DC4278 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
 		40D2D18D0DB0B3ED00DC4278 /* Makefile.windows */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Makefile.windows; sourceTree = "<group>"; };
 		40D2D1930DB0BE3900DC4278 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		40D2D1950DB0BE3900DC4278 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -62,11 +61,9 @@
 		40D2E2D30DB7B7F100DC4278 /* make-files.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "make-files.sh"; sourceTree = "<group>"; };
 		40D2E2D40DB7B80900DC4278 /* make-files.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "make-files.sh"; sourceTree = "<group>"; };
 		40D2E2D50DB7B83400DC4278 /* make-files.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "make-files.sh"; sourceTree = "<group>"; };
-		40D2E2E40DB7BA3600DC4278 /* make-files.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "make-files.sh"; sourceTree = "<group>"; };
 		40D2E32D0DB7C0E900DC4278 /* make-files.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "make-files.sh"; sourceTree = "<group>"; };
 		40D2E33A0DB7C2A700DC4278 /* opendevice.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = opendevice.c; sourceTree = "<group>"; };
 		40D2E33B0DB7C2A700DC4278 /* opendevice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = opendevice.h; sourceTree = "<group>"; };
-		40D2E3710DB7CCCF00DC4278 /* make-all.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "make-all.sh"; sourceTree = "<group>"; };
 		40D64A260EAA318F00FF5D92 /* osctune.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osctune.h; sourceTree = "<group>"; };
 		40D64A2B0EAA41FB00FF5D92 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		40D64A2C0EAA41FB00FF5D92 /* requests.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = requests.h; sourceTree = "<group>"; };
@@ -81,6 +78,7 @@
 		40D64A830EAA502A00FF5D92 /* osccal.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = osccal.c; sourceTree = "<group>"; };
 		40D64A840EAA502A00FF5D92 /* osccal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osccal.h; sourceTree = "<group>"; };
 		40D64B590EAA740400FF5D92 /* usbdrv */ = {isa = PBXFileReference; lastKnownFileType = folder; path = usbdrv; sourceTree = "<group>"; };
+		40EB7F8E166F73E60099159E /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; usesTabs = 1; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -100,10 +98,9 @@
 		40D2CC570DA921F000DC4278 = {
 			isa = PBXGroup;
 			children = (
-				40D2E3710DB7CCCF00DC4278 /* make-all.sh */,
+				40EB7F8E166F73E60099159E /* Makefile */,
 				40D2CC6D0DA9221D00DC4278 /* Readme.txt */,
 				40D2CC6C0DA9221D00DC4278 /* mkdist.sh */,
-				40D2E2E40DB7BA3600DC4278 /* make-files.sh */,
 				40D2E2320DB63ADA00DC4278 /* circuits */,
 				40D2D12F0DAE9F1E00DC4278 /* libs-device */,
 				40D2D1320DAE9F1E00DC4278 /* libs-host */,
@@ -225,7 +222,6 @@
 			isa = PBXGroup;
 			children = (
 				40D2E28D0DB782FE00DC4278 /* set-led.c */,
-				40D2D18C0DB0B3ED00DC4278 /* Makefile */,
 				40D2D18D0DB0B3ED00DC4278 /* Makefile.windows */,
 			);
 			path = commandline;
