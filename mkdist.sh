@@ -132,7 +132,7 @@ make files
 
 rm -rf examples/drivertest v-usb.xcodeproj
 find . -name 'make-files.sh' -exec rm '{}' \;   # remove helper scripts
-rm -f mkdist.sh .gitignore
+rm -f mkdist.sh README.md .gitignore
 (
     cd usbdrv
     cp Changelog.txt License.txt CommercialLicense.txt USB-IDs-for-free.txt USB-ID-FAQ.txt ..

@@ -79,6 +79,7 @@
 		40D64A840EAA502A00FF5D92 /* osccal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = osccal.h; sourceTree = "<group>"; };
 		40D64B590EAA740400FF5D92 /* usbdrv */ = {isa = PBXFileReference; lastKnownFileType = folder; path = usbdrv; sourceTree = "<group>"; };
 		40EB7F8E166F73E60099159E /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; usesTabs = 1; };
+		40EB7F9D16700CA20099159E /* README.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXGroup section */
@@ -98,6 +99,7 @@
 		40D2CC570DA921F000DC4278 = {
 			isa = PBXGroup;
 			children = (
+				40EB7F9D16700CA20099159E /* README.md */,
 				40EB7F8E166F73E60099159E /* Makefile */,
 				40D2CC6D0DA9221D00DC4278 /* Readme.txt */,
 				40D2CC6C0DA9221D00DC4278 /* mkdist.sh */,
