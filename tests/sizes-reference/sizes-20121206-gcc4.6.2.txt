@@ -1,0 +1,17 @@
+                              Variation Flash   RAM    +F  +RAM
+                    Minimum_with_16_MHz  1192    45    +0    +0
+                    Minimum_with_12_MHz  1242    45   +50    +0
+                  Minimum_with_12_8_MHz  1558    45  +366    +0
+                    Minimum_with_15_MHz  1298    45  +106    +0
+                  Minimum_with_16_5_MHz  1314    45  +122    +0
+                Minimum_with_18_MHz+CRC  2262    45 +1070    +0
+                    Minimum_with_20_MHz  1174    45   -18    +0
+                  With_usbFunctionWrite  1252    45   +60    +0
+                   With_usbFunctionRead  1248    45   +56    +0
+         With_usbFunctionRead_and_Write  1286    45   +94    +0
+               With_usbFunctionWriteOut  1214    45   +22    +0
+           With_Interrupt_In_Endpoint_1  1328    57  +136   +12
+  With_Interrupt_In_Endpoint_1_and_Halt  1420    57  +228   +12
+     With_Interrupt_In_Endpoint_1_and_3  1386    69  +194   +24
+                With_Dynamic_Descriptor  1198    45    +6    +0
+                    With_Long_Transfers  1236    47   +44    +2
