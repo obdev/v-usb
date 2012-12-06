@@ -19,9 +19,10 @@ all:
 	if [ ! -f examples/hid-mouse/firmware/Makefile ]; then \
 		$(MAKE) files; \
 	fi
-	$(MAKE) unix
-	if cross-make.sh --help >/dev/null 2>&1; then \
+	if [ -n "$(uname -s | grep -i mingw)" ]; then \
 		$(MAKE) windows; \
+	else \
+		$(MAKE) unix; \
 	fi
 
 clean:
@@ -49,7 +50,9 @@ unix unixclean:
 
 windows windowsclean:
 	target=$$(echo $@ | sed -e 's/windows//g'); \
-	find . -mindepth 3 -name Makefile.windows -execdir cross-make.sh $$target \;
+	find . -mindepth 3 -name Makefile.windows -execdir cross-make.sh $$target \; ; \
+	if [ -z "$$target" ]; then target=hex; fi; \
+	find . -mindepth 2 -name firmware -exec sh -c "cd '{}'; $(MAKE) $$target" \;
 
 files filesremove:
 	target=$$(echo $@ | sed -e 's/files//g'); \
