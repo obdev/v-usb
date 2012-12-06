@@ -3,6 +3,7 @@
 *.o
 *.elf
 *.hex
+*.exe
 /*.xcodeproj/project.xcworkspace/xcuserdata
 examples/*/*/Makefile*
 examples/*/*/opendevice.*
@@ -13,5 +14,9 @@ examples/*/firmware/osccal.*
 examples/*/commandline/hiddata.*
 examples/*/commandline/hidsdi.h
 examples/hid-custom-rq/commandline
+examples/custom-class/commandline/set-led
+examples/drivertest/commandline/runtest
+examples/hid-data/commandline/hidtool
+examples/usbtool/usbtool
 tests/sizes.txt
 tests/usbdrv
