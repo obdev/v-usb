@@ -22,7 +22,7 @@ eagle=~/Applications/EAGLE/EAGLE.app/Contents/MacOS/EAGLE
 
 changes=$(git status --porcelain --untracked-files=no)
 if [ -n "$changes" ]; then
-    echo "There are unsaved changes. Please commit them before making a release!"
+    echo "There are uncommitted changes. Please commit them before making a release!"
     exit 1
 fi
 
