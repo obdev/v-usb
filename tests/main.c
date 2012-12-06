@@ -121,7 +121,7 @@ uchar *p = 0, len = 0;
         p = (uchar *)(myDescriptorConfiguration);
         len = sizeof(myDescriptorConfiguration);
     }
-    usbMsgPtr = p;
+    usbMsgPtr = (usbMsgPtr_t)p;
     return len;
 }
 #endif
