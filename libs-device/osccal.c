@@ -42,7 +42,7 @@ int usbMeasureFrameLengthDecreasing(int);
  *	  - usbMeasureFrameLengthDecreasing measures in multiples of 5 cycles and is thus
  *	    slighly more accurate.
  *	  - usbMeasureFrameLengthDecreasing does not support time out anymore. The original
- *	    implemented returned zero in case of time out, which would have caused the old
+ *	    implementation returned zero in case of time out, which would have caused the old
  *      calibrateOscillator() implementation to increase OSSCAL to 255, effictively
  *      overclocking and most likely crashing the CPU. The new implementation will enter
  *		an infinite loop when no USB activity is encountered. The user program should
