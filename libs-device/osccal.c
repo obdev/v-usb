@@ -8,7 +8,6 @@
  */
 
 #include <avr/io.h>
-#include <util/delay.h>
 #ifndef uchar
 #define uchar   unsigned char
 #endif
@@ -28,12 +27,12 @@ extern int usbMeasurePacketLengthDecreasing(int);
  *
  * Benefits:
  *	  - Codesize reduced by 54 bytes.
- *    - Improved robustness due to removing timeout from frame lengths measurement and 
+ *    - Improved robustness due to removing timeout from frame length measurement and 
  *	    inserted NOP after OSCCAL writes.
  *
  * Changes:
  *    - The new routine performs a combined binary and neighborhood search
- *      in a single loop. This saves 34 bytes.
+ *      in a single loop.
  *      Note that the neighborhood search is necessary due to the quasi-monotonic 
  *      nature of OSCCAL. (See Atmel application note AVR054).
  *	  - Inserted NOP after writes to OSCCAL to avoid CPU errors during oscillator
