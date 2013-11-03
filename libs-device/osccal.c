@@ -12,7 +12,7 @@
 #define uchar   unsigned char
 #endif
 
-extern int usbMeasurePacketLengthDecreasing(int);
+int usbMeasureFrameLengthDecreasing(int);
 
 /* ------------------------------------------------------------------------- */
 /* ------------------------ Oscillator Calibration ------------------------- */
