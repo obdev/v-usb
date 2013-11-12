@@ -219,7 +219,7 @@ static inline void  usbResetStall(void)
 static void usbGenericSetInterrupt(uchar *data, uchar len, usbTxStatus_t *txStatus)
 {
 uchar   *p;
-char    i;
+schar   i;
 
 #if USB_CFG_IMPLEMENT_HALT
     if(usbTxLen1 == USBPID_STALL)
