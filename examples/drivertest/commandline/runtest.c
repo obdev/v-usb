@@ -21,9 +21,10 @@ General Description:
 
 #define uchar   unsigned char
 
-static void hexdump(uchar *buffer, int len, FILE *fp)
+static void hexdump(char *_buffer, int len, FILE *fp)
 {
 int i;
+uchar *buffer = (uchar *)_buffer;
 
     for(i = 0; i < len; i++){
         if(i != 0){
