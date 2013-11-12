@@ -87,8 +87,9 @@ int __attribute__((noreturn)) main(void)
 uchar   i;
 
     wdt_enable(WDTO_1S);
-    /* Even if you don't use the watchdog, turn it off here. On newer devices,
-     * the status of the watchdog (on/off, period) is PRESERVED OVER RESET!
+    /* If you don't use the watchdog, replace the call above with a wdt_disable().
+     * On newer devices, the status of the watchdog (on/off, period) is PRESERVED
+     * OVER RESET!
      */
     /* RESET status: all port bits are inputs without pull-up.
      * That's the way we need D+ and D-. Therefore we don't need any
