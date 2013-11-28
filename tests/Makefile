@@ -13,7 +13,7 @@ DEFINES =
 CFLAGS  = $(DEFINES) -Iusbdrv -I. -DDEBUG_LEVEL=0
 OBJECTS = usbdrv/usbdrv.o usbdrv/usbdrvasm.o usbdrv/oddebug.o main.o
 
-COMPILE = avr-gcc -Wall -Os -DF_CPU=$(F_CPU) $(CFLAGS) -mmcu=$(DEVICE)
+COMPILE = avr-gcc -Wall -Os -DF_CPU=$(F_CPU) $(CRCFLAG) $(CFLAGS) -mmcu=$(DEVICE)
 
 SIZES_TMP = /tmp/sizetmp.txt
 
@@ -39,6 +39,8 @@ sizes sizes.txt:
 	$(MAKE) clean; $(MAKE) main.elf F_CPU=16500000
 	avr-size main.elf | tail -1 | awk '{print "Minimum_with_16_5_MHz", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
 	$(MAKE) clean; $(MAKE) main.elf F_CPU=18000000
+	avr-size main.elf | tail -1 | awk '{print "Minimum_with_18_MHz", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
+	$(MAKE) clean; $(MAKE) main.elf F_CPU=18000000 CRCFLAG="-DUSE_CRC=1"
 	avr-size main.elf | tail -1 | awk '{print "Minimum_with_18_MHz+CRC", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)
 	$(MAKE) clean; $(MAKE) main.elf F_CPU=20000000
 	avr-size main.elf | tail -1 | awk '{print "Minimum_with_20_MHz", $$1+$$2, $$3+$$2}' >>$(SIZES_TMP)

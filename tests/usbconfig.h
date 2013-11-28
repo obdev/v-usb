@@ -22,7 +22,11 @@ features. Don't use it as a prototype, use usbconfig-prototype.h instead!
 #define USB_CFG_DMINUS_BIT      4
 #define USB_CFG_DPLUS_BIT       2
 #define USB_CFG_CLOCK_KHZ       (F_CPU/1000)
-#define USB_CFG_CHECK_CRC       (USB_CFG_CLOCK_KHZ == 18000)
+#ifdef USE_CRC
+#   define USB_CFG_CHECK_CRC    1
+#else
+#   define USB_CFG_CHECK_CRC    0
+#endif
 
 
 /* ----------------------- Optional Hardware Config ------------------------ */

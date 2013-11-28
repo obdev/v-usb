@@ -366,7 +366,7 @@ usbMFTimeout:
 #   if USB_CFG_CLOCK_KHZ == 18000
 #       include "usbdrvasm18-crc.inc"
 #   else
-#       error "USB_CFG_CLOCK_KHZ is not one of the supported crc-rates!"
+#       error "USB_CFG_CLOCK_KHZ is not one of the supported rates for USB_CFG_CHECK_CRC!"
 #   endif
 #else   /* USB_CFG_CHECK_CRC */
 #   if USB_CFG_CLOCK_KHZ == 12000
@@ -379,9 +379,11 @@ usbMFTimeout:
 #       include "usbdrvasm16.inc"
 #   elif USB_CFG_CLOCK_KHZ == 16500
 #       include "usbdrvasm165.inc"
+#   elif USB_CFG_CLOCK_KHZ == 18000
+#       include "usbdrvasm18.inc"
 #   elif USB_CFG_CLOCK_KHZ == 20000
 #       include "usbdrvasm20.inc"
 #   else
-#       error "USB_CFG_CLOCK_KHZ is not one of the supported non-crc-rates!"
+#       error "USB_CFG_CLOCK_KHZ is not one of the supported rates!"
 #   endif
 #endif /* USB_CFG_CHECK_CRC */
