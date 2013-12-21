@@ -21,7 +21,8 @@ section at the end of this file).
 */
 
 /* ---------------------------- Hardware Config ---------------------------- */
-
+#define USB_RUNNING_ON_LGT		1
+/* This is the switch of support LGT 's cpu duty or AVR 's CPU duty */
 #define USB_CFG_IOPORTNAME      D
 /* This is the port where the USB bus is connected. When you configure it to
  * "B", the registers PORTB, PINB and DDRB will be used.

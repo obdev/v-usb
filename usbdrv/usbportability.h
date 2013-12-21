@@ -62,7 +62,16 @@ Thanks to Oleg Semyonov for his help with the IAR tools port!
 #define _BV(x)      (1 << (x))
 
 /* assembler compatibility macros */
-#define nop2    rjmp    $+2 /* jump to next instruction */
+#if USB_RUNNING_ON_LGT
+	#ifdef __ASSEMBLER__
+	macro nop2
+	nop
+	nop
+	endm
+	#endif
+#else
+	#define nop2    rjmp    $+2 /* jump to next instruction */
+#endif
 #define XL      r26
 #define XH      r27
 #define YL      r28
@@ -111,8 +120,16 @@ static inline void  sei(void)
 
 #define macro   .macro
 #define endm    .endmacro
-#define nop2    rjmp    .+0 /* jump to next instruction */
-
+#if USB_RUNNING_ON_LGT
+	#ifdef __ASSEMBLER__
+	macro nop2
+	nop
+	nop
+	endm
+	#endif
+#else
+	#define nop2    rjmp    .+0 /* jump to next instruction */
+#endif
 /* ------------------------------------------------------------------------- */
 #else   /* default development environment is avr-gcc/avr-libc */
 /* ------------------------------------------------------------------------- */
@@ -132,7 +149,16 @@ static inline void  sei(void)
 
 #define macro   .macro
 #define endm    .endm
-#define nop2    rjmp    .+0 /* jump to next instruction */
+#if USB_RUNNING_ON_LGT
+	#ifdef __ASSEMBLER__
+	macro nop2
+	nop
+	nop
+	endm
+	#endif
+#else
+	#define nop2    rjmp    .+0 /* jump to next instruction */
+#endif
 
 #endif  /* development environment */
 

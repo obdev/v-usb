@@ -7,7 +7,7 @@
 # License: GNU GPL v2 (see License.txt), GNU GPL v3 or proprietary (CommercialLicense.txt)
 
 DEVICE  = atmega8
-F_CPU   = 12800000	# in Hz
+F_CPU   = 12000000	# in Hz
 FUSE_L  = 0x94
 FUSE_H  = 0xc9
 AVRDUDE = avrdude -c stk500v2 -P avrdoper -p $(DEVICE) # edit this line for your programmer
