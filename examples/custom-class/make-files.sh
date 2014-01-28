@@ -16,7 +16,7 @@ if [ "$1" = remove ]; then
     exit
 fi
 
-cat << \EOF | sed -n -f /dev/stdin ../../usbdrv/usbconfig-prototype.h >firmware/usbconfig.h
+cat << \EOF | sed -n -f - ../../usbdrv/usbconfig-prototype.h >firmware/usbconfig.h
 /^\( [*] \)\{0,1\}[+].*$/ d
 s/^#define USB_CFG_DMINUS_BIT .*$/#define USB_CFG_DMINUS_BIT      4/g
 s|^.*#define USB_CFG_CLOCK_KHZ.*$|#define USB_CFG_CLOCK_KHZ       (F_CPU/1000)|g
@@ -27,13 +27,13 @@ s/^#define USB_CFG_MAX_BUS_POWER .*$/#define USB_CFG_MAX_BUS_POWER           40/
 p
 EOF
 
-cat << \EOF | sed -n -f /dev/stdin ../usbtool/Makefile.windows >commandline/Makefile.windows
+cat << \EOF | sed -n -f - ../usbtool/Makefile.windows >commandline/Makefile.windows
 /^\( [*] \)\{0,1\}[+].*$/ d
 s/^# Project: .*$/# Project: custom-class example/g
 p
 EOF
 
-cat << \EOF | sed -n -f /dev/stdin ../usbtool/Makefile >commandline/Makefile
+cat << \EOF | sed -n -f - ../usbtool/Makefile >commandline/Makefile
 /^\( [*] \)\{0,1\}[+].*$/ d
 s/^# Project: .*$/# Project: custom-class example/g
 s/^NAME = .*$/NAME = set-led/g
