@@ -149,7 +149,7 @@ PROGMEM const char usbDescriptorConfiguration[] = {    /* USB configuration desc
 #if USB_CFG_IS_SELF_POWERED
     (1 << 7) | USBATTR_SELFPOWER,       /* attributes */
 #else
-    (1 << 7),                           /* attributes */
+    (1 << 7) | USBATTR_REMOTEWAKE,      /* attributes */
 #endif
     USB_CFG_MAX_BUS_POWER/2,            /* max USB current in 2mA units */
 /* interface descriptor follows inline: */
