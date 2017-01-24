@@ -208,6 +208,15 @@ extern usbMsgPtr_t usbMsgPtr;
  * implementation of usbFunctionWrite(). It is also used internally by the
  * driver for standard control requests.
  */
+
+extern uchar usbMsgFlags;    /* flag values see USB_FLG_* */
+/* Can be set to `USB_FLG_MSGPTR_IS_ROM` in `usbFunctionSetup()` or
+ * `usbFunctionDescriptor()` if `usbMsgPtr` has been set to a flash memory
+ * address.
+ */
+
+#define USB_FLG_MSGPTR_IS_ROM   (1<<6)
+
 USB_PUBLIC usbMsgLen_t usbFunctionSetup(uchar data[8]);
 /* This function is called when the driver receives a SETUP transaction from
  * the host which is not answered by the driver itself (in practice: class and
