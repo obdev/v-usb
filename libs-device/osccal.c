@@ -16,6 +16,12 @@
 /* ------------------------ Oscillator Calibration ------------------------- */
 /* ------------------------------------------------------------------------- */
 
+/* This is a "C" implementation. You can customize it to your needs easily.
+ * If you want smaller code size, there is an improved version in the
+ * micronucleous project. See
+ * https://github.com/micronucleus/micronucleus/blob/master/firmware/osccalASM.S
+ */
+
 /* Calibrate the RC oscillator. Our timing reference is the Start Of Frame
  * signal (a single SE0 bit) repeating every millisecond immediately after
  * a USB RESET. We first do a binary search for the OSCCAL value and then
