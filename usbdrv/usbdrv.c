@@ -333,6 +333,9 @@ uchar       flags = USB_FLG_MSGPTR_IS_ROM;
             GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_STRING_SERIAL_NUMBER, usbDescriptorStringSerialNumber)
         SWITCH_DEFAULT
             if(USB_CFG_DESCR_PROPS_UNKNOWN & USB_PROP_IS_DYNAMIC){
+                if(USB_CFG_DESCR_PROPS_UNKNOWN & USB_PROP_IS_RAM){
+                    flags = 0;
+                }
                 len = usbFunctionDescriptor(rq);
             }
         SWITCH_END
@@ -345,6 +348,9 @@ uchar       flags = USB_FLG_MSGPTR_IS_ROM;
 #endif
     SWITCH_DEFAULT
         if(USB_CFG_DESCR_PROPS_UNKNOWN & USB_PROP_IS_DYNAMIC){
+            if(USB_CFG_DESCR_PROPS_UNKNOWN & USB_PROP_IS_RAM){
+                flags = 0;
+            }
             len = usbFunctionDescriptor(rq);
         }
     SWITCH_END
