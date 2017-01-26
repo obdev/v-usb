@@ -350,6 +350,75 @@ usbMFTimeout:
 
 #endif  /* USB_CFG_HAVE_MEASURE_FRAME_LENGTH */
 
+
+#if USB_CFG_HAVE_MEASURE_FRAME_LENGTH
+#ifdef __IAR_SYSTEMS_ASM__
+/* Register assignments for usbMeasureFrameLengthDecreasing on IAR cc */
+/* Calling conventions on IAR:
+ * First parameter passed in r16/r17, second in r18/r19 and so on.
+ * Callee must preserve r4-r15, r24-r29 (r28/r29 is frame pointer)
+ * Result is passed in r16/r17
+ * In case of the "tiny" memory model, pointers are only 8 bit with no
+ * padding. We therefore pass argument 1 as "16 bit unsigned".
+ */
+#   define resL     r16
+#   define resH     r17
+#   define cnt16L   r30
+#   define cnt16H   r31
+#   define cntH     r18
+
+#else  /* __IAR_SYSTEMS_ASM__ */ 
+/* Register assignments for usbMeasureFrameLength on gcc */
+/* Calling conventions on gcc:
+ * First parameter passed in r24/r25, second in r22/23 and so on.
+ * Callee must preserve r1-r17, r28/r29
+ * Result is passed in r24/r25
+ */
+#   define resL     r24
+#   define resH     r25
+#   define cnt16L   r24
+#   define cnt16H   r25
+#   define cntH     r26
+#endif
+#   define cnt16    cnt16L
+
+; extern int usbMeasurePacketLengthDecreasing(int);
+; input: timer start value
+; return: counts down time between two idle strobes in multiples of 5 CPU clocks
+.global usbMeasureFrameLengthDecreasing
+usbMeasureFrameLengthDecreasing:
+
+#if resL != cnt16L
+    mov     cnt16L, resL
+    mov     cnt16H, resH
+#endif
+
+usbDFWaitStrobe:            ; first wait for D- == 0 (idle strobe)
+    sbic    USBIN, USBMINUS ;
+    rjmp    usbDFWaitStrobe ;
+usbDFWaitIdle:              ; then wait until idle again
+    sbis    USBIN, USBMINUS ;1 wait for D- == 1
+    rjmp    usbDFWaitIdle   ;2
+usbDFWaitLoop:
+	sbiw	cnt16,1			;[0] [5]
+    sbic    USBIN, USBMINUS ;[2] 
+    rjmp    usbDFWaitLoop   ;[3]
+
+#if resL != cnt16L
+    mov     resL, cnt16L
+    mov     resH, cnt16H
+#endif
+    ret
+
+#undef resL
+#undef resH
+#undef cnt16
+#undef cnt16L
+#undef cnt16H
+#undef cntH
+
+#endif  /* USB_CFG_HAVE_MEASURE_FRAME_LENGTH */
+
 ;----------------------------------------------------------------------------
 ; Now include the clock rate specific code
 ;----------------------------------------------------------------------------
