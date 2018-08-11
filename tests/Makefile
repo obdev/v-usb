@@ -114,7 +114,7 @@ clean:
 
 # file targets:
 
-# Since we don't want to ship the driver multipe times, we copy it into this project:
+# Since we don't want to ship the driver multiple times, we copy it into this project:
 usbdrv:
 	cp -r ../usbdrv .
 

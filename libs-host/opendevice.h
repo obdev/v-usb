@@ -37,7 +37,7 @@ int usbGetStringAscii(usb_dev_handle *dev, int index, char *buf, int buflen);
  */
 
 int usbOpenDevice(usb_dev_handle **device, int vendorID, char *vendorNamePattern, int productID, char *productNamePattern, char *serialNamePattern, FILE *printMatchingDevicesFp, FILE *warningsFp);
-/* This function iterates over all devices on all USB busses and searches for
+/* This function iterates over all devices on all USB buses and searches for
  * a device. Matching is done first by means of Vendor- and Product-ID (passed
  * in 'vendorID' and 'productID'. An ID of 0 matches any numeric ID (wildcard).
  * When a device matches by its IDs, matching by names is performed. Name

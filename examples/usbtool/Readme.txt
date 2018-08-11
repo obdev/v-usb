@@ -25,7 +25,7 @@ SYNOPSIS
 COMMANDS
 ========
   list
-    This command prints a list of devices found on all available USB busses.
+    This command prints a list of devices found on all available USB buses.
     Options -v, -V, -p and -P can be used to filter the list.
 
   control in|out <type> <recipient> <request> <value> <index>
