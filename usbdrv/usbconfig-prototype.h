@@ -93,7 +93,7 @@ section at the end of this file).
 /* The above macro defines the startup condition for data toggling on the
  * interrupt/bulk endpoints 1 and 3. Defaults to USBPID_DATA1.
  * Since the token is toggled BEFORE sending any data, the first packet is
- * sent with the oposite value of this configuration!
+ * sent with the opposite value of this configuration!
  */
 #define USB_CFG_IMPLEMENT_HALT          0
 /* Define this to 1 if you also want to implement the ENDPOINT_HALT feature
@@ -369,7 +369,7 @@ section at the end of this file).
 /* The following configurations have working defaults in usbdrv.h. You
  * usually don't need to set them explicitly. Only if you want to run
  * the driver on a device which is not yet supported or with a compiler
- * which is not fully supported (such as IAR C) or if you use a differnt
+ * which is not fully supported (such as IAR C) or if you use a different
  * interrupt than INT0, you may have to define some of these.
  */
 /* #define USB_INTR_CFG            MCUCR */

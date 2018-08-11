@@ -56,7 +56,7 @@ of CPU cycles, but even an exact number of cycles!
 ; CRC algorithm:
 ;	The crc register is formed by x3 (higher byte) and ZL (lower byte). The algorithm uses a 'reversed' form
 ;	i.e. that it takes the least significant bit first and shifts to the right. So in fact the highest order
-;	bit seen from the polynomial devision point of view is the lsb of ZL. (If this sounds strange to you i
+;	bit seen from the polynomial division point of view is the lsb of ZL. (If this sounds strange to you i
 ;	propose a research on CRC :-) )
 ;	Each data byte received is xored to ZL, the lower crc byte. This byte now builds the crc
 ;	table index. Next the new high byte is loaded from the table and stored in x4 until we have space in x3
@@ -104,9 +104,9 @@ macro CRC_CLEANUP_AND_CHECK
 	lpm		ZL, Z				;[+6][+7][+8]
 	eor		ZL, x3				;[+7] xor the old high byte with the value from the table, x2:ZL now holds the crc value
 	cpi		ZL, 0x01			;[+8] if the crc is ok we have a fixed remainder value of 0xb001 in x2:ZL (see usb spec)
-	brne	ignorePacket		;[+9] detected a crc fault -> paket is ignored and retransmitted by the host
+	brne	ignorePacket		;[+9] detected a crc fault -> packet is ignored and retransmitted by the host
 	cpi		x2, 0xb0			;[+10]
-	brne	ignorePacket		;[+11] detected a crc fault -> paket is ignored and retransmitted by the host
+	brne	ignorePacket		;[+11] detected a crc fault -> packet is ignored and retransmitted by the host
     endm
 
 
@@ -122,7 +122,7 @@ USB_INTR_VECTOR:
 ;sync byte (D-) pattern LSb to MSb: 01010100 [1 = idle = J, 0 = K]
 ;sync up with J to K edge during sync pattern -- use fastest possible loops
 ;The first part waits at most 1 bit long since we must be in sync pattern.
-;YL is guarenteed to be < 0x80 because I flag is clear. When we jump to
+;YL is guaranteed to be < 0x80 because I flag is clear. When we jump to
 ;waitForJ, ensure that this prerequisite is met.
 waitForJ:
     inc     YL
@@ -227,7 +227,7 @@ bitloopPid:
 	ror		shift				;[6]
 	ldi		ZL, 0x54			;[7] ZL is the low order crc value
 	ser		x4					;[8] the is no bit stuffing check here as the pid bit can't be stuffed. if so
-								; some error occured. In this case the paket is discarded later on anyway.
+								; some error occurred. In this case the packet is discarded later on anyway.
 	mov		x2, x1				;[9] prepare for the next cycle
 	brcc	bitloopPid			;[10] while 0s drop out of shift we get the next bit
 	eor		x4, shift			;[11] invert all bits in shift and store result in x4
@@ -516,7 +516,7 @@ didunstuff5:
 	lpm		x4, Z				;[8] load the higher crc xor-byte and store it for later use
 								;[9] lpm needs 3 cycles
 								;[10]			
-	ldi		ZH, hi8(usbCrcTableLow);[11] load the lower crc xor byte adress
+	ldi		ZH, hi8(usbCrcTableLow);[11] load the lower crc xor byte address
 
 ; bit6	    					
 	in      x1, USBIN           ;[0] sample line state

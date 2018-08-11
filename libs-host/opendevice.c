@@ -122,7 +122,7 @@ int                 errorCode = USBOPEN_ERR_NOTFOUND;
     usb_find_busses();
     usb_find_devices();
     for(bus = usb_get_busses(); bus; bus = bus->next){
-        for(dev = bus->devices; dev; dev = dev->next){  /* iterate over all devices on all busses */
+        for(dev = bus->devices; dev; dev = dev->next){  /* iterate over all devices on all buses */
             if((vendorID == 0 || dev->descriptor.idVendor == vendorID)
                         && (productID == 0 || dev->descriptor.idProduct == productID)){
                 char    vendor[256], product[256], serial[256];
