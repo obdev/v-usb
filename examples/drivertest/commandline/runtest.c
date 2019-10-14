@@ -21,6 +21,10 @@ General Description:
 
 #define uchar   unsigned char
 
+#if defined(__linux__)
+    #define srandomdev()
+#endif
+
 static void hexdump(char *_buffer, int len, FILE *fp)
 {
 int i;
