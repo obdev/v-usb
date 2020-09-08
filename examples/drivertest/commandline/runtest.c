@@ -13,6 +13,7 @@ General Description:
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <usb.h>        /* this is libusb */
 #include "opendevice.h" /* common code moved to separate module */
 
@@ -111,7 +112,11 @@ int             cnt, vid, pid, i, j;
             }
         }
     }else{
+#ifdef __linux__
+        srandom(time(NULL));
+#else
         srandomdev();
+#endif
         for(i = 0; i <= 100000; i++){
             fillBuffer(txBuffer, sizeof(txBuffer));
             cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_OUT, CUSTOM_RQ_SET_DATA, 0, 0, txBuffer, sizeof(txBuffer), 5000);
