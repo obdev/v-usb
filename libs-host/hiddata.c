@@ -160,7 +160,7 @@ BOOLEAN rval = 0;
 /* ######################################################################## */
 
 #include <string.h>
-#include <usb.h>
+#include <libusb.h>
 
 #define usbDevice   usb_dev_handle  /* use libusb's device structure */
 
@@ -176,90 +176,67 @@ static int  usesReportIDs;
 
 /* ------------------------------------------------------------------------- */
 
-static int usbhidGetStringAscii(usb_dev_handle *dev, int index, char *buf, int buflen)
-{
-char    buffer[256];
-int     rval, i;
-
-    if((rval = usb_get_string_simple(dev, index, buf, buflen)) >= 0) /* use libusb version if it works */
-        return rval;
-    if((rval = usb_control_msg(dev, USB_ENDPOINT_IN, USB_REQ_GET_DESCRIPTOR, (USB_DT_STRING << 8) + index, 0x0409, buffer, sizeof(buffer), 5000)) < 0)
-        return rval;
-    if(buffer[1] != USB_DT_STRING){
-        *buf = 0;
-        return 0;
-    }
-    if((unsigned char)buffer[0] < rval)
-        rval = (unsigned char)buffer[0];
-    rval /= 2;
-    /* lossy conversion to ISO Latin1: */
-    for(i=1;i<rval;i++){
-        if(i > buflen)              /* destination buffer overflow */
-            break;
-        buf[i-1] = buffer[2 * i];
-        if(buffer[2 * i + 1] != 0)  /* outside of ISO Latin1 range */
-            buf[i-1] = '?';
-    }
-    buf[i-1] = 0;
-    return i-1;
-}
-
 int usbhidOpenDevice(usbDevice_t **device, int vendor, char *vendorName, int product, char *productName, int _usesReportIDs)
 {
-struct usb_bus      *bus;
-struct usb_device   *dev;
-usb_dev_handle      *handle = NULL;
-int                 errorCode = USBOPEN_ERR_NOTFOUND;
-static int          didUsbInit = 0;
+
+    libusb_device       *dev = NULL;
+    libusb_device_handle *handle = NULL;
+    struct libusb_device_descriptor desc;
+    int                 errorCode = USBOPEN_ERR_NOTFOUND;
+    static int          didUsbInit = 0;
+    char    string[256];
+    int                 r;
 
     if(!didUsbInit){
-        usb_init();
+        r = libusb_init(NULL);
+        if (0 != r) {
+            fprintf(stderr, "Warning: cannot initialize libusb: %s\n", libusb_strerror(r));
+            return errorCode;
+        }
         didUsbInit = 1;
     }
-    usb_find_busses();
-    usb_find_devices();
-    for(bus=usb_get_busses(); bus; bus=bus->next){
-        for(dev=bus->devices; dev; dev=dev->next){
-            if(dev->descriptor.idVendor == vendor && dev->descriptor.idProduct == product){
-                char    string[256];
-                int     len;
-                handle = usb_open(dev); /* we need to open the device in order to query strings */
-                if(!handle){
-                    errorCode = USBOPEN_ERR_ACCESS;
-                    fprintf(stderr, "Warning: cannot open USB device: %s\n", usb_strerror());
-                    continue;
-                }
-                if(vendorName == NULL && productName == NULL){  /* name does not matter */
-                    break;
-                }
-                /* now check whether the names match: */
-                len = usbhidGetStringAscii(handle, dev->descriptor.iManufacturer, string, sizeof(string));
-                if(len < 0){
-                    errorCode = USBOPEN_ERR_IO;
-                    fprintf(stderr, "Warning: cannot query manufacturer for device: %s\n", usb_strerror());
-                }else{
-                    errorCode = USBOPEN_ERR_NOTFOUND;
-                    /* fprintf(stderr, "seen device from vendor ->%s<-\n", string); */
-                    if(strcmp(string, vendorName) == 0){
-                        len = usbhidGetStringAscii(handle, dev->descriptor.iProduct, string, sizeof(string));
-                        if(len < 0){
-                            errorCode = USBOPEN_ERR_IO;
-                            fprintf(stderr, "Warning: cannot query product for device: %s\n", usb_strerror());
-                        }else{
-                            errorCode = USBOPEN_ERR_NOTFOUND;
-                            /* fprintf(stderr, "seen product ->%s<-\n", string); */
-                            if(strcmp(string, productName) == 0)
-                                break;
-                        }
-                    }
-                }
-                usb_close(handle);
-                handle = NULL;
-            }
-        }
-        if(handle)
-            break;
+
+    handle = libusb_open_device_with_vid_pid(NULL, vendor, product);
+    if(handle == NULL) {
+        errorCode = USBOPEN_ERR_ACCESS;
+        fprintf(stderr, "Warning: cannot open USB device: %s\n", libusb_strerror(r));
+        return errorCode;
     }
+
+    dev = libusb_get_device(handle);
+    r = libusb_get_device_descriptor(dev, &desc);
+    if(r < 0) {
+        errorCode = USBOPEN_ERR_IO;
+        fprintf(stderr, "Warning: cannot query descriptor for device: %s\n", libusb_strerror(r));
+        return errorCode;
+    }
+
+    if(vendorName != NULL){
+        r = libusb_get_string_descriptor_ascii(handle, desc.iManufacturer, (unsigned char *)string, sizeof(string));
+        if(r < 0) {
+            errorCode = USBOPEN_ERR_IO;
+            fprintf(stderr, "Warning: cannot query manufacturer for device: %s\n", libusb_strerror(r));
+            return errorCode;
+        }
+        if(strcmp(string, vendorName) != 0){
+            return errorCode;
+        }
+        /* fprintf(stderr, "seen device from vendor ->%s<-\n", string); */
+    }
+
+    if(productName != NULL){
+        r = libusb_get_string_descriptor_ascii(handle, desc.iProduct, (unsigned char *)string, sizeof(string));
+        if(r < 0) {
+            errorCode = USBOPEN_ERR_IO;
+            fprintf(stderr, "Warning: cannot query product for device: %s\n", libusb_strerror(r));
+            return errorCode;
+        }
+        if(strcmp(string, productName) != 0){
+            return errorCode;
+        }
+        /* fprintf(stderr, "seen product ->%s<-\n", string); */
+    }
+
     if(handle != NULL){
         errorCode = 0;
         *device = (void *)handle;
@@ -273,7 +250,7 @@ static int          didUsbInit = 0;
 void    usbhidCloseDevice(usbDevice_t *device)
 {
     if(device != NULL)
-        usb_close((void *)device);
+        libusb_close((void *)device);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -286,10 +263,10 @@ int bytesSent, reportId = buffer[0];
         buffer++;   /* skip dummy report ID */
         len--;
     }
-    bytesSent = usb_control_msg((void *)device, USB_TYPE_CLASS | USB_RECIP_DEVICE | USB_ENDPOINT_OUT, USBRQ_HID_SET_REPORT, USB_HID_REPORT_TYPE_FEATURE << 8 | (reportId & 0xff), 0, buffer, len, 5000);
+    bytesSent = libusb_control_transfer((void *)device, LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_OUT, USBRQ_HID_SET_REPORT, USB_HID_REPORT_TYPE_FEATURE << 8 | (reportId & 0xff), 0, (unsigned char *)buffer, len, 5000);
     if(bytesSent != len){
         if(bytesSent < 0)
-            fprintf(stderr, "Error sending message: %s\n", usb_strerror());
+            fprintf(stderr, "Error sending message: %s\n", libusb_strerror(bytesSent));
         return USBOPEN_ERR_IO;
     }
     return 0;
@@ -305,9 +282,9 @@ int bytesReceived, maxLen = *len;
         buffer++;   /* make room for dummy report ID */
         maxLen--;
     }
-    bytesReceived = usb_control_msg((void *)device, USB_TYPE_CLASS | USB_RECIP_DEVICE | USB_ENDPOINT_IN, USBRQ_HID_GET_REPORT, USB_HID_REPORT_TYPE_FEATURE << 8 | reportNumber, 0, buffer, maxLen, 5000);
+    bytesReceived = libusb_control_transfer((void *)device, LIBUSB_REQUEST_TYPE_CLASS | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_IN, USBRQ_HID_GET_REPORT, USB_HID_REPORT_TYPE_FEATURE << 8 | reportNumber, 0, (unsigned char *)buffer, maxLen, 5000);
     if(bytesReceived < 0){
-        fprintf(stderr, "Error sending message: %s\n", usb_strerror());
+        fprintf(stderr, "Error sending message: %s\n", libusb_strerror(bytesReceived));
         return USBOPEN_ERR_IO;
     }
     *len = bytesReceived;
