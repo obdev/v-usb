@@ -162,7 +162,7 @@ BOOLEAN rval = 0;
 #include <string.h>
 #include <libusb.h>
 
-#define usbDevice   usb_dev_handle  /* use libusb's device structure */
+#define usbDevice   libusb_device_handle  /* use libusb's device structure */
 
 /* ------------------------------------------------------------------------- */
 
@@ -199,7 +199,7 @@ int usbhidOpenDevice(usbDevice_t **device, int vendor, char *vendorName, int pro
     handle = libusb_open_device_with_vid_pid(NULL, vendor, product);
     if(handle == NULL) {
         errorCode = USBOPEN_ERR_ACCESS;
-        fprintf(stderr, "Warning: cannot open USB device: %s\n", libusb_strerror(r));
+        fprintf(stderr, "Warning: cannot open USB device\n");
         return errorCode;
     }
 

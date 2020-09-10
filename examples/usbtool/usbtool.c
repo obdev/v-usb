@@ -296,7 +296,7 @@ FILE            *fp;
          */
         while((len = libusb_claim_interface(handle, usbInterface)) != 0 && retries-- > 0){
 #ifdef LIBUSB_HAS_DETACH_KERNEL_DRIVER_NP
-            r = usb_detach_kernel_driver(handle, 0);
+            r = libusb_detach_kernel_driver(handle, 0);
             if(r != LIBUSB_SUCCESS && showWarnings){
                 fprintf(stderr, "Warning: could not detach kernel driver: %s\n", libusb_strerror(r));
             }

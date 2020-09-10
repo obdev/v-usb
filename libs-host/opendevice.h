@@ -33,7 +33,7 @@ int usbGetStringAscii(libusb_device_handle *dev, int index, char *buf, int bufle
  * must be given in 'dev'.
  * Returns: The length of the string (excluding the terminating 0) or
  * a negative number in case of an error. If there was an error, use
- * usb_strerror() to obtain the error message.
+ * libusb_strerror() to obtain the error message.
  */
 
 int usbOpenDevice(libusb_device_handle **device, int vendorID, char *vendorNamePattern, int productID, char *productNamePattern, char *serialNamePattern, FILE *printMatchingDevicesFp, FILE *warningsFp);
