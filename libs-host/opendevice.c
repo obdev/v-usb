@@ -88,7 +88,7 @@ char    buffer[256];
 int     rval, i;
 
     rval = libusb_get_string_descriptor_ascii(dev, index, (unsigned char *)buf, buflen); /* use libusb version if it works */
-    if(rval < 0)
+    if(rval >= 0)
         return rval;
     if((rval = libusb_control_transfer(dev, LIBUSB_ENDPOINT_IN, LIBUSB_REQUEST_GET_DESCRIPTOR, (LIBUSB_DT_STRING << 8) + index, 0, (unsigned char *)buffer, sizeof(buffer), 5000)) < 0)
         return rval;

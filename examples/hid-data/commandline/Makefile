@@ -10,16 +10,14 @@
 # system:
 
 # Use the following 3 lines on Unix and Mac OS X:
-#USBFLAGS=   `libusb-config --cflags`
-#USBLIBS=    `libusb-config --libs`
 USBFLAGS=   `pkg-config --cflags libusb-1.0`
 USBLIBS=    `pkg-config --libs libusb-1.0`
 EXE_SUFFIX=
 
 # Use the following 3 lines on Windows and comment out the 3 above:
-#USBFLAGS=
-#USBLIBS=    -lhid -lusb -lsetupapi
-#EXE_SUFFIX= .exe
+#USBFLAGS = -I/usr/local/include/libusb-1.0
+#USBLIBS = -L/usr/local/lib -lhid -lusb-1.0 -lsetupapi
+#EXE_SUFFIX = .exe
 
 CC=				gcc
 CFLAGS=			-O -Wall $(USBFLAGS)

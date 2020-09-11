@@ -12,6 +12,6 @@
 
 include Makefile
 
-USBFLAGS=
-USBLIBS=    -lhid -lsetupapi
+USBFLAGS = -I/usr/local/mingw/include/libusb-1.0
+USBLIBS = -L/usr/local/mingw/lib -lhid -lusb-1.0 -lsetupapi
 EXE_SUFFIX= .exe

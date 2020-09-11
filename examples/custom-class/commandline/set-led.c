@@ -20,7 +20,7 @@ respectively.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <usb.h>        /* this is libusb */
+#include <libusb.h>        /* this is libusb */
 #include "opendevice.h" /* common code moved to separate module */
 
 #include "../firmware/requests.h"   /* custom request numbers */
@@ -87,7 +87,7 @@ int                 cnt, vid, pid, isOn, r;
 #endif
 
     if(strcasecmp(argv[1], "status") == 0){
-        cnt = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | USB_ENDPOINT_IN, CUSTOM_RQ_GET_STATUS, 0, 0, (unsigned char *)buffer, sizeof(buffer), 5000);
+        cnt = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_IN, CUSTOM_RQ_GET_STATUS, 0, 0, (unsigned char *)buffer, sizeof(buffer), 5000);
         if(cnt < 1){
             if(cnt < 0){
                 fprintf(stderr, "USB error: %s\n", libusb_strerror(cnt));
@@ -98,7 +98,7 @@ int                 cnt, vid, pid, isOn, r;
             printf("LED is %s\n", buffer[0] ? "on" : "off");
         }
     }else if((isOn = (strcasecmp(argv[1], "on") == 0)) || strcasecmp(argv[1], "off") == 0){
-        cnt = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | USB_ENDPOINT_OUT, CUSTOM_RQ_SET_STATUS, isOn, 0, (unsigned char *)buffer, 0, 5000);
+        cnt = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_OUT, CUSTOM_RQ_SET_STATUS, isOn, 0, (unsigned char *)buffer, 0, 5000);
         if(cnt < 0){
             fprintf(stderr, "USB error: %s\n", libusb_strerror(cnt));
         }
