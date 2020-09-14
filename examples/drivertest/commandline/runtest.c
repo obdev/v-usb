@@ -13,7 +13,8 @@ General Description:
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <usb.h>        /* this is libusb */
+#include <time.h>
+#include <libusb.h>        /* this is libusb */
 #include "opendevice.h" /* common code moved to separate module */
 
 #include "../firmware/requests.h"   /* custom request numbers */
@@ -79,13 +80,17 @@ int i, rval = 0;
 
 int main(int argc, char **argv)
 {
-usb_dev_handle  *handle = NULL;
+libusb_device_handle  *handle = NULL;
 const uchar     rawVid[2] = {USB_CFG_VENDOR_ID}, rawPid[2] = {USB_CFG_DEVICE_ID};
 char            vendor[] = {USB_CFG_VENDOR_NAME, 0}, product[] = {USB_CFG_DEVICE_NAME, 0};
 char            txBuffer[64], rxBuffer[64];
-int             cnt, vid, pid, i, j;
+int             cnt, vid, pid, i, j, r;
 
-    usb_init();
+    r = libusb_init(NULL);
+    if (0 != r) {
+        fprintf(stderr, "Warning: cannot initialize libusb: %s\n", libusb_strerror(r));
+        exit(1);
+    }
     /* compute VID/PID from usbconfig.h so that there is a central source of information */
     vid = rawVid[1] * 256 + rawVid[0];
     pid = rawPid[1] * 256 + rawPid[0];
@@ -98,25 +103,29 @@ int             cnt, vid, pid, i, j;
         if(argc > 2){   /* set osccal */
             int osccal = atoi(argv[2]);
             printf("setting osccal to %d\n", osccal);
-            cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, CUSTOM_RQ_SET_OSCCAL, osccal, 0, txBuffer, 0, 5000);
+            cnt = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_IN, CUSTOM_RQ_SET_OSCCAL, osccal, 0, (unsigned char *)txBuffer, 0, 5000);
             if(cnt < 0){
-                fprintf(stderr, "\nUSB error setting osccal: %s\n", usb_strerror());
+                fprintf(stderr, "\nUSB error setting osccal: %s\n", libusb_strerror(cnt));
             }
         }else{
-            cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, CUSTOM_RQ_GET_OSCCAL, 0, 0, rxBuffer, 1, 5000);
+            cnt = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_IN, CUSTOM_RQ_GET_OSCCAL, 0, 0, (unsigned char *)rxBuffer, 1, 5000);
             if(cnt < 0){
-                fprintf(stderr, "\nUSB error getting osccal: %s\n", usb_strerror());
+                fprintf(stderr, "\nUSB error getting osccal: %s\n", libusb_strerror(cnt));
             }else{
                 printf("osccal = %d\n", (unsigned char)rxBuffer[0]);
             }
         }
     }else{
+#ifdef __linux__
+        srandom(time(NULL));
+#else
         srandomdev();
+#endif
         for(i = 0; i <= 100000; i++){
             fillBuffer(txBuffer, sizeof(txBuffer));
-            cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_OUT, CUSTOM_RQ_SET_DATA, 0, 0, txBuffer, sizeof(txBuffer), 5000);
+            cnt = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_OUT, CUSTOM_RQ_SET_DATA, 0, 0, (unsigned char *)txBuffer, sizeof(txBuffer), 5000);
             if(cnt < 0){
-                fprintf(stderr, "\nUSB tx error in iteration %d: %s\n", i, usb_strerror());
+                fprintf(stderr, "\nUSB tx error in iteration %d: %s\n", i, libusb_strerror(cnt));
                 break;
             }else if(cnt != sizeof(txBuffer)){
                 fprintf(stderr, "\nerror in iteration %d: %d bytes sent instead of %d\n", i, cnt, (int)sizeof(txBuffer));
@@ -125,9 +134,9 @@ int             cnt, vid, pid, i, j;
             for(j = 0; j < sizeof(rxBuffer); j++){
                 rxBuffer[j] = ~txBuffer[j];
             }
-            cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, CUSTOM_RQ_GET_DATA, 0, 0, rxBuffer, sizeof(rxBuffer), 5000);
+            cnt = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_IN, CUSTOM_RQ_GET_DATA, 0, 0, (unsigned char *)rxBuffer, sizeof(rxBuffer), 5000);
             if(cnt < 0){
-                fprintf(stderr, "\nUSB rx error in iteration %d: %s\n", i, usb_strerror());
+                fprintf(stderr, "\nUSB rx error in iteration %d: %s\n", i, libusb_strerror(cnt));
                 break;
             }else if(cnt != sizeof(txBuffer)){
                 fprintf(stderr, "\nerror in iteration %d: %d bytes received instead of %d\n", i, cnt, (int)sizeof(rxBuffer));
@@ -146,6 +155,6 @@ int             cnt, vid, pid, i, j;
         }
         fprintf(stderr, "\nTest completed.\n");
     }
-    usb_close(handle);
+    libusb_close(handle);
     return 0;
 }

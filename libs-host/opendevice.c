@@ -82,16 +82,17 @@ static int shellStyleMatch(char *text, char *pattern)
 
 /* ------------------------------------------------------------------------- */
 
-int usbGetStringAscii(usb_dev_handle *dev, int index, char *buf, int buflen)
+int usbGetStringAscii(libusb_device_handle *dev, int index, char *buf, int buflen)
 {
 char    buffer[256];
 int     rval, i;
 
-    if((rval = usb_get_string_simple(dev, index, buf, buflen)) >= 0) /* use libusb version if it works */
+    rval = libusb_get_string_descriptor_ascii(dev, index, (unsigned char *)buf, buflen); /* use libusb version if it works */
+    if(rval >= 0)
         return rval;
-    if((rval = usb_control_msg(dev, USB_ENDPOINT_IN, USB_REQ_GET_DESCRIPTOR, (USB_DT_STRING << 8) + index, 0x0409, buffer, sizeof(buffer), 5000)) < 0)
+    if((rval = libusb_control_transfer(dev, LIBUSB_ENDPOINT_IN, LIBUSB_REQUEST_GET_DESCRIPTOR, (LIBUSB_DT_STRING << 8) + index, 0, (unsigned char *)buffer, sizeof(buffer), 5000)) < 0)
         return rval;
-    if(buffer[1] != USB_DT_STRING){
+    if(buffer[1] != LIBUSB_DT_STRING){
         *buf = 0;
         return 0;
     }
@@ -112,87 +113,101 @@ int     rval, i;
 
 /* ------------------------------------------------------------------------- */
 
-int usbOpenDevice(usb_dev_handle **device, int vendorID, char *vendorNamePattern, int productID, char *productNamePattern, char *serialNamePattern, FILE *printMatchingDevicesFp, FILE *warningsFp)
+int usbOpenDevice(libusb_device_handle **device, int vendorID, char *vendorNamePattern, int productID, char *productNamePattern, char *serialNamePattern, FILE *printMatchingDevicesFp, FILE *warningsFp)
 {
-struct usb_bus      *bus;
-struct usb_device   *dev;
-usb_dev_handle      *handle = NULL;
-int                 errorCode = USBOPEN_ERR_NOTFOUND;
+    int     errorCode = USBOPEN_ERR_NOTFOUND;
+    struct  libusb_device **devs;
+    struct  libusb_device *dev;
+    struct  libusb_device_handle *dev_handle = NULL;
+    size_t  i = 0;
+    int     r;
 
-    usb_find_busses();
-    usb_find_devices();
-    for(bus = usb_get_busses(); bus; bus = bus->next){
-        for(dev = bus->devices; dev; dev = dev->next){  /* iterate over all devices on all busses */
-            if((vendorID == 0 || dev->descriptor.idVendor == vendorID)
-                        && (productID == 0 || dev->descriptor.idProduct == productID)){
-                char    vendor[256], product[256], serial[256];
-                int     len;
-                handle = usb_open(dev); /* we need to open the device in order to query strings */
-                if(!handle){
-                    errorCode = USBOPEN_ERR_ACCESS;
-                    if(warningsFp != NULL)
-                        fprintf(warningsFp, "Warning: cannot open VID=0x%04x PID=0x%04x: %s\n", dev->descriptor.idVendor, dev->descriptor.idProduct, usb_strerror());
-                    continue;
-                }
-                /* now check whether the names match: */
-                len = vendor[0] = 0;
-                if(dev->descriptor.iManufacturer > 0){
-                    len = usbGetStringAscii(handle, dev->descriptor.iManufacturer, vendor, sizeof(vendor));
-                }
-                if(len < 0){
-                    errorCode = USBOPEN_ERR_ACCESS;
-                    if(warningsFp != NULL)
-                        fprintf(warningsFp, "Warning: cannot query manufacturer for VID=0x%04x PID=0x%04x: %s\n", dev->descriptor.idVendor, dev->descriptor.idProduct, usb_strerror());
-                }else{
-                    errorCode = USBOPEN_ERR_NOTFOUND;
-                    /* printf("seen device from vendor ->%s<-\n", vendor); */
-                    if(shellStyleMatch(vendor, vendorNamePattern)){
-                        len = product[0] = 0;
-                        if(dev->descriptor.iProduct > 0){
-                            len = usbGetStringAscii(handle, dev->descriptor.iProduct, product, sizeof(product));
-                        }
-                        if(len < 0){
-                            errorCode = USBOPEN_ERR_ACCESS;
-                            if(warningsFp != NULL)
-                                fprintf(warningsFp, "Warning: cannot query product for VID=0x%04x PID=0x%04x: %s\n", dev->descriptor.idVendor, dev->descriptor.idProduct, usb_strerror());
-                        }else{
-                            errorCode = USBOPEN_ERR_NOTFOUND;
-                            /* printf("seen product ->%s<-\n", product); */
-                            if(shellStyleMatch(product, productNamePattern)){
-                                len = serial[0] = 0;
-                                if(dev->descriptor.iSerialNumber > 0){
-                                    len = usbGetStringAscii(handle, dev->descriptor.iSerialNumber, serial, sizeof(serial));
-                                }
-                                if(len < 0){
-                                    errorCode = USBOPEN_ERR_ACCESS;
-                                    if(warningsFp != NULL)
-                                        fprintf(warningsFp, "Warning: cannot query serial for VID=0x%04x PID=0x%04x: %s\n", dev->descriptor.idVendor, dev->descriptor.idProduct, usb_strerror());
-                                }
-                                if(shellStyleMatch(serial, serialNamePattern)){
-                                    if(printMatchingDevicesFp != NULL){
-                                        if(serial[0] == 0){
-                                            fprintf(printMatchingDevicesFp, "VID=0x%04x PID=0x%04x vendor=\"%s\" product=\"%s\"\n", dev->descriptor.idVendor, dev->descriptor.idProduct, vendor, product);
-                                        }else{
-                                            fprintf(printMatchingDevicesFp, "VID=0x%04x PID=0x%04x vendor=\"%s\" product=\"%s\" serial=\"%s\"\n", dev->descriptor.idVendor, dev->descriptor.idProduct, vendor, product, serial);
-                                        }
+    r = libusb_get_device_list(NULL, &devs);
+    if (r < 0) {
+        if(warningsFp != NULL)
+            fprintf(warningsFp, "Warning: cannot query device list: %s\n", libusb_strerror(r));
+        return errorCode;
+    }
+
+    while ((dev = devs[i++]) != NULL) {
+        struct libusb_device_descriptor desc;
+        r = libusb_get_device_descriptor(dev, &desc);
+        if (r < 0) {
+            if(warningsFp != NULL)
+                fprintf(warningsFp, "Warning: cannot query device descriptor: %s\n", libusb_strerror(r));
+            goto out;
+        }
+        if ((vendorID == 0 || desc.idVendor == vendorID)
+             && (productID == 0 || desc.idProduct == productID)) {
+            char    vendor[256], product[256], serial[256];
+            int     len;
+
+            r = libusb_open(dev, &dev_handle);
+            if (r < 0) {
+                if(warningsFp != NULL)
+                    fprintf(warningsFp, "Warning: cannot open VID=0x%04x PID=0x%04x: %s\n", desc.idVendor, desc.idProduct, libusb_strerror(r));
+                dev_handle = NULL;
+                continue;
+            }
+            /* now check whether the names match: */
+            len = vendor[0] = 0;
+            if(desc.iManufacturer > 0){
+                len = usbGetStringAscii(dev_handle, desc.iManufacturer, vendor, sizeof(vendor));
+            }
+            if(len < 0){
+                errorCode = USBOPEN_ERR_ACCESS;
+                if(warningsFp != NULL)
+                    fprintf(warningsFp, "Warning: cannot query manufacturer for VID=0x%04x PID=0x%04x: %s\n", desc.idVendor, desc.idProduct, libusb_strerror(len));
+            }else{
+                errorCode = USBOPEN_ERR_NOTFOUND;
+                /* printf("seen device from vendor ->%s<-\n", vendor); */
+                if(shellStyleMatch(vendor, vendorNamePattern)){
+                    len = product[0] = 0;
+                    if(desc.iProduct > 0){
+                        len = usbGetStringAscii(dev_handle, desc.iProduct, product, sizeof(product));
+                    }
+                    if(len < 0){
+                        errorCode = USBOPEN_ERR_ACCESS;
+                        if(warningsFp != NULL)
+                            fprintf(warningsFp, "Warning: cannot query product for VID=0x%04x PID=0x%04x: %s\n", desc.idVendor, desc.idProduct, libusb_strerror(len));
+                    }else{
+                        errorCode = USBOPEN_ERR_NOTFOUND;
+                        /* printf("seen product ->%s<-\n", product); */
+                        if(shellStyleMatch(product, productNamePattern)){
+                            len = serial[0] = 0;
+                            if(desc.iSerialNumber > 0){
+                                len = usbGetStringAscii(dev_handle, desc.iSerialNumber, serial, sizeof(serial));
+                            }
+                            if(len < 0){
+                                errorCode = USBOPEN_ERR_ACCESS;
+                                if(warningsFp != NULL)
+                                    fprintf(warningsFp, "Warning: cannot query serial for VID=0x%04x PID=0x%04x: %s\n", desc.idVendor, desc.idProduct, libusb_strerror(len));
+                            }
+                            if(shellStyleMatch(serial, serialNamePattern)){
+                                if(printMatchingDevicesFp != NULL){
+                                    if(serial[0] == 0){
+                                        fprintf(printMatchingDevicesFp, "VID=0x%04x PID=0x%04x vendor=\"%s\" product=\"%s\"\n", desc.idVendor, desc.idProduct, vendor, product);
                                     }else{
-                                        break;
+                                        fprintf(printMatchingDevicesFp, "VID=0x%04x PID=0x%04x vendor=\"%s\" product=\"%s\" serial=\"%s\"\n", desc.idVendor, desc.idProduct, vendor, product, serial);
                                     }
+                                }else{
+                                    break;
                                 }
                             }
                         }
                     }
                 }
-                usb_close(handle);
-                handle = NULL;
             }
+        libusb_close(dev_handle);
         }
-        if(handle)  /* we have found a deice */
-            break;
     }
-    if(handle != NULL){
+
+out:
+    libusb_free_device_list(devs, 1);
+
+    if(dev_handle != NULL){
         errorCode = 0;
-        *device = handle;
+        *device = dev_handle;
     }
     if(printMatchingDevicesFp != NULL)  /* never return an error for listing only */
         errorCode = 0;

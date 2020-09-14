@@ -20,7 +20,7 @@ respectively.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <usb.h>        /* this is libusb */
+#include <libusb.h>        /* this is libusb */
 #include "opendevice.h" /* common code moved to separate module */
 
 #include "../firmware/requests.h"   /* custom request numbers */
@@ -39,13 +39,17 @@ static void usage(char *name)
 
 int main(int argc, char **argv)
 {
-usb_dev_handle      *handle = NULL;
+libusb_device_handle      *handle = NULL;
 const unsigned char rawVid[2] = {USB_CFG_VENDOR_ID}, rawPid[2] = {USB_CFG_DEVICE_ID};
 char                vendor[] = {USB_CFG_VENDOR_NAME, 0}, product[] = {USB_CFG_DEVICE_NAME, 0};
 char                buffer[4];
-int                 cnt, vid, pid, isOn;
+int                 cnt, vid, pid, isOn, r;
 
-    usb_init();
+    r = libusb_init(NULL);
+    if (0 != r) {
+        fprintf(stderr, "Warning: cannot initialize libusb: %s\n", libusb_strerror(r));
+        exit(1);
+    }
     if(argc < 2){   /* we need at least one argument */
         usage(argv[0]);
         exit(1);
@@ -66,25 +70,27 @@ int                 cnt, vid, pid, isOn;
      * needs it: */
 #if 0
     int retries = 1, usbConfiguration = 1, usbInterface = 0;
-    if(usb_set_configuration(handle, usbConfiguration) && showWarnings){
-        fprintf(stderr, "Warning: could not set configuration: %s\n", usb_strerror());
+    r = libusb_set_configuration(handle, usbConfiguration);
+    if(r != 0 && showWarnings){
+        fprintf(stderr, "Warning: could not set configuration: %s\n", libusb_strerror(r));
     }
     /* now try to claim the interface and detach the kernel HID driver on
      * Linux and other operating systems which support the call. */
-    while((len = usb_claim_interface(handle, usbInterface)) != 0 && retries-- > 0){
+    while((len = libusb_claim_interface(handle, usbInterface)) != 0 && retries-- > 0){
 #ifdef LIBUSB_HAS_DETACH_KERNEL_DRIVER_NP
-        if(usb_detach_kernel_driver_np(handle, 0) < 0 && showWarnings){
-            fprintf(stderr, "Warning: could not detach kernel driver: %s\n", usb_strerror());
+        r = libusb_detach_kernel_driver(handle, 0);
+        if(r != 0 && showWarnings){
+            fprintf(stderr, "Warning: could not detach kernel driver: %s\n", libusb_strerror(r));
         }
 #endif
     }
 #endif
 
     if(strcasecmp(argv[1], "status") == 0){
-        cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, CUSTOM_RQ_GET_STATUS, 0, 0, buffer, sizeof(buffer), 5000);
+        cnt = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_IN, CUSTOM_RQ_GET_STATUS, 0, 0, (unsigned char *)buffer, sizeof(buffer), 5000);
         if(cnt < 1){
             if(cnt < 0){
-                fprintf(stderr, "USB error: %s\n", usb_strerror());
+                fprintf(stderr, "USB error: %s\n", libusb_strerror(cnt));
             }else{
                 fprintf(stderr, "only %d bytes received.\n", cnt);
             }
@@ -92,9 +98,9 @@ int                 cnt, vid, pid, isOn;
             printf("LED is %s\n", buffer[0] ? "on" : "off");
         }
     }else if((isOn = (strcasecmp(argv[1], "on") == 0)) || strcasecmp(argv[1], "off") == 0){
-        cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_OUT, CUSTOM_RQ_SET_STATUS, isOn, 0, buffer, 0, 5000);
+        cnt = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | LIBUSB_ENDPOINT_OUT, CUSTOM_RQ_SET_STATUS, isOn, 0, (unsigned char *)buffer, 0, 5000);
         if(cnt < 0){
-            fprintf(stderr, "USB error: %s\n", usb_strerror());
+            fprintf(stderr, "USB error: %s\n", libusb_strerror(cnt));
         }
 #if ENABLE_TEST
     }else if(strcasecmp(argv[1], "test") == 0){
@@ -107,9 +113,9 @@ int                 cnt, vid, pid, isOn;
                 fprintf(stderr, "\r%05d", i+1);
                 fflush(stderr);
             }
-            cnt = usb_control_msg(handle, USB_TYPE_VENDOR | USB_RECIP_DEVICE | USB_ENDPOINT_IN, CUSTOM_RQ_ECHO, value, index, buffer, sizeof(buffer), 5000);
+            cnt = libusb_control_transfer(handle, LIBUSB_REQUEST_TYPE_VENDOR | LIBUSB_RECIPIENT_DEVICE | USB_ENDPOINT_IN, CUSTOM_RQ_ECHO, value, index, (unsigned char *)buffer, sizeof(buffer), 5000);
             if(cnt < 0){
-                fprintf(stderr, "\nUSB error in iteration %d: %s\n", i, usb_strerror());
+                fprintf(stderr, "\nUSB error in iteration %d: %s\n", i, libusb_strerror(cnt));
                 break;
             }else if(cnt != 4){
                 fprintf(stderr, "\nerror in iteration %d: %d bytes received instead of 4\n", i, cnt);
@@ -129,6 +135,6 @@ int                 cnt, vid, pid, isOn;
         usage(argv[0]);
         exit(1);
     }
-    usb_close(handle);
+    libusb_close(handle);
     return 0;
 }

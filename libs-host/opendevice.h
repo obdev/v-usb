@@ -22,10 +22,10 @@ files according to the GNU General Public License (GPL) version 2 or 3.
 #ifndef __OPENDEVICE_H_INCLUDED__
 #define __OPENDEVICE_H_INCLUDED__
 
-#include <usb.h>    /* this is libusb, see http://libusb.sourceforge.net/ */
+#include <libusb.h>    /* this is libusb, see http://libusb.sourceforge.net/ */
 #include <stdio.h>
 
-int usbGetStringAscii(usb_dev_handle *dev, int index, char *buf, int buflen);
+int usbGetStringAscii(libusb_device_handle *dev, int index, char *buf, int buflen);
 /* This function gets a string descriptor from the device. 'index' is the
  * string descriptor index. The string is returned in ISO Latin 1 encoding in
  * 'buf' and it is terminated with a 0-character. The buffer size must be
@@ -33,10 +33,10 @@ int usbGetStringAscii(usb_dev_handle *dev, int index, char *buf, int buflen);
  * must be given in 'dev'.
  * Returns: The length of the string (excluding the terminating 0) or
  * a negative number in case of an error. If there was an error, use
- * usb_strerror() to obtain the error message.
+ * libusb_strerror() to obtain the error message.
  */
 
-int usbOpenDevice(usb_dev_handle **device, int vendorID, char *vendorNamePattern, int productID, char *productNamePattern, char *serialNamePattern, FILE *printMatchingDevicesFp, FILE *warningsFp);
+int usbOpenDevice(libusb_device_handle **device, int vendorID, char *vendorNamePattern, int productID, char *productNamePattern, char *serialNamePattern, FILE *printMatchingDevicesFp, FILE *warningsFp);
 /* This function iterates over all devices on all USB busses and searches for
  * a device. Matching is done first by means of Vendor- and Product-ID (passed
  * in 'vendorID' and 'productID'. An ID of 0 matches any numeric ID (wildcard).
@@ -54,7 +54,7 @@ int usbOpenDevice(usb_dev_handle **device, int vendorID, char *vendorNamePattern
  * 'printMatchingDevicesFp' is not NULL, no device is opened but matching
  * devices are printed to the given file descriptor with fprintf().
  * If a device is opened, the resulting USB handle is stored in '*device'. A
- * pointer to a "usb_dev_handle *" type variable must be passed here.
+ * pointer to a "libusb_device_handle *" type variable must be passed here.
  * Returns: 0 on success, an error code (see defines below) on failure.
  */
 

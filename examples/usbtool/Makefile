@@ -11,14 +11,14 @@
 # This Makefile has been tested on Mac OS X, Linux and Windows.
 
 # Use the following 3 lines on Unix (uncomment the framework on Mac OS X):
-USBFLAGS = `libusb-config --cflags`
-USBLIBS = `libusb-config --libs`
+USBFLAGS = `pkg-config --cflags libusb-1.0`
+USBLIBS = `pkg-config --libs libusb-1.0`
 EXE_SUFFIX =
 
 # Use the following 3 lines on Windows and comment out the 3 above. You may
 # have to change the include paths to where you installed libusb-win32
-#USBFLAGS = -I/usr/local/include
-#USBLIBS = -L/usr/local/lib -lusb
+#USBFLAGS = -I/usr/local/include/libusb-1.0
+#USBLIBS = -L/usr/local/lib -lusb-1.0
 #EXE_SUFFIX = .exe
 
 NAME = usbtool
