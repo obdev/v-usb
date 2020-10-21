@@ -410,7 +410,7 @@ skipAddrAssign:				;- [03/04]
     cbr     x2, USBMASK     		;1 [09] set both pins to input
     mov     x3, x1          		;1 [10]
     cbr     x3, USBMASK     		;1 [11] configure no pullup on both pins
-    ldi     x4, 3           		;1 [12]
+    ldi     x4, 2           		;1 [12]
 se0Delay:				;- [12] [15] 
     dec     x4              		;1 [13] [16] 
     brne    se0Delay        		;1 [14] [17] 
