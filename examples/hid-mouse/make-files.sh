@@ -14,7 +14,7 @@ if [ "$1" = remove ]; then
     exit
 fi
 
-cat << \EOF | sed -n -f /dev/stdin ../../usbdrv/usbconfig-prototype.h >firmware/usbconfig.h
+cat << \EOF | sed -n -f - ../../usbdrv/usbconfig-prototype.h >firmware/usbconfig.h
 /^\( [*] \)\{0,1\}[+].*$/ d
 s/^#define USB_CFG_DMINUS_BIT .*$/#define USB_CFG_DMINUS_BIT      4/g
 s|^.*#define USB_CFG_CLOCK_KHZ.*$|#define USB_CFG_CLOCK_KHZ       (F_CPU/1000)|g
@@ -31,7 +31,7 @@ s/^.*#define USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH.*$/#define USB_CFG_HID_REPORT_
 p
 EOF
 
-cat << \EOF | sed -n -f /dev/stdin ../custom-class/firmware/Makefile >firmware/Makefile
+cat << \EOF | sed -n -f - ../custom-class/firmware/Makefile >firmware/Makefile
 /^\( [*] \)\{0,1\}[+].*$/ d
 s/^# Project: .*$/# Project: hid-mouse example/g
 p

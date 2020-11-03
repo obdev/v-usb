@@ -1,0 +1,26 @@
+{
+    "description": "A Firmware-Only USB implementation for Atmel's AVR Microcontrollers",
+    "repository": {
+        "url": "https://github.com/dvv/v-usb",
+        "type": "git"
+    },
+    "platforms": [
+        "atmelavr"
+    ],
+    "include": "usbdrv",
+    "build": {
+        "flags": "-I ../../src",
+        "srcFilter": "+<usbdrv.c> +<usbdrv.h> +<usbdrvasm.S> -<*.asm>"
+    },
+    "examples": [
+        "examples/mad-mouse"
+    ],
+    "keywords": [
+        "USB"
+    ],
+    "name": "V-USB",
+    "frameworks": [
+        "arduino"
+    ],
+    "version": "0.0.2"
+}

@@ -10,6 +10,10 @@
 #ifndef __usbdrv_h_included__
 #define __usbdrv_h_included__
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /*
 Hardware Prerequisites:
 =======================
@@ -486,25 +490,25 @@ extern
 #if !(USB_CFG_DESCR_PROPS_DEVICE & USB_PROP_IS_RAM)
 PROGMEM const
 #endif
-char usbDescriptorDevice[];
+uchar usbDescriptorDevice[];
 
 extern
 #if !(USB_CFG_DESCR_PROPS_CONFIGURATION & USB_PROP_IS_RAM)
 PROGMEM const
 #endif
-char usbDescriptorConfiguration[];
+uchar usbDescriptorConfiguration[];
 
 extern
 #if !(USB_CFG_DESCR_PROPS_HID_REPORT & USB_PROP_IS_RAM)
 PROGMEM const
 #endif
-char usbDescriptorHidReport[];
+uchar usbDescriptorHidReport[];
 
 extern
 #if !(USB_CFG_DESCR_PROPS_STRING_0 & USB_PROP_IS_RAM)
 PROGMEM const
 #endif
-char usbDescriptorString0[];
+uchar usbDescriptorString0[];
 
 extern
 #if !(USB_CFG_DESCR_PROPS_STRING_VENDOR & USB_PROP_IS_RAM)
@@ -766,5 +770,9 @@ typedef struct usbRequest{
 #define USBRQ_HID_SET_PROTOCOL  0x0b
 
 /* ------------------------------------------------------------------------- */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* __usbdrv_h_included__ */

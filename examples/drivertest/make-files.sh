@@ -16,13 +16,13 @@ if [ "$1" = remove ]; then
     exit
 fi
 
-cat << \EOF | sed -n -f /dev/stdin ../usbtool/Makefile.windows >commandline/Makefile.windows
+cat << \EOF | sed -n -f - ../usbtool/Makefile.windows >commandline/Makefile.windows
 /^\( [*] \)\{0,1\}[+].*$/ d
 s/^# Project: .*$/# Project: hid-custom-rq example/g
 p
 EOF
 
-cat << \EOF | sed -n -f /dev/stdin ../usbtool/Makefile >commandline/Makefile
+cat << \EOF | sed -n -f - ../usbtool/Makefile >commandline/Makefile
 /^\( [*] \)\{0,1\}[+].*$/ d
 s/^# Project: .*$/# Project: hid-custom-rq example/g
 s/^NAME = .*$/NAME = runtest/g
