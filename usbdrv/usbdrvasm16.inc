@@ -24,6 +24,15 @@ really know what you are doing! Many parts require not only a maximum number
 of CPU cycles, but even an exact number of cycles!
 */
 
+/*
+Timing differences between the original ASM and the attiny1614:
+
+PUSH: is 1 cycle, this code assumes 2 cycles, so add one NOP
+ST with increment: is 1 cycle, this code assumes 2 cycles, so add one NOP
+SBI: is 1 cycle, this code assumes 2 cycles, so add one NOP
+LDS: is 3 cycles, this code assumes 2 cycles, so save one cycle somewhere else
+*/
+
 ;max stack usage: [ret(2), YL, SREG, YH, bitcnt, shift, x1, x2, x3, x4, cnt] = 12 bytes
 ;nominal frequency: 16 MHz -> 10.6666666 cycles per bit, 85.333333333 cycles per byte
 ; Numbers in brackets are clocks counted from center of last sync bit
@@ -32,9 +41,12 @@ of CPU cycles, but even an exact number of cycles!
 USB_INTR_VECTOR:
 ;order of registers pushed: YL, SREG YH, [sofError], bitcnt, shift, x1, x2, x3, x4, cnt
     push    YL                  ;[-25] push only what is necessary to sync with edge ASAP
+    nop
     in      YL, SREG            ;[-23]
     push    YL                  ;[-22]
+    nop
     push    YH                  ;[-20]
+    nop
 ;----------------------------------------------------------------------------
 ; Synchronize with sync pattern:
 ;----------------------------------------------------------------------------
@@ -75,14 +87,16 @@ foundK:                         ;[-12]
 ;we have 1 bit time for setup purposes, then sample again. Numbers in brackets
 ;are cycles from center of first sync (double K) bit after the instruction
     push    bitcnt              ;[-12]
+    nop
 ;   [---]                       ;[-11]
     lds     YL, usbInputBufOffset;[-10]
 ;   [---]                       ;[-9]
-    clr     YH                  ;[-8]
-    subi    YL, lo8(-(usbRxBuf));[-7] [rx loop init]
-    sbci    YH, hi8(-(usbRxBuf));[-6] [rx loop init]
-    push    shift               ;[-5]
-;   [---]                       ;[-4]
+;   [---]                       ;[-8]
+    clr     YH                  ;[-7]
+    subi    YL, lo8(-(usbRxBuf));[-6] [rx loop init]
+    sbci    YH, hi8(-(usbRxBuf));[-5] [rx loop init]
+    push    shift               ;[-4]
+    ; no nop on 1-series to correct lds taking 1 cycle longer earlier
     ldi     bitcnt, 0x55        ;[-3] [rx loop init]
     sbis    USBIN, USBMINUS     ;[-2] we want two bits K (sample 2 cycles too early)
     rjmp    haveTwoBitsK        ;[-1]
@@ -97,17 +111,22 @@ foundK:                         ;[-12]
 ;----------------------------------------------------------------------------
 haveTwoBitsK:
     push    x1              ;[1]
+    nop
     push    x2              ;[3]
+    nop
     push    x3              ;[5]
+    nop
     ldi     shift, 0        ;[7]
     ldi     x3, 1<<4        ;[8] [rx loop init] first sample is inverse bit, compensate that
     push    x4              ;[9] == leap
+    nop
 
     in      x1, USBIN       ;[11] <-- sample bit 0
     andi    x1, USBMASK     ;[12]
     bst     x1, USBMINUS    ;[13]
     bld     shift, 7        ;[14]
     push    cnt             ;[15]
+    nop
     ldi     leap, 0         ;[17] [rx loop init]
     ldi     cnt, USB_BUFSIZE;[18] [rx loop init]
     rjmp    rxbit1          ;[19] arrives at [21]
@@ -178,6 +197,7 @@ didUnstuff7:
     brcc    unstuff7    ;[07]
     eor     x3, shift   ;[08] reconstruct: x3 is 1 at bit locations we changed, 0 at others
     st      y+, x3      ;[09] store data
+    nop
 rxBitLoop:
     in      x1, USBIN   ;[00] [11] <-- sample bit 0/2/4
     andi    x1, USBMASK ;[01]
@@ -253,16 +273,20 @@ bitstuff7:
 
 sendNakAndReti:
     ldi     x3, USBPID_NAK  ;[-18]
-    rjmp    sendX3AndReti   ;[-17]
+    ldi     YL, lo8(usbTxToken) ;[-17]
+    ldi     YH, hi8(usbTxToken) ;[-16]
+    st      y, x3           ;[-15]
+    rjmp    usbSendAndReti  ;[-14]
 sendAckAndReti:
     ldi     cnt, USBPID_ACK ;[-17]
 sendCntAndReti:
-    mov     x3, cnt         ;[-16]
-sendX3AndReti:
-    ldi     YL, 20          ;[-15] x3==r20 address is 20
-    ldi     YH, 0           ;[-14]
+    ldi     YL, lo8(usbTxToken)  ;[-16]
+    ldi     YH, hi8(usbTxToken) ;[-15]
+    st      y, cnt          ;[-14]
     ldi     cnt, 2          ;[-13]
 ;   rjmp    usbSendAndReti      fallthrough
+
+
 
 ;usbSend:
 ;pointer to data in 'Y'
@@ -275,6 +299,7 @@ usbSendAndReti:             ; 12 cycles until SOP
     in      x2, USBDDR      ;[-12]
     ori     x2, USBMASK     ;[-11]
     sbi     USBOUT, USBMINUS;[-10] prepare idle state; D+ and D- must have been 0 (no pullups)
+    nop
     in      x1, USBOUT      ;[-8] port mirror for tx loop
     out     USBDDR, x2      ;[-7] <- acquire bus
 ; need not init x2 (bitstuff history) because sync starts with 0
@@ -318,28 +343,28 @@ didStuff7:
 ;make SE0:
     cbr     x1, USBMASK     ;[5] prepare SE0 [spec says EOP may be 21 to 25 cycles]
     lds     x2, usbNewDeviceAddr;[6]
-    lsl     x2              ;[8] we compare with left shifted address
-    subi    YL, 20 + 2      ;[9] Only assign address on data packets, not ACK/NAK in x3
-    sbci    YH, 0           ;[10]
-    out     USBOUT, x1      ;[11] <-- out SE0 -- from now 2 bits = 22 cycles until bus idle
+    lsl     x2              ;[9] we compare with left shifted address
+    subi    YL, 20 + 2      ;[10] Only assign address on data packets, not ACK/NAK in x3
+    sbci    YH, 0           ;[0] [11]
+    out     USBOUT, x1      ;[1] <-- out SE0 -- from now 2 bits = 22 cycles until bus idle
 ;2006-03-06: moved transfer of new address to usbDeviceAddr from C-Code to asm:
 ;set address only after data packet was sent, not after handshake
-    breq    skipAddrAssign  ;[0]
+    breq    skipAddrAssign  ;[2]
     sts     usbDeviceAddr, x2; if not skipped: SE0 is one cycle longer
 skipAddrAssign:
 ;end of usbDeviceAddress transfer
-    ldi     x2, 1<<USB_INTR_PENDING_BIT;[2] int0 occurred during TX -- clear pending flag
-    USB_STORE_PENDING(x2)   ;[3]
-    ori     x1, USBIDLE     ;[4]
-    in      x2, USBDDR      ;[5]
-    cbr     x2, USBMASK     ;[6] set both pins to input
-    mov     x3, x1          ;[7]
-    cbr     x3, USBMASK     ;[8] configure no pullup on both pins
-    ldi     x4, 4           ;[9]
+    ldi     x2, 1<<USB_INTR_PENDING_BIT;[3] int0 occurred during TX -- clear pending flag
+    USB_STORE_PENDING(x2)   ;[4]
+    ori     x1, USBIDLE     ;[5]
+    in      x2, USBDDR      ;[6]
+    cbr     x2, USBMASK     ;[7] set both pins to input
+    mov     x3, x1          ;[8]
+    cbr     x3, USBMASK     ;[9] configure no pullup on both pins
+    ldi     x4, 4           ;[10]
 se0Delay:
-    dec     x4              ;[10] [13] [16] [19]
-    brne    se0Delay        ;[11] [14] [17] [20]
-    out     USBOUT, x1      ;[21] <-- out J (idle) -- end of SE0 (EOP signal)
-    out     USBDDR, x2      ;[22] <-- release bus now
-    out     USBOUT, x3      ;[23] <-- ensure no pull-up resistors are active
+    dec     x4              ;[11] [14] [17] [20]
+    brne    se0Delay        ;[12] [15] [18] [21]
+    out     USBOUT, x1      ;[22] <-- out J (idle) -- end of SE0 (EOP signal)
+    out     USBDDR, x2      ;[23] <-- release bus now
+    out     USBOUT, x3      ;[24] <-- ensure no pull-up resistors are active
     rjmp    doReturn

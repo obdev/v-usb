@@ -29,6 +29,7 @@ uchar       usbCurrentTok;      /* last token received or endpoint number for la
 uchar       usbRxToken;         /* token for data we received; or endpont number for last OUT */
 volatile uchar usbTxLen = USBPID_NAK;   /* number of bytes to transmit with next IN token or handshake token */
 uchar       usbTxBuf[USB_BUFSIZE];/* data to transmit with next IN, free if usbTxLen contains handshake token */
+uchar       usbTxToken;
 #if USB_COUNT_SOF
 volatile uchar  usbSofCount;    /* incremented by assembler module every SOF */
 #endif

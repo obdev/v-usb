@@ -34,7 +34,7 @@ the file appropriate for the given clock rate.
 
 #ifdef __IAR_SYSTEMS_ASM__
     extern  usbRxBuf, usbDeviceAddr, usbNewDeviceAddr, usbInputBufOffset
-    extern  usbCurrentTok, usbRxLen, usbRxToken, usbTxLen
+    extern  usbCurrentTok, usbRxLen, usbRxToken, usbTxLen, usbTxToken
     extern  usbTxBuf, usbTxStatus1, usbTxStatus3
 #   if USB_COUNT_SOF
         extern usbSofCount

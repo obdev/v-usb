@@ -531,11 +531,12 @@ int usbDescriptorStringSerialNumber[];
 /* ------------------------------------------------------------------------- */
 
 #define USB_CONCAT(a, b)            a ## b
+#define USB_CONCAT3(a, b, c)        a ## b ## c
 #define USB_CONCAT_EXPANDED(a, b)   USB_CONCAT(a, b)
 
-#define USB_OUTPORT(name)           USB_CONCAT(PORT, name)
-#define USB_INPORT(name)            USB_CONCAT(PIN, name)
-#define USB_DDRPORT(name)           USB_CONCAT(DDR, name)
+#define USB_OUTPORT(name)           USB_CONCAT3(VPORT, name, _OUT)
+#define USB_INPORT(name)            USB_CONCAT3(VPORT, name, _IN)
+#define USB_DDRPORT(name)           USB_CONCAT3(VPORT, name, _DIR)
 /* The double-define trick above lets us concatenate strings which are
  * defined by macros.
  */
