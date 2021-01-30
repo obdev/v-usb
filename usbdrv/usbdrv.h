@@ -269,7 +269,7 @@ USB_PUBLIC void usbSetInterrupt3(uchar *data, uchar len);
 /* Same as above for endpoint 3 */
 #endif
 #endif /* USB_CFG_HAVE_INTRIN_ENDPOINT */
-#if USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH    /* simplified interface for backward compatibility */
+#if defined USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH    /* simplified interface for backward compatibility */
 #define usbHidReportDescriptor  usbDescriptorHidReport
 /* should be declared as: PROGMEM char usbHidReportDescriptor[]; */
 /* If you implement an HID device, you need to provide a report descriptor.
@@ -467,7 +467,7 @@ extern volatile schar   usbRxLen;
 #endif
 #if !(USB_CFG_DESCR_PROPS_HID_REPORT)
 #   undef USB_CFG_DESCR_PROPS_HID_REPORT
-#   if USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH /* do some backward compatibility tricks */
+#   if defined USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH /* do some backward compatibility tricks */
 #       define USB_CFG_DESCR_PROPS_HID_REPORT       USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH
 #   else
 #       define USB_CFG_DESCR_PROPS_HID_REPORT       0
