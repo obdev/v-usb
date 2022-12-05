@@ -44,34 +44,53 @@ more precise than one step of OSCCAL. It is therefore not suitable to tune an
 Thanks to Henrik Haftmann for the idea to this routine!
 */
 
-#define TIMER0_PRESCALING           64 /* must match the configuration for TIMER0 in main */
-#define TOLERATED_DEVIATION_PPT     5  /* max clock deviation before we tune in 1/10 % */
-/* derived constants: */
-#define EXPECTED_TIMER0_INCREMENT   ((F_CPU / (1000 * TIMER0_PRESCALING)) & 0xff)
-#define TOLERATED_DEVIATION         (TOLERATED_DEVIATION_PPT * F_CPU / (1000000 * TIMER0_PRESCALING))
-
 #ifdef __ASSEMBLER__
+
+// F_CPU isn't always usable in assembler, because with some AVR toolchains it
+// ends in 'L' or 'UL' (e.g. 12000000UL)
+// This clever routine creates a new macro, "F_CPU_NUMERIC" that doens't end in
+// 'UL'.
+// Idea from https://www.avrfreaks.net/comment/334055#comment-334055
+.set F_CPU_NUMERIC,0  // init to 0
+.irpc param,F_CPU     // go through all 'characters' in F_CPU
+.ifnc \param,U        // if not a 'U'
+.ifnc \param,L        // and not an 'L'
+.set F_CPU_NUMERIC,F_CPU_NUMERIC*10+\param // multiply by 10, then add new digit
+.endif
+.endif
+.endr 
+
+#define TIMER0_PRESCALING           64 /* must match the configuration for TIMER0 in main */
+#define TOLERATED_DEVIATION_PPT     5  /* max clock deviation before we tune in 1/10 (e.g. 5 = 0.5%) */
+
+/* derived constants: */
+
+/* Timer ticks in 1ms - the expected number of ticks between USB SOFs ('Start Of Frames') */
+#define EXPECTED_TIMER0_INCREMENT   ((F_CPU_NUMERIC / (1000 * TIMER0_PRESCALING)) & 0xff) 
+
+#define TOLERATED_DEVIATION         (TOLERATED_DEVIATION_PPT * F_CPU_NUMERIC / (1000000 * TIMER0_PRESCALING))
+
 macro tuneOsccal
-    push    YH                              ;[0]
-    in      YL, TCNT0                       ;[2]
-    lds     YH, lastTimer0Value             ;[3]
-    sts     lastTimer0Value, YL             ;[5]
-    sub     YL, YH                          ;[7] time passed since last frame
-    subi    YL, EXPECTED_TIMER0_INCREMENT   ;[8]
+    push    YH                              ;[0]  Save HY. We are allowed to clobber only YL.
+    in      YL, TCNT0                       ;[2]  YL = TCNT
+    lds     YH, lastTimer0Value             ;[3]  YH = lastTimer0Value
+    sts     lastTimer0Value, YL             ;[5]  lastTimer0Value = YL (store new timer value for next time)
+    sub     YL, YH                          ;[7]  YL = YL - YH (YL = time passed since last frame)
+    subi    YL, EXPECTED_TIMER0_INCREMENT   ;[8]  YL = YL - EXPECTED_TIMER0_INCREMENT
 #if OSCCAL > 0x3f   /* outside I/O addressable range */
-    lds     YH, OSCCAL                      ;[6]
+    lds     YH, OSCCAL                      ;[6]  HY = OSCCAL (timer calibration byte)
 #else
-    in      YH, OSCCAL                      ;[6] assembler modle uses __SFR_OFFSET == 0
+    in      YH, OSCCAL                      ;[6]  assembler modle uses __SFR_OFFSET == 0
 #endif
-    cpi     YL, TOLERATED_DEVIATION + 1     ;[10]
-    brmi    notTooHigh                      ;[11]
-    subi    YH, 1                           ;[12] clock rate was too high
+    cpi     YL, TOLERATED_DEVIATION + 1     ;[10] Compare YL with TOLERATED_DEVIATION + 1 
+    brmi    notTooHigh                      ;[11] Branch to notTooHigh if the result is <0
+    subi    YH, 1                           ;[12] Clock rate was too high - subtract 1 from YH (the OSCCal we loaded above).
 ;   brcs    tuningOverflow                  ; optionally check for overflow
-    rjmp    osctuneDone                     ;[13]
+    rjmp    osctuneDone                     ;[13] goto osctuneDone.
 notTooHigh:
-    cpi     YL, -TOLERATED_DEVIATION        ;[13]
-    brpl    osctuneDone                     ;[14] not too low
-    inc     YH                              ;[15] clock rate was too low
+    cpi     YL, -TOLERATED_DEVIATION        ;[13] Compare YL with -TOLERATED_DEVIATION.
+    brpl    osctuneDone                     ;[14] If it compares higher, we are in spec. No need to do anything.
+    inc     YH                              ;[15] clock rate was too low - add 1 to YH (the OSCCal we loaded above).
 ;   breq    tuningOverflow                  ; optionally check for overflow
 osctuneDone:
 #if OSCCAL > 0x3f   /* outside I/O addressable range */
@@ -80,7 +99,7 @@ osctuneDone:
     out     OSCCAL, YH                      ;[12-13] store tuned value
 #endif
 tuningOverflow:
-    pop     YH                              ;[17]
+    pop     YH                              ;[17] Restore YH.
     endm                                    ;[19] max number of cycles
 #endif
 
