@@ -215,7 +215,8 @@ extern uchar usbMsgFlags;    /* flag values see USB_FLG_* */
  * address.
  */
 
-#define USB_FLG_MSGPTR_IS_ROM   (1<<6)
+#define USB_FLG_MSGPTR_IS_ROM      (1<<6)
+#define USB_FLG_MSGPTR_IS_EEPROM   (1<<5)
 
 USB_PUBLIC usbMsgLen_t usbFunctionSetup(uchar data[8]);
 /* This function is called when the driver receives a SETUP transaction from
@@ -424,6 +425,11 @@ extern volatile schar   usbRxLen;
  * about the various methods to define USB descriptors. If you do nothing,
  * the default descriptors will be used.
  */
+#define USB_PROP_IS_EEPROM      (1u << 13)
+/* If this property is set for a descriptor, the data is read from EEPROM
+* memory. Use it combined (OR) with with USB_PROP_EEPROM_STRING_LENGTH
+* if its a string descriptor.
+ */
 #define USB_PROP_IS_DYNAMIC     (1u << 14)
 /* If this property is set for a descriptor, usbFunctionDescriptor() will be
  * used to obtain the particular descriptor. Data directly returned via
@@ -439,6 +445,15 @@ extern volatile schar   usbRxLen;
 /* If a static external descriptor is used, this is the total length of the
  * descriptor in bytes.
  */
+ #define USB_PROP_EEPROM_LENGTH(len)  ((len) & 0x1fff)
+/* If a static external descriptor stored in EEPROM is used, this is the total length of the
+ * descriptor in bytes.
+ */
+ #define USB_PROP_EEPROM_STRING_LENGTH(eepromStringLength) (USB_PROP_EEPROM_LENGTH((2*(eepromStringLength)+2)))
+/* This macro computes the EEPROM length for a string descriptor given the
+ * string's length. See usbdrv.c for an example how to use it.
+ */
+
 
 /* all descriptors which may have properties: */
 #ifndef USB_CFG_DESCR_PROPS_DEVICE
@@ -483,46 +498,77 @@ extern volatile schar   usbRxLen;
  */
 #ifndef __ASSEMBLER__
 extern
+#if !(USB_CFG_DESCR_PROPS_DEVICE & USB_PROP_IS_EEPROM)
 #if !(USB_CFG_DESCR_PROPS_DEVICE & USB_PROP_IS_RAM)
 PROGMEM const
 #endif
 char usbDescriptorDevice[];
+#else
+const char EEMEM usbDescriptorDevice[];
+#endif
+
 
 extern
+#if !(USB_CFG_DESCR_PROPS_CONFIGURATION & USB_PROP_IS_EEPROM)
 #if !(USB_CFG_DESCR_PROPS_CONFIGURATION & USB_PROP_IS_RAM)
 PROGMEM const
 #endif
 char usbDescriptorConfiguration[];
+#else
+const char EEMEM usbDescriptorConfiguration[];
+#endif
 
 extern
+#if !(USB_CFG_DESCR_PROPS_CONFIGURATION & USB_PROP_IS_EEPROM)
 #if !(USB_CFG_DESCR_PROPS_HID_REPORT & USB_PROP_IS_RAM)
 PROGMEM const
 #endif
 char usbDescriptorHidReport[];
+#else
+const char EEMEM usbDescriptorHidReport[];
+#endif
 
 extern
+#if !(USB_CFG_DESCR_PROPS_CONFIGURATION & USB_PROP_IS_EEPROM)
 #if !(USB_CFG_DESCR_PROPS_STRING_0 & USB_PROP_IS_RAM)
 PROGMEM const
 #endif
 char usbDescriptorString0[];
+#else
+const char EEMEM usbDescriptorString0[];
+#endif
 
 extern
+#if !(USB_CFG_DESCR_PROPS_STRING_VENDOR & USB_PROP_IS_EEPROM)
 #if !(USB_CFG_DESCR_PROPS_STRING_VENDOR & USB_PROP_IS_RAM)
 PROGMEM const
 #endif
 int usbDescriptorStringVendor[];
+#else
+const int EEMEM usbDescriptorStringVendor[];
+#endif
+
 
 extern
+#if !(USB_CFG_DESCR_PROPS_STRING_PRODUCT & USB_PROP_IS_EEPROM)
 #if !(USB_CFG_DESCR_PROPS_STRING_PRODUCT & USB_PROP_IS_RAM)
 PROGMEM const
 #endif
 int usbDescriptorStringDevice[];
+#else
+const int EEMEM usbDescriptorStringDevice[];
+#endif
 
 extern
-#if !(USB_CFG_DESCR_PROPS_STRING_SERIAL_NUMBER & USB_PROP_IS_RAM)
+#if !(USB_CFG_DESCR_PROPS_STRING_SERIAL_NUMBER & USB_PROP_IS_EEPROM)
+#if !(USB_CFG_DESCR_PROPS_STRING_SERIAL_NUMBER & USB_PROP_IS_RAM) 
 PROGMEM const
 #endif
 int usbDescriptorStringSerialNumber[];
+#else
+const int EEMEM usbDescriptorStringSerialNumber[];
+#endif
+
 
 #endif /* __ASSEMBLER__ */
 
