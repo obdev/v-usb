@@ -7,14 +7,12 @@
 # Copyright: (c) 2008 by OBJECTIVE DEVELOPMENT Software GmbH
 # License: GNU GPL v2 (see License.txt), GNU GPL v3 or proprietary (CommercialLicense.txt)
 
-# This script was created for Mac OS X with EAGLE and ImageMagick installed
 # The "open" command is specific to Mac OS X and is used to start GUI
 # applications or open files and directories.
 
 name=vusb
 
 #PATH="$PATH"
-eagle=~/Applications/EAGLE/EAGLE.app/Contents/MacOS/EAGLE
 
 #-------------------------------------------------------------------
 # initial user dialog:
@@ -98,27 +96,6 @@ rm -f "/tmp/$pkgname".*
 mkdir "/tmp/$pkgname"
 git archive --format tar "$branch" | tar -x -C "/tmp/$pkgname"
 cd "/tmp/$pkgname"
-
-#-------------------------------------------------------------------
-# Automatically create PNG files from EAGLE design
-#-------------------------------------------------------------------
-
-# Script for exporting circuit diagram:
-tname="mkdist-$$"
-cat >/tmp/$tname.scr <<EOF
-EXPORT IMAGE 'circuits/image.png' monochrome 300;
-QUIT
-EOF
-
-# Copy the schematics file and run the script on it:
-for i in circuits/*.sch; do
-    rm -f "circuits/image.png"
-    cp "$i" /tmp/$tname.sch
-    $eagle -S/tmp/$tname.scr /tmp/$tname.sch
-    file=`basename -s .sch $i`
-    mv circuits/image.png circuits/$file.png
-done
-rm /tmp/$tname.scr /tmp/$tname.sch
 
 #-------------------------------------------------------------------
 # Generate all derived files
