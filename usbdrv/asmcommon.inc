@@ -14,7 +14,7 @@
 /*
 General Description:
 This file contains assembler code which is shared among the USB driver
-implementations for different CPU cocks. Since the code must be inserted
+implementations for different CPU clocks. Since the code must be inserted
 in the middle of the module, it's split out into this file and #included.
 
 Jump destinations called from outside:
