@@ -57,7 +57,7 @@ USB_INTR_VECTOR:
 ;sync byte (D-) pattern LSb to MSb: 01010100 [1 = idle = J, 0 = K]
 ;sync up with J to K edge during sync pattern -- use fastest possible loops
 ;The first part waits at most 1 bit long since we must be in sync pattern.
-;YL is guarenteed to be < 0x80 because I flag is clear. When we jump to
+;YL is guaranteed to be < 0x80 because I flag is clear. When we jump to
 ;waitForJ, ensure that this prerequisite is met.
 waitForJ:
     inc     YL
@@ -144,7 +144,7 @@ b6checkUnstuff:
     dec     bitcnt              ;[9]
     breq    unstuff6            ;[10]
 bit7:
-    subi    cnt, 1              ;[11] cannot use dec becaus it does not affect the carry flag
+    subi    cnt, 1              ;[11] cannot use dec because it does not affect the carry flag
     brcs    overflow            ;[12] Too many bytes received. Ignore packet
     in      x1, USBIN           ;[0] sample line state
     andi    x1, USBMASK         ;[1] filter only D+ and D- bits
