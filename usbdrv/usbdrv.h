@@ -608,7 +608,7 @@ int usbDescriptorStringSerialNumber[];
 #   endif
 #endif
 #ifndef USB_INTR_CFG_SET    /* allow user to override our default */
-#   if defined(USB_COUNT_SOF) || defined(USB_SOF_HOOK)
+#   if USB_COUNT_SOF || defined(USB_SOF_HOOK)
 #       define USB_INTR_CFG_SET (1 << ISC01)                    /* cfg for falling edge */
         /* If any SOF logic is used, the interrupt must be wired to D- where
          * we better trigger on falling edge
