@@ -42,7 +42,7 @@ if [ "$1" = public ]; then
         echo "Release is not documented in usbdrv/Changelog.txt, please do that!"
         exit 1
     fi
-    cat << EOF | sed -n -f /dev/stdin usbdrv/usbdrv.h >usbdrv/usbdrv.h.new
+    cat << EOF | sed -n -f - usbdrv/usbdrv.h >usbdrv/usbdrv.h.new
 /^\( [*] \)\{0,1\}[+].*\$/ d
 s/^#define USBDRV_VERSION .*\$/#define USBDRV_VERSION  $today/g
 p

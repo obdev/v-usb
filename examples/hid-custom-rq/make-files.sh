@@ -15,7 +15,7 @@ if [ "$1" = remove ]; then
     exit
 fi
 
-cat << \EOF | sed -n -f /dev/stdin ../../usbdrv/usbconfig-prototype.h >firmware/usbconfig.h
+cat << \EOF | sed -n -f - ../../usbdrv/usbconfig-prototype.h >firmware/usbconfig.h
 /^\( [*] \)\{0,1\}[+].*$/ d
 s/^#define USB_CFG_DMINUS_BIT .*$/#define USB_CFG_DMINUS_BIT      4/g
 s|^.*#define USB_CFG_CLOCK_KHZ.*$|#define USB_CFG_CLOCK_KHZ       (F_CPU/1000)|g
@@ -32,26 +32,26 @@ s/^.*#define USB_CFG_HID_REPORT_DESCRIPTOR_LENGTH.*$/#define USB_CFG_HID_REPORT_
 p
 EOF
 
-cat << \EOF | sed -n -f /dev/stdin ../custom-class/firmware/Makefile >firmware/Makefile
+cat << \EOF | sed -n -f - ../custom-class/firmware/Makefile >firmware/Makefile
 /^\( [*] \)\{0,1\}[+].*$/ d
 s/^# Project: .*$/# Project: hid-custom-rq example/g
 p
 EOF
 
 mkdir commandline 2>/dev/null
-cat << \EOF | sed -n -f /dev/stdin ../custom-class/commandline/set-led.c >commandline/set-led.c
+cat << \EOF | sed -n -f - ../custom-class/commandline/set-led.c >commandline/set-led.c
 /^\( [*] \)\{0,1\}[+].*$/ d
 s/^ [*] Project: .*$/ * Project: hid-custom-rq example/g
 p
 EOF
 
-cat << \EOF | sed -n -f /dev/stdin ../usbtool/Makefile.windows >commandline/Makefile.windows
+cat << \EOF | sed -n -f - ../usbtool/Makefile.windows >commandline/Makefile.windows
 /^\( [*] \)\{0,1\}[+].*$/ d
 s/^# Project: .*$/# Project: hid-custom-rq example/g
 p
 EOF
 
-cat << \EOF | sed -n -f /dev/stdin ../usbtool/Makefile >commandline/Makefile
+cat << \EOF | sed -n -f - ../usbtool/Makefile >commandline/Makefile
 /^\( [*] \)\{0,1\}[+].*$/ d
 s/^# Project: .*$/# Project: hid-custom-rq example/g
 s/^NAME = .*$/NAME = set-led/g
