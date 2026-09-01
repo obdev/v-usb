@@ -291,17 +291,23 @@ USB_PUBLIC void usbSetInterrupt3(uchar *data, uchar len)
  * This may cause problems with undefined symbols if compiled without
  * optimizing!
  */
-#define GET_DESCRIPTOR(cfgProp, staticName)         \
-    if(cfgProp){                                    \
-        if((cfgProp) & USB_PROP_IS_RAM)             \
-            flags = 0;                              \
-        if((cfgProp) & USB_PROP_IS_DYNAMIC){        \
-            len = usbFunctionDescriptor(rq);        \
-        }else{                                      \
-            len = USB_PROP_LENGTH(cfgProp);         \
-            usbMsgPtr = (usbMsgPtr_t)(staticName);  \
-        }                                           \
-    }
+#define GET_DESCRIPTOR(cfgProp, staticName)             \
+    if(cfgProp){                                        \
+        if((cfgProp) & USB_PROP_IS_RAM){                \
+           flags = 0;                                   \
+        }                                               \
+        if((cfgProp) & USB_PROP_IS_DYNAMIC){            \
+            len = usbFunctionDescriptor(rq);            \
+        }else{                                          \
+            if((cfgProp) & USB_PROP_IS_EEPROM){         \
+                flags = USB_FLG_MSGPTR_IS_EEPROM;       \
+                len = USB_PROP_EEPROM_LENGTH(cfgProp);  \
+            } else {                                    \
+                len = USB_PROP_LENGTH(cfgProp);         \
+            }                                           \
+            usbMsgPtr = (usbMsgPtr_t)(staticName);      \
+        }                                               \
+    }                                                   \
 
 /* usbDriverDescriptor() is similar to usbFunctionDescriptor(), but used
  * internally for all types of descriptors.
@@ -318,8 +324,12 @@ uchar       flags = USB_FLG_MSGPTR_IS_ROM;
         GET_DESCRIPTOR(USB_CFG_DESCR_PROPS_CONFIGURATION, usbDescriptorConfiguration)
     SWITCH_CASE(USBDESCR_STRING)    /* 3 */
 #if USB_CFG_DESCR_PROPS_STRINGS & USB_PROP_IS_DYNAMIC
-        if(USB_CFG_DESCR_PROPS_STRINGS & USB_PROP_IS_RAM)
+        if(USB_CFG_DESCR_PROPS_STRINGS & USB_PROP_IS_RAM){
             flags = 0;
+        } else
+        if(USB_CFG_DESCR_PROPS_UNKNOWN & USB_PROP_IS_EEPROM){
+            flags = USB_FLG_MSGPTR_IS_EEPROM;
+        }
         len = usbFunctionDescriptor(rq);
 #else   /* USB_CFG_DESCR_PROPS_STRINGS & USB_PROP_IS_DYNAMIC */
         SWITCH_START(rq->wValue.bytes[0])
@@ -335,6 +345,9 @@ uchar       flags = USB_FLG_MSGPTR_IS_ROM;
             if(USB_CFG_DESCR_PROPS_UNKNOWN & USB_PROP_IS_DYNAMIC){
                 if(USB_CFG_DESCR_PROPS_UNKNOWN & USB_PROP_IS_RAM){
                     flags = 0;
+                } else
+                if(USB_CFG_DESCR_PROPS_UNKNOWN & USB_PROP_IS_EEPROM){
+                    flags = USB_FLG_MSGPTR_IS_EEPROM;
                 }
                 len = usbFunctionDescriptor(rq);
             }
@@ -350,6 +363,9 @@ uchar       flags = USB_FLG_MSGPTR_IS_ROM;
         if(USB_CFG_DESCR_PROPS_UNKNOWN & USB_PROP_IS_DYNAMIC){
             if(USB_CFG_DESCR_PROPS_UNKNOWN & USB_PROP_IS_RAM){
                 flags = 0;
+            } else
+            if(USB_CFG_DESCR_PROPS_UNKNOWN & USB_PROP_IS_EEPROM){
+                flags = USB_FLG_MSGPTR_IS_EEPROM;
             }
             len = usbFunctionDescriptor(rq);
         }
@@ -505,7 +521,13 @@ static uchar usbDeviceRead(uchar *data, uchar len)
         {
             uchar i = len;
             usbMsgPtr_t r = usbMsgPtr;
-            if(usbMsgFlags & USB_FLG_MSGPTR_IS_ROM){    /* ROM data */
+            if(usbMsgFlags & USB_FLG_MSGPTR_IS_EEPROM){    /* EEPROM data */
+                do{
+                    uchar c = USB_READ_EEPROM(r);    /* assign to char size variable to enforce byte ops */
+                    *data++ = c;
+                    r++;
+                }while(--i);
+            }else if(usbMsgFlags & USB_FLG_MSGPTR_IS_ROM){    /* ROM data */
                 do{
                     uchar c = USB_READ_FLASH(r);    /* assign to char size variable to enforce byte ops */
                     *data++ = c;

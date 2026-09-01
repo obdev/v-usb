@@ -118,6 +118,7 @@ static inline void  sei(void)
 /* ------------------------------------------------------------------------- */
 
 #include <avr/io.h>
+#include <avr/eeprom.h>
 #ifdef __ASSEMBLER__
 #   define _VECTOR(N)   __vector_ ## N   /* io.h does not define this for asm */
 #else
@@ -129,6 +130,8 @@ static inline void  sei(void)
 #else
 #   define USB_READ_FLASH(addr)    pgm_read_byte(addr)
 #endif
+
+#define USB_READ_EEPROM(addr) eeprom_read_byte(addr)
 
 #define macro   .macro
 #define endm    .endm
