@@ -27,10 +27,10 @@ Although it may seem very handy to save the crystal and use the internal
 RC oscillator of the CPU, this method (and this module) has some serious
 limitations:
 (1) The guaranteed calibration range of the oscillator is only 8.1 MHz.
-They typical range is 14.5 MHz and most AVRs can actually reach this rate.
+The typical range is 14.5 MHz and most AVRs can actually reach this rate.
 (2) Writing EEPROM and Flash may be unreliable (short data lifetime) since
 the write procedure is timed from the RC oscillator.
-(3) End Of Packet detection (SE0) should be in bit 1, bit it is only checked
+(3) End Of Packet detection (SE0) should be in bit 1, but it is only checked
 if bits 0 and 1 both read as 0 on D- and D+ read as 0 in the middle. This may
 cause problems with old hubs which delay SE0 by up to one cycle.
 (4) Code size is much larger than that of the other modules.

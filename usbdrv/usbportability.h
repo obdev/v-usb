@@ -81,7 +81,7 @@ Thanks to Oleg Semyonov for his help with the IAR tools port!
  */
 
 /* ------------------------------------------------------------------------- */
-#elif __CODEVISIONAVR__ /* check for CodeVision AVR */
+#elif defined __CODEVISIONAVR__ /* check for CodeVision AVR */
 /* ------------------------------------------------------------------------- */
 /* This port is not working (yet) */
 
