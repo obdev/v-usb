@@ -335,3 +335,8 @@ Scroll down to the bottom to see the most recent changes.
   - Updated USB-IDs-for-free.txt and source code comments to clarify that the
     shared VID/PID pairs are not assigned to anybody, not authorized by the
     USB-IF and not guaranteed to be free of conflicts.
+  - Support USB descriptors larger than 255 bytes.
+  - Updated to libusb-1.0.
+  - New 18 MHz module which checks CRC.
+
+* Release 2026-11-23
