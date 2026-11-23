@@ -19,7 +19,7 @@ startup code, interrupt vectors etc.
 int	main(void)
 {
     for(;;);
-	return 0;
+    return 0;
 }
 
 /* ------------------------------------------------------------------------- */

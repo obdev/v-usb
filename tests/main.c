@@ -132,7 +132,7 @@ usbRequest_t    *rq = (void *)data;
 
     if(rq->bRequest == 0)   /* request using usbFunctionRead()/usbFunctionWrite() */
         return 0xff;
-	return 0;   /* default for not implemented requests: return no data back to host */
+    return 0;   /* default for not implemented requests: return no data back to host */
 }
 
 /* ------------------------------------------------------------------------- */
