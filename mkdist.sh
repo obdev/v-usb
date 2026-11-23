@@ -5,7 +5,7 @@
 # Creation Date: 2008-04-18
 # Tabsize: 4
 # Copyright: (c) 2008 by OBJECTIVE DEVELOPMENT Software GmbH
-# License: GNU GPL v2 (see License.txt), GNU GPL v3 or proprietary (CommercialLicense.txt)
+# License: GNU GPL v2 (see License.txt) or GNU GPL v3
 
 # The "open" command is specific to Mac OS X and is used to start GUI
 # applications or open files and directories.
@@ -112,7 +112,7 @@ find . -name 'make-files.sh' -exec rm '{}' \;   # remove helper scripts
 rm -f mkdist.sh README.md .gitignore
 (
     cd usbdrv
-    cp Changelog.txt License.txt CommercialLicense.txt USB-IDs-for-free.txt USB-ID-FAQ.txt ..
+    cp Changelog.txt License.txt USB-IDs-for-free.txt USB-ID-FAQ.txt ..
 )
 cd ..
 echo "Creating /tmp/$pkgname.zip and /tmp/$pkgname.tar.gz"

@@ -4,7 +4,7 @@
 # Creation Date: 2012-12-05
 # Tabsize: 4
 # Copyright: (c) 2012 by OBJECTIVE DEVELOPMENT Software GmbH
-# License: GNU GPL v2 (see License.txt), GNU GPL v3 or proprietary (CommercialLicense.txt)
+# License: GNU GPL v2 (see License.txt) or GNU GPL v3
 
 # This is the main Makefile. The two primary targets are "all", to build
 # everything which can be built (except tests), and "clean" to remove all

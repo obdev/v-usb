@@ -4,7 +4,7 @@
  * Creation Date: 2008-10-11
  * Tabsize: 4
  * Copyright: (c) 2008 by OBJECTIVE DEVELOPMENT Software GmbH
- * License: GNU GPL v2 (see License.txt), GNU GPL v3 or proprietary (CommercialLicense.txt)
+ * License: GNU GPL v2 (see License.txt) or GNU GPL v3
  */
 
 /* Do not link this file! Link usbdrvasm.S instead, which includes the

@@ -38,7 +38,6 @@ The driver consists of the following files:
                            module instead of usbdrvasm.S when you assembler
                            with IAR's tools.
   License.txt ............ Open Source license for this driver.
-  CommercialLicense.txt .. Optional commercial license for this driver.
   USB-ID-FAQ.txt ......... General infos about USB Product- and Vendor-IDs.
   USB-IDs-for-free.txt ... List and terms of use for free shared PIDs.
 
@@ -106,9 +105,6 @@ Since an entry level cost of 1,500 USD is too high for most small companies
 and hobbyists, we provide some VID/PID pairs for free. See the file
 USB-IDs-for-free.txt for details.
 
-Objective Development also has some license offerings which include product
-IDs. See http://www.obdev.at/vusb/ for details.
-
 
 DEVELOPMENT SYSTEM
 ==================
@@ -158,15 +154,4 @@ http://www.obdev.at/goto.php?t=vusb-wiki&p=hosted-projects.
     - a Readme.txt file in ASCII format which describes the purpose of the
       project and what can be found in which directories and which files
     - a reference to http://www.obdev.at/vusb/
-
-(3) If you improve the driver firmware itself, please give us a free license
-to your modifications for our commercial license offerings.
-
-
-COMMERCIAL LICENSES FOR V-USB
-=============================
-If you don't want to publish your source code under the terms of the GPL,
-you can simply pay money for V-USB. As an additional benefit you get
-USB PIDs for free, reserved exclusively to you. See the file
-"CommercialLicense.txt" for details.
 

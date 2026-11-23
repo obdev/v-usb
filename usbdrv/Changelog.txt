@@ -327,3 +327,6 @@ Scroll down to the bottom to see the most recent changes.
   - Prepared repository for github.com.
 
 * Release 2012-12-06
+
+  - Removed the commercial license (CommercialLicense.txt). V-USB is now
+    available under the GNU GPL v2 or v3 only.

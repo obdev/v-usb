@@ -19,7 +19,6 @@ for device and host and fully working examples for device and host:
   circuits ................ Example circuits using this driver.
   Changelog.txt ........... Documentation of changes between versions.
   License.txt ............. Free Open Source license for this package (GPL).
-  CommercialLicense.txt ... Alternative commercial license for this package.
   USB-ID-FAQ.txt .......... General infos about USB Product- and Vendor-IDs.
   USB-IDs-for-free.txt .... List and terms of use for free shared PIDs.
 
@@ -73,9 +72,6 @@ General Public License (GPL) version 3. It is your choice whether you apply
 the terms of version 2 or version 3. In addition to the terms of the GPL, we
 strongly encourage you to publish your entire project and mail OBJECTIVE
 DEVELOPMENT a link to your publication.
-
-Alternatively, we offer a commercial license without the restrictions of the
-GPL. See CommercialLicense.txt for details.
 
 
 ----------------------------------------------------------------------------

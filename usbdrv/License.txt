@@ -14,9 +14,6 @@ Use the form at http://www.obdev.at/vusb/feedback.html for your submission.
       project and what can be found in which directories and which files
     - a reference to http://www.obdev.at/vusb/
 
-(3) If you improve the driver firmware itself, please give us a free license
-to your modifications for our commercial license offerings.
-
 
 
                     GNU GENERAL PUBLIC LICENSE
