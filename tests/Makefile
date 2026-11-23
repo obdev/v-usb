@@ -79,16 +79,11 @@ test:
 # The following rule is used to check the compiler
 devices: #exclude devices without RAM for stack and atmega603 for gcc 3
 	excludes="at90s1200 attiny11 attiny12 attiny15 attiny28"; \
-	for gccVersion in 3 4; do \
-		avr-gcc-select $$gccVersion; \
-		for device in `echo | avr-gcc -xc -mmcu=x - 2>&1 | egrep '^ *at[a-zA-Z0-9_-]+$$'`; do \
-			if echo "$$excludes" | grep "$$device" >/dev/null; then continue; fi; \
-			if [ "$$gccVersion" = 3 -a "$$device" = atmega603 ]; then continue; fi; \
-			$(MAKE) clean; $(MAKE) null.elf DEVICE=$$device || exit 1; \
-		done \
-	done
+	for device in $(ls "$(avr-gcc -print-file-name=device-specs)"ls "$(avr-gcc -print-file-name=device-specs)" 2>/dev/null | sed 's/^specs-//' | grep 'atmega\|attiny'); do \
+		if echo "$$excludes" | grep "$$device" >/dev/null; then continue; fi; \
+		$(MAKE) clean; $(MAKE) null.elf DEVICE=$$device || exit 1; \
+	done \
 	$(MAKE) clean
-	avr-gcc-select 3
 	@echo "+++ Device test succeeded!"
 
 # rule for deleting dependent files (those which can be built by Make):

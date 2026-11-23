@@ -67,18 +67,13 @@ if [ "$isPublic" != yes ]; then
 	version="$version"-priv
 else
     (
-        currentGcc=`avr-gcc-select | awk '{print $NF}'`
         cd tests
-        for i in 3 4; do
-            avr-gcc-select $i >/dev/null 2>&1
-            gccvers=`avr-gcc --version | awk '{print $NF; exit}'`
-            file=sizes-$version-gcc$gccvers.txt
-            make sizes
-            mv sizes.txt sizes-reference/$file
-            git add sizes-reference/$file
-        done
+        gccvers=`avr-gcc --version | awk '{print $NF; exit}'`
+        file=sizes-$version-gcc$gccvers.txt
+        make sizes
+        mv sizes.txt sizes-reference/$file
+        git add sizes-reference/$file
         git commit -m "RELEASE: Added sizes files for this version"
-        avr-gcc-select $currentGcc
     )
 	echo "Tagging as version $version"
     git tag "releases/$version"
