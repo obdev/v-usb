@@ -546,7 +546,7 @@ int usbDescriptorStringSerialNumber[];
 
 #if !defined __ASSEMBLER__ && (!defined USB_CFG_VENDOR_ID || !defined USB_CFG_DEVICE_ID)
 #warning "You should define USB_CFG_VENDOR_ID and USB_CFG_DEVICE_ID in usbconfig.h"
-/* If the user has not defined IDs, we default to obdev's free IDs.
+/* If the user has not defined IDs, we default to the free shared IDs.
  * See USB-IDs-for-free.txt for details.
  */
 #endif
@@ -562,7 +562,7 @@ int usbDescriptorStringSerialNumber[];
 #   elif USB_CFG_INTERFACE_CLASS == 2
 #       define USB_CFG_DEVICE_ID    0xe1, 0x05  /* = 0x5e1 = 1505, shared PID for CDC Modems */
 #   else
-#       define USB_CFG_DEVICE_ID    0xdc, 0x05  /* = 0x5dc = 1500, obdev's free PID */
+#       define USB_CFG_DEVICE_ID    0xdc, 0x05  /* = 0x5dc = 1500, free shared PID */
 #   endif
 #endif
 

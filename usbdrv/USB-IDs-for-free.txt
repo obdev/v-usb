@@ -1,13 +1,28 @@
-Version 2009-08-22
+Version 2026-11-23
 
 ===========================
 FREE USB-IDs FOR SHARED USE
 ===========================
 
-Objective Development has reserved a set of USB Product-IDs for use according
-to the guidelines outlined below. For more information about the concept of
-USB IDs please see the file USB-ID-FAQ.txt. Objective Development guarantees
-that the IDs listed below are not used by any USB compliant devices.
+This file lists a set of USB Vendor-/Product-ID pairs which have been used
+for many years by a large number of V-USB based devices and examples. Since
+these pairs are shared by so many devices, they are effectively unusable for
+anybody who wants their device to be distinguishable by its IDs alone. This
+is why we consider them "good enough" for experiments, hobby projects and
+devices which follow the sharing rules outlined below.
+
+Please note:
+
+  - These IDs are NOT assigned to you or to anybody else for exclusive use.
+    They are shared by everybody who follows the rules below.
+  - Objective Development is not authorized by the USB Implementers Forum
+    (USB-IF) to assign USB Vendor- or Product-IDs.
+  - The use of these IDs is neither authorized nor endorsed by the USB-IF.
+  - We cannot guarantee that these IDs are free of conflicts with other
+    devices or drivers.
+
+For more information about the concept of USB IDs and the alternatives to
+shared pairs please see the file USB-ID-FAQ.txt.
 
 
 ====================
@@ -16,10 +31,10 @@ MECHANISM OF SHARING
 
 From a technical point of view, two different devices can share the same USB
 Vendor- and Product-ID if they require the same driver on operating system
-level. We make use of this fact by assigning separate IDs for various device
-classes. On application layer, devices must be distinguished by their textual
-name or serial number. We offer separate sets of IDs for discrimination by
-textual name and for serial number.
+level. The shared pairs listed below are therefore separated by device class.
+On application layer, devices must be distinguished by their textual name or
+serial number. There are separate sets of pairs for discrimination by textual
+name and for discrimination by serial number.
 
 Examples for shared use of USB IDs are included with V-USB in the "examples"
 subdirectory.
@@ -149,15 +164,14 @@ implement a non-compliant device or implement it using other technology
 than V-USB.
 
 
-=================
-ORIGIN OF USB-IDs
-=================
+===============
+VENDOR ID 5824
+===============
 
-OBJECTIVE DEVELOPMENT Software GmbH has obtained all VID/PID pairs listed
-here from Wouter van Ooijen (see www.voti.nl) for exclusive disposition.
-Wouter van Ooijen has obtained the VID from the USB Implementers Forum, Inc.
-(see www.usb.org). The VID is registered for the company name "Van Ooijen
-Technische Informatica".
+The USB-IF is the sole authority which assigns USB Vendor IDs. Vendor ID 5824
+(0x16c0) was assigned by the USB-IF to "Van Ooijen Technische Informatica".
+Neither Objective Development nor the users of the shared pairs listed above
+have been assigned this Vendor ID.
 
 
 ==========

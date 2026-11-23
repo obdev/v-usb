@@ -39,7 +39,7 @@ The driver consists of the following files:
                            with IAR's tools.
   License.txt ............ Open Source license for this driver.
   USB-ID-FAQ.txt ......... General infos about USB Product- and Vendor-IDs.
-  USB-IDs-for-free.txt ... List and terms of use for free shared PIDs.
+  USB-IDs-for-free.txt ... List of shared VID/PID pairs and sharing rules.
 
 (*) ... These files should be linked to your project.
 
@@ -97,13 +97,24 @@ uses similar tricks as the 16 MHz module to insert leap cycles.
 
 USB IDENTIFIERS
 ===============
-Every USB device needs a vendor- and a product-identifier (VID and PID). VIDs
-are obtained from usb.org for a price of 1,500 USD. Once you have a VID, you
-can assign PIDs at will.
+Every USB device needs a vendor- and a product-identifier (VID and PID). The
+USB Implementers Forum (USB-IF, www.usb.org) is the authority which assigns
+Vendor IDs. The fees for a Vendor ID are out of reach for most hobbyists.
 
-Since an entry level cost of 1,500 USD is too high for most small companies
-and hobbyists, we provide some VID/PID pairs for free. See the file
-USB-IDs-for-free.txt for details.
+V-USB is designed for hobby use. For hobby projects, one option is a random
+PID from 0x4400 to 0x7fff under VID 0x20a0. As of November 2026, the public
+USB ID database used by Linux (http://www.linux-usb.org/usb.ids) lists no
+products in this range, so a conflict with a known device is unlikely, but
+not impossible. This is technical information on how to avoid conflicts, not
+legal advice. See USB-ID-FAQ.txt for details.
+
+Alternatively, the examples in this package use a few VID/PID pairs which are
+shared by many V-USB based devices. These pairs are NOT assigned to you and
+Objective Development is not authorized by the USB-IF to assign USB IDs.
+
+Objective Development disclaims all liability for problems caused by your
+choice of USB IDs. See the files USB-ID-FAQ.txt and USB-IDs-for-free.txt for
+details.
 
 
 DEVELOPMENT SYSTEM

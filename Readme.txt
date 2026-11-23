@@ -20,7 +20,7 @@ for device and host and fully working examples for device and host:
   Changelog.txt ........... Documentation of changes between versions.
   License.txt ............. Free Open Source license for this package (GPL).
   USB-ID-FAQ.txt .......... General infos about USB Product- and Vendor-IDs.
-  USB-IDs-for-free.txt .... List and terms of use for free shared PIDs.
+  USB-IDs-for-free.txt .... List of shared VID/PID pairs and sharing rules.
 
 Each subdirectory contains a separate Readme file which explains its
 contents. We recommend that you also read the Readme.txt file in the

@@ -219,24 +219,21 @@ section at the end of this file).
 /* -------------------------- Device Description --------------------------- */
 
 #define  USB_CFG_VENDOR_ID       0xc0, 0x16 /* = 0x16c0 = 5824 = voti.nl */
-/* USB vendor ID for the device, low byte first. If you have registered your
- * own Vendor ID, define it here. Otherwise you may use one of obdev's free
- * shared VID/PID pairs. Be sure to read USB-IDs-for-free.txt for rules!
+/* USB vendor ID for the device, low byte first. See the file USB-ID-FAQ.txt
+ * for how to choose your IDs.
  * *** IMPORTANT NOTE ***
- * This template uses obdev's shared VID/PID pair for Vendor Class devices
+ * This template uses the free shared VID/PID pair for Vendor Class devices
  * with libusb: 0x16c0/0x5dc.  Use this VID/PID pair ONLY if you understand
- * the implications!
+ * the implications! Be sure to read the rules in USB-IDs-for-free.txt!
  */
 #define  USB_CFG_DEVICE_ID       0xdc, 0x05 /* = 0x05dc = 1500 */
 /* This is the ID of the product, low byte first. It is interpreted in the
- * scope of the vendor ID. If you have registered your own VID with usb.org
- * or if you have licensed a PID from somebody else, define it here. Otherwise
- * you may use one of obdev's free shared VID/PID pairs. See the file
- * USB-IDs-for-free.txt for details!
+ * scope of the vendor ID. See the file USB-ID-FAQ.txt for how to choose your
+ * IDs.
  * *** IMPORTANT NOTE ***
- * This template uses obdev's shared VID/PID pair for Vendor Class devices
+ * This template uses the free shared VID/PID pair for Vendor Class devices
  * with libusb: 0x16c0/0x5dc.  Use this VID/PID pair ONLY if you understand
- * the implications!
+ * the implications! Be sure to read the rules in USB-IDs-for-free.txt!
  */
 #define USB_CFG_DEVICE_VERSION  0x00, 0x01
 /* Version number of the device: Minor number first, then major number.
@@ -248,7 +245,7 @@ section at the end of this file).
  * are interpreted as Unicode (UTF-16) entities.
  * If you don't want a vendor name string, undefine these macros.
  * ALWAYS define a vendor name containing your Internet domain name if you use
- * obdev's free shared VID/PID pair. See the file USB-IDs-for-free.txt for
+ * the free shared VID/PID pair. See the file USB-IDs-for-free.txt for
  * details.
  */
 #define USB_CFG_DEVICE_NAME     'T', 'e', 'm', 'p', 'l', 'a', 't', 'e'

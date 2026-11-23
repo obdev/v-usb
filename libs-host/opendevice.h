@@ -65,9 +65,9 @@ int usbOpenDevice(libusb_device_handle **device, int vendorID, char *vendorNameP
 #define USBOPEN_ERR_NOTFOUND    3   /* device not found */
 
 
-/* Obdev's free USB IDs, see USB-IDs-for-free.txt for details */
+/* Free shared USB IDs, see USB-IDs-for-free.txt for details */
 
-#define USB_VID_OBDEV_SHARED        5824    /* obdev's shared vendor ID */
+#define USB_VID_OBDEV_SHARED        5824    /* free shared vendor ID */
 #define USB_PID_OBDEV_SHARED_CUSTOM 1500    /* shared PID for custom class devices */
 #define USB_PID_OBDEV_SHARED_HID    1503    /* shared PID for HIDs except mice & keyboards */
 #define USB_PID_OBDEV_SHARED_CDCACM 1505    /* shared PID for CDC Modem devices */

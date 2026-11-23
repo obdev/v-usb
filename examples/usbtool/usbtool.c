@@ -59,7 +59,7 @@ static void usage(char *name)
         "  interrupt in|out (send or receive interrupt data)\n"
         "  bulk in|out (send or receive bulk data)\n"
         "For valid enum values for <type> and <recipient> pass \"x\" for the value.\n"
-        "Objective Development's free VID/PID pairs are:\n"
+        "The free shared VID/PID pairs are:\n"
         "  5824/1500 for vendor class devices\n"
         "  5824/1503 for HID class devices excluding mice and keyboards\n"
         "  5824/1505 for CDC-ACM class devices\n"

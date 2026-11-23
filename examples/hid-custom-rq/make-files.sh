@@ -20,7 +20,7 @@ cat << \EOF | sed -n -f - ../../usbdrv/usbconfig-prototype.h >firmware/usbconfig
 s/^#define USB_CFG_DMINUS_BIT .*$/#define USB_CFG_DMINUS_BIT      4/g
 s|^.*#define USB_CFG_CLOCK_KHZ.*$|#define USB_CFG_CLOCK_KHZ       (F_CPU/1000)|g
 s/^#define USB_CFG_HAVE_INTRIN_ENDPOINT .*$/#define USB_CFG_HAVE_INTRIN_ENDPOINT    1/g
-s|^#define  USB_CFG_DEVICE_ID .*$|#define  USB_CFG_DEVICE_ID       0xdf, 0x05 /* obdev's shared PID for HIDs */|g
+s|^#define  USB_CFG_DEVICE_ID .*$|#define  USB_CFG_DEVICE_ID       0xdf, 0x05 /* free shared PID for HIDs */|g
 s/^#define USB_CFG_DEVICE_NAME .*$/#define USB_CFG_DEVICE_NAME     'L', 'E', 'D', 'C', 't', 'l', 'H', 'I', 'D'/g
 s/^#define USB_CFG_DEVICE_NAME_LEN .*$/#define USB_CFG_DEVICE_NAME_LEN 9/g
 

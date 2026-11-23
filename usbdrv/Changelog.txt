@@ -330,3 +330,8 @@ Scroll down to the bottom to see the most recent changes.
 
   - Removed the commercial license (CommercialLicense.txt). V-USB is now
     available under the GNU GPL v2 or v3 only.
+  - Rewrote USB-ID-FAQ.txt with information on how to choose USB IDs for
+    hobby projects.
+  - Updated USB-IDs-for-free.txt and source code comments to clarify that the
+    shared VID/PID pairs are not assigned to anybody, not authorized by the
+    USB-IF and not guaranteed to be free of conflicts.
